@@ -1,0 +1,25 @@
+.searchBar {
+  background: linear-gradient(
+    90.1deg,
+    #fca7a7 -63.02%,
+    rgba(255, 255, 255, 0.63) 90.43%
+  );
+  border: 0px;
+  border-radius: 100px;
+
+  left: 50%;
+
+  width: 40%;
+  height: 50%;
+  max-width: 500px;
+}
+
+button{
+  left: 60%;
+}
+
+button, .searchBar{
+  position: absolute;
+  top: 50%;
+  transform: translate(-50%, -50%);
+}

@@ -1,0 +1,46 @@
+:root {
+  --body-radius: 40%;
+  --body-bottom-radius: 10%;
+}
+
+.profileIcon {
+  position: relative;
+  margin-left: auto;
+  margin-right: 1.5%;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+
+  height: 65%;
+  aspect-ratio: 1/1.5;
+}
+
+.headIcon {
+  background: radial-gradient(
+    circle,
+    var(--secondary-color),
+    var(--icon-color)
+  );
+  width: 50%;
+  aspect-ratio: 1/1;
+  border-radius: 50%;
+}
+.bodyIcon {
+  margin: 10%;
+
+  background: linear-gradient(
+    135deg,
+    var(--icon-color),
+    var(--secondary-color)
+  );
+  height: 50%;
+  width: 100%;
+  border-color: var(--icon-color);
+  border-width: 10px;
+  border-top-left-radius: var(--body-radius);
+  border-top-right-radius: var(--body-radius);
+  border-bottom-left-radius: var(--body-bottom-radius);
+  border-bottom-right-radius: var(--body-bottom-radius);
+}
