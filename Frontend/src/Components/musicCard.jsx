@@ -1,6 +1,16 @@
 import "../styles/musicCard.css";
 
+import { useState } from "react";
+
 const MusicCard = () => {
+
+  const [seekValue, setSeekValue] = useState(0);
+
+  const seekTo = (event) => {
+    const newValue = parseInt(event.target.value);
+    setSeekValue(newValue);
+  };
+
   return (
     <div className="music-card">
       <div className="image">
@@ -18,9 +28,9 @@ const MusicCard = () => {
           type="range"
           min="1"
           max="100"
-          value="0"
+          value={seekValue}
           className="seek_slider"
-          onchange="seekTo()"
+          onChange={seekTo}
         />
         <div className="total-duration">00:00</div>
       </div>
