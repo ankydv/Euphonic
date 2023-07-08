@@ -7,7 +7,7 @@ const MyRoutes = () => {
   return (
       <Routes>
         <Route path="/" Component={MusicRecommendation}/>
-        <Route path="/test" element={<SearchResults searchQuery="ankit"/>}/>
+        <Route path="/search" element={<SearchResults />}/>
       </Routes>
   );
 };
