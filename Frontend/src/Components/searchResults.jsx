@@ -16,7 +16,7 @@ const SearchResults = () =>{
     if(searchQuery===null || searchQuery==='')
         searchHeading = "Search Results will appear below";
     else{
-        searchHeading = "Search Results for "+searchQuery;
+        searchHeading = `Search Results for "${searchQuery}"`;
     }
 
     useEffect(() => {

@@ -12,8 +12,6 @@ const SearchBar = () => {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    // window.location.href = '/test';
-    console.log('Search value:', searchValue);
     setSearchParams({q:searchValue})
   };
 
@@ -22,12 +20,12 @@ const SearchBar = () => {
   };
 
   const shouldNavigate = (event) =>{
-    if(location.pathname == '/test')
+    if(location.pathname == '/search')
       event.preventDefault();
   }
   return (
     <form onSubmit={handleSubmit}>
-      <NavLink to="/test" onClick={shouldNavigate}>
+      <NavLink to="/search" onClick={shouldNavigate}>
       <input
         type="text"
         className="searchBar"
