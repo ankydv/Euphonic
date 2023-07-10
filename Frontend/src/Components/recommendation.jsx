@@ -1,5 +1,6 @@
-import React from "react";
+import React, { useContext } from "react";
 import "../styles/musicRecommendation.css"; // Import the CSS file for styling
+import "../styles/musicCard.css"
 
   // Sample music recommendations data
   const musicRecommendations = [
@@ -23,16 +24,13 @@ export default MusicRecommendation;
 
 const MusicCards = ({title, dataSet, type})=>{
 
-  const handleClick = () => {
-    console.log('Clicked on music Card');
-  }
   
   return(
     <div className="music-cards-container">
       <h2>{title}</h2>
     <div className="music-cards">
           {dataSet.map((music, index) => (
-            <div className="music-card" key={index} onClick={handleClick}>
+            <div className="music-card" key={index}>
               <img src={music.thumbnails[0].url} alt={music.name} />
               <div className="music-details">
                 <h3>{music.name}</h3>
@@ -43,6 +41,15 @@ const MusicCards = ({title, dataSet, type})=>{
                 ))}
                 </p>
                 }
+              </div>
+              <div className="buttons onCardButton" onClick={() => console.log('play')}>
+                <ul className="list list--buttons" >
+                  <li>
+                    <a className="list__link">
+                      <i className="fa fa-play"></i>
+                    </a>
+                  </li>
+                </ul>
               </div>
             </div>
           ))}

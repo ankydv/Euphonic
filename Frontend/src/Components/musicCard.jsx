@@ -5,6 +5,8 @@ import { useState } from "react";
 const MusicCard = () => {
 
   const [seekValue, setSeekValue] = useState(0);
+  const [currentMusic, setCurrentMusic] = useState(null);
+  const [isPlaying, setIsPlaying] = useState(false);
 
   const seekTo = (event) => {
     const newValue = parseInt(event.target.value);

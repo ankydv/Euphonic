@@ -75,6 +75,11 @@
   bottom: 8%;
   justify-content: center;
 }
+.onCardButton{
+  position: absolute;
+  top:25%;
+  right:0;
+}
 .playpause-track,
 .prev-track,
 .next-track {

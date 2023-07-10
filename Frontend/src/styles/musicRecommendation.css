@@ -16,6 +16,7 @@
   gap:30px;
 }
 .music-cards > .music-card{
+  background: transparent;
   min-width: 160px;
   border-radius: 10px;
 }

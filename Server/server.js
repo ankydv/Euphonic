@@ -21,4 +21,11 @@ app.get('/search', async (req, res) => {
         res.status(404).send("Invalid type argument");
 })
 
+app.get('/song', async (req, res) => {
+    const YTMusic = require("ytmusic-api").default;
+    const ytmusic = await new YTMusic().initialize();
+    const q = req.query['q'];
+    res.send(await ytmusic.getSong(q));
+})
+
 app.listen(5000, () => {console.log('Running on port 5000')})
