@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React from "react";
 import "../styles/musicRecommendation.css"; // Import the CSS file for styling
 import "../styles/musicCard.css"
 
@@ -22,40 +22,48 @@ const MusicRecommendation = () => {
 
 export default MusicRecommendation;
 
-const MusicCards = ({title, dataSet, type})=>{
+const MusicCardItem = ({ music, handlePlay }) => {
+  return (
+    <div className="music-card">
+      <img src={music.thumbnails[0].url} alt={music.name} />
+      <div className="music-details">
+        <h3>{music.name}</h3>
+        {music.artists && (
+          <p>
+            {music.artists.map((artist, index) => (
+              <p key={index}>{artist.name}</p>
+            ))}
+          </p>
+        )}
+      </div>
+      <div className="buttons onCardButton" onClick={() => handlePlay(music)}>
+        <ul className="list list--buttons">
+          <li>
+            <a className="list__link">
+              <i className="fa fa-play"></i>
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  );
+};
 
-  
-  return(
+const MusicCards = ({ title, dataSet, type }) => {
+  return (
     <div className="music-cards-container">
       <h2>{title}</h2>
-    <div className="music-cards">
-          {dataSet.map((music, index) => (
-            <div className="music-card" key={index}>
-              <img src={music.thumbnails[0].url} alt={music.name} />
-              <div className="music-details">
-                <h3>{music.name}</h3>
-                {
-                type !=="artists" && type!=="playlists" &&
-                <p>{music.artists.map((artist, index) => (
-                  <p key={index}>{artist.name}</p>
-                ))}
-                </p>
-                }
-              </div>
-              <div className="buttons onCardButton" onClick={() => console.log('play')}>
-                <ul className="list list--buttons" >
-                  <li>
-                    <a className="list__link">
-                      <i className="fa fa-play"></i>
-                    </a>
-                  </li>
-                </ul>
-              </div>
-            </div>
-          ))}
-        </div>
-        </div>
+      <div className="music-cards">
+        {dataSet.map((music, index) => (
+          <MusicCardItem
+            key={index}
+            music={music}
+            // handlePlay={handlePlay} // Pass the handlePlay function from parent component
+          />
+        ))}
+      </div>
+    </div>
   );
-}
+};
 
 export {MusicCards};
