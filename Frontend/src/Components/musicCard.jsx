@@ -2,6 +2,7 @@ import "../styles/musicCard.css";
 
 import { useState } from "react";
 import { useSelector } from 'react-redux';
+import YouTube from 'react-youtube';
 
 const MusicCard = () => {
 
@@ -16,6 +17,7 @@ const MusicCard = () => {
 
   return (
     <div className="music-card">
+      <YouTubePlayer/>
       <div className="image">
         {currMusic && <img
           alt="Music Art"
@@ -62,5 +64,31 @@ const MusicCard = () => {
     </div>
   );
 };
+
+const YouTubePlayer = () => {
+  const videoId = 'cf1PCl6AdPE';
+
+  const opts = {
+    height: '400',
+    width: '400',
+    playerVars: {
+      VideoPlaybackQuality:'hd1080',
+      autoplay: 1,
+      controls: 1,
+      modestbranding: 1,
+      playsinline: 0
+    }
+
+  };
+
+  return (
+    <YouTube
+      videoId={videoId}
+      opts={opts}
+      // onStateChange={onPlayerPlaybackQualityChange}
+      // onReady={onPlayerStateChange}
+    />
+  );
+}
 
 export default MusicCard;
