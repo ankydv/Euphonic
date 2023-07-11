@@ -11,29 +11,46 @@ const MusicCard = () => {
   const [playerState, setPlayerState] = useState(0);
   const [player, setPlayer] = useState(null);
   const [currDuration, setCurrDuration] = useState(0);
+  const [totalDuration, setTotalDuration] = useState(0);
 
   useEffect(() => {
-    const interval = setInterval(() => {
-      if (playerState === YouTube.PlayerState.PLAYING) {
-        const currentTime = player && player.getCurrentTime();
+    let interval = null;
+  
+    if (playerState === YouTube.PlayerState.PLAYING) {
+      interval = setInterval(() => {
+        console.log('Im running')
+        const currentTime = player.getCurrentTime();
         if (currentTime !== null) {
           setCurrDuration(currentTime);
-          setSeekValue(currentTime / player.getDuration() * 100);
+          setSeekValue((currentTime / player.getDuration()) * 100);
         }
-      }
-    }, 1000);
-
+      }, 1000);
+    }
+  
     return () => clearInterval(interval);
   }, [playerState, player]);
+  
 
   const seekTo = (event) => {
     const newValue = parseInt(event.target.value);
     setSeekValue(newValue);
-    // player.seekTo(player.getDuration*newValue/100);
+    if (player) {
+      const duration = player.getDuration();
+      const seekTime = (newValue / 100) * duration;
+      player.seekTo(seekTime, true);
+    }
   };
+
+  function formatTime(timeInSeconds) {
+    const minutes = Math.floor(timeInSeconds / 60).toString().padStart(2, '0');
+    const seconds = Math.floor(timeInSeconds % 60).toString().padStart(2, '0');
+    return `${minutes}:${seconds}`;
+  }
+  
 
   const handleReady = (event) => {
     setPlayer(event.target);
+    setTotalDuration(event.target.getDuration());
   }
 
   const handleStateChange = (event) => {
@@ -79,7 +96,7 @@ const MusicCard = () => {
       <div className="wave"></div>
       <div className="wave"></div>
       <div className="slider_container">
-        <div className="current-time">00:00</div>
+      <div className="current-time">{formatTime(currDuration)}</div>
         <input
           type="range"
           min="1"
@@ -88,7 +105,7 @@ const MusicCard = () => {
           className="seek_slider"
           onChange={seekTo}
         />
-        <div className="total-duration">00:00</div>
+        <div className="current-time">{formatTime(totalDuration)}</div>
       </div>
 
       <div className="buttons">
@@ -115,31 +132,5 @@ const MusicCard = () => {
     </div>
   );
 };
-
-const YouTubePlayer = (id) => {
-  const videoId = {id};
-
-  const opts = {
-    height: '300',
-    width: '300',
-    playerVars: {
-      VideoPlaybackQuality:'hd1080',
-      autoplay: 1,
-      controls: 1,
-      modestbranding: 1,
-      playsinline: 0
-    }
-
-  };
-
-  return (
-    <YouTube
-      videoId={videoId}
-      opts={opts}
-      // onStateChange={onPlayerPlaybackQualityChange}
-      // onReady={onPlayerStateChange}
-    />
-  );
-}
 
 export default MusicCard;
