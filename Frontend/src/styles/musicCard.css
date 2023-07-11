@@ -217,3 +217,7 @@
 .list__link:hover {
   color: #d30320;
 }
+
+.ytplayer{
+  position:absolute;
+}

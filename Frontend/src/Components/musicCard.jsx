@@ -15,9 +15,28 @@ const MusicCard = () => {
     setSeekValue(newValue);
   };
 
+  const videoId = 'cf1PCl6AdPE';
+
+  const opts = {
+    height: '0',
+    width: '0',
+    playerVars: {
+      VideoPlaybackQuality:'hd1080',
+      autoplay: 1,
+      controls: 1,
+      modestbranding: 1,
+      playsinline: 0
+    }
+
+  };
+
   return (
     <div className="music-card">
-      <YouTubePlayer/>
+     {currMusic && <YouTube // if currMusic is present then render youtube iframe
+      className="ytplayer"
+      videoId={currMusic.videoId}
+      opts={opts}
+    />}
       <div className="image">
         {currMusic && <img
           alt="Music Art"
@@ -65,12 +84,12 @@ const MusicCard = () => {
   );
 };
 
-const YouTubePlayer = () => {
-  const videoId = 'cf1PCl6AdPE';
+const YouTubePlayer = (id) => {
+  const videoId = {id};
 
   const opts = {
-    height: '400',
-    width: '400',
+    height: '300',
+    width: '300',
     playerVars: {
       VideoPlaybackQuality:'hd1080',
       autoplay: 1,
