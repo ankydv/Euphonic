@@ -17,10 +17,10 @@ const MusicCard = () => {
   return (
     <div className="music-card">
       <div className="image">
-        <img
+        {currMusic && <img
           alt="Music Art"
-          src="https://images-na.ssl-images-amazon.com/images/I/513VUhBNJzL.jpg"
-        />
+          src={currMusic.thumbnails[1].url}
+        />}
       </div>
       <div className="wave"></div>
       <div className="wave"></div>
