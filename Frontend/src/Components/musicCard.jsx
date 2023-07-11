@@ -1,6 +1,6 @@
 import "../styles/musicCard.css";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useSelector } from 'react-redux';
 import YouTube from 'react-youtube';
 
@@ -8,14 +8,44 @@ const MusicCard = () => {
 
   const [seekValue, setSeekValue] = useState(0);
   const currMusic = useSelector(state => state.music);
-  // const [isPlaying, setIsPlaying] = useState(false);
+  const [playerState, setPlayerState] = useState(0);
+  const [player, setPlayer] = useState(null);
+  const [currDuration, setCurrDuration] = useState(0);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      if (playerState === YouTube.PlayerState.PLAYING) {
+        const currentTime = player && player.getCurrentTime();
+        if (currentTime !== null) {
+          setCurrDuration(currentTime);
+          setSeekValue(currentTime / player.getDuration() * 100);
+        }
+      }
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, [playerState, player]);
 
   const seekTo = (event) => {
     const newValue = parseInt(event.target.value);
     setSeekValue(newValue);
+    // player.seekTo(player.getDuration*newValue/100);
   };
 
-  const videoId = 'cf1PCl6AdPE';
+  const handleReady = (event) => {
+    setPlayer(event.target);
+  }
+
+  const handleStateChange = (event) => {
+    setPlayerState(event.target.getPlayerState());
+  }
+  const handlePlayPause = () => {
+    if(playerState == YouTube.PlayerState.PLAYING){
+      player.pauseVideo();
+    }
+    else
+      player.playVideo();
+  }
 
   const opts = {
     height: '0',
@@ -36,6 +66,8 @@ const MusicCard = () => {
       className="ytplayer"
       videoId={currMusic.videoId}
       opts={opts}
+      onReady={handleReady}
+      onStateChange={handleStateChange}
     />}
       <div className="image">
         {currMusic && <img
@@ -68,7 +100,7 @@ const MusicCard = () => {
           </li>
 
           <li>
-            <a href="#" className="list__link" onClick={() => console.log({currMusic})}>
+            <a href="#" className="list__link" onClick={handlePlayPause}>
               <i className="fa fa-play"></i>
             </a>
           </li>
