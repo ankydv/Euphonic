@@ -1,12 +1,13 @@
 import "../styles/musicCard.css";
 
 import { useState } from "react";
+import { useSelector } from 'react-redux';
 
 const MusicCard = () => {
 
   const [seekValue, setSeekValue] = useState(0);
-  const [currentMusic, setCurrentMusic] = useState(null);
-  const [isPlaying, setIsPlaying] = useState(false);
+  const currMusic = useSelector(state => state.music);
+  // const [isPlaying, setIsPlaying] = useState(false);
 
   const seekTo = (event) => {
     const newValue = parseInt(event.target.value);
@@ -46,7 +47,7 @@ const MusicCard = () => {
           </li>
 
           <li>
-            <a href="#" className="list__link">
+            <a href="#" className="list__link" onClick={() => console.log({currMusic})}>
               <i className="fa fa-play"></i>
             </a>
           </li>
