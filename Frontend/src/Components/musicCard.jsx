@@ -24,7 +24,7 @@ const MusicCard = () => {
           setCurrDuration(currentTime);
           setSeekValue((currentTime / player.getDuration()) * 100);
         }
-      }, 1000);
+      }, 100);
     }
   
     return () => clearInterval(interval);
@@ -50,6 +50,8 @@ const MusicCard = () => {
 
   const handleReady = (event) => {
     setPlayer(event.target);
+    setCurrDuration(0);
+    setSeekValue(0);
     setTotalDuration(event.target.getDuration());
   }
 
@@ -62,6 +64,10 @@ const MusicCard = () => {
     }
     else
       player.playVideo();
+  }
+
+  const handleEnd = () =>{
+    setCurrDuration(totalDuration);
   }
 
   const opts = {
@@ -77,6 +83,8 @@ const MusicCard = () => {
 
   };
 
+  const playPauseBtnClass = 'fa fa-'+(playerState == 1 ? "pause" : "play");
+
   return (
     <div className="music-card">
      {currMusic && <YouTube // if currMusic is present then render youtube iframe
@@ -85,6 +93,7 @@ const MusicCard = () => {
       opts={opts}
       onReady={handleReady}
       onStateChange={handleStateChange}
+      onEnd={handleEnd}
     />}
       <div className="image">
         {currMusic && <img
@@ -118,7 +127,7 @@ const MusicCard = () => {
 
           <li>
             <a href="#" className="list__link" onClick={handlePlayPause}>
-              <i className="fa fa-play"></i>
+              <i className={playPauseBtnClass}></i>
             </a>
           </li>
 
