@@ -1,0 +1,14 @@
+{
+    "name": "musicplayer",
+    "devDependencies": {
+        "concurrently": "^8.2.0"
+    },
+    "scripts": {
+        "client": "cd Frontend && npm start",
+        "server": "cd Server && npm run dev",
+        "dev": "concurrently \"npm run server\" \"npm run client\"",
+        "installClient": "cd Frontend && npm i",
+        "installServer": "cd Server && npm i",
+        "install": "concurrently \"npm run installClient\" \"npm run installServer\""
+        }
+}
