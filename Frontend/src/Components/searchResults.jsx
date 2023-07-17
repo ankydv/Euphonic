@@ -21,7 +21,7 @@ const SearchResults = () =>{
 
     useEffect(() => {
         if(searchQuery!=null){
-            const baseUrl = 'http://localhost:5000/search?q='+searchQuery+'&type=';
+            const baseUrl = 'https://music-player-server-ssgb.onrender.com/search?q='+searchQuery+'&type=';
             let type = "songs";
             axios.get(baseUrl+type)
             .then((songs) => {
