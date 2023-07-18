@@ -5,11 +5,13 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 
 const SearchResults = () =>{
-    const [searchParams, setSearchParams] = useSearchParams();
+    const [searchParams,] = useSearchParams();
     const [searchedSongs, setSearchedSongs] = useState(null);
     const [searchedAlbums, setSearchedAlbums] = useState(null);
     const [searchedArtists, setSearchedArtists] = useState(null);
     const [searchedPlaylists, setSearchedPlaylists] = useState(null);
+
+    const server = process.env.REACT_APP_SERVER;
 
     var searchHeading
     var searchQuery = searchParams.get('q');
@@ -21,7 +23,8 @@ const SearchResults = () =>{
 
     useEffect(() => {
         if(searchQuery!=null){
-            const baseUrl = 'https://music-player-server-ssgb.onrender.com/search?q='+searchQuery+'&type=';
+            const baseUrl = `${server}search?q=${searchQuery}&type=`;
+            console.log(baseUrl)
             let type = "songs";
             axios.get(baseUrl+type)
             .then((songs) => {
