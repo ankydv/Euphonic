@@ -1,1 +1,2 @@
-fastapi
+fastapi==0.100.0
+pytube==15.0.0
