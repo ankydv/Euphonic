@@ -4,10 +4,12 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
-fastapi = "0.100.0"
-pytube = "15.0.0"
+fastapi = "*"
+pytube = "*"
+ytmusicapi = "*"
 
 [dev-packages]
+uvicorn = {version = "*", extras = ["standard"]}
 
 [requires]
-python_version = "3.11"
+python_version = "3.11.3"

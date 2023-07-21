@@ -1,14 +1,14 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from ytmusicapi import YTMusic
-from api import songs
+
+from api import songs, search
 
 app = FastAPI()
-ytmusic = YTMusic()
 
 origins=[
     'http://localhost:3000'
 ]
+
 app.add_middleware(
     CORSMiddleware,
     allow_origins=origins,
@@ -16,12 +16,12 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
-app.include_router(songs.router, prefix="/api", tags=["songs"])
 
+#test api route
 @app.get('/')
 def ankit():
-    return "Hello"
+    return "Server is working fine"
 
-@app.get("/search")
-def search(q,type=None):
-    return ytmusic.search(q,type)
+prefix = "/api"
+app.include_router(songs.router, prefix=prefix, tags=["songs"])
+app.include_router(search.router, prefix=prefix, tags=["search"])
