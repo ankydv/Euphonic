@@ -1,6 +1,6 @@
 import React from "react";
 import "../styles/musicRecommendation.css"; // Import the CSS file for styling
-import "../styles/musicCard.css"
+// import "../styles/musicCard.css"
 
 import { useDispatch } from 'react-redux';
 import { bindActionCreators } from "redux";
@@ -31,27 +31,28 @@ const MusicCardItem = ({ music }) => {
   const { sendMusic } = bindActionCreators(actionCreators, dispatch);
 
   return (
-    <div className="music-card">
+    <div className="music-card-item">
       <img src={
         (music.thumbnails[1])?
           music.thumbnails[1].url
         :                               // Ternary operator to check if high quality thumbnail is available and set.
           music.thumbnails[0].url
-      } alt={music.name} />
+      } alt={music.title} />
       <div className="music-details">
-        <h3>{music.name}</h3>
+        <p>{music.title}</p>
         {music.artists && (
           <p>
             {music.artists.map((artist, index) => (
-              <p key={index}>{artist.name}</p>
+              <span key={index}>{artist.name}{index!==music.artists.length-1 && <span>, </span>}</span>
             ))}
           </p>
         )}
       </div>
-      <div className="buttons onCardButton" onClick={() => sendMusic(music)}>
+      <div className="onCardButton" onClick={(e) => {sendMusic(music); e.preventDefault()}}>
         <ul className="list list--buttons">
           <li>
-            <a href="#" className="list__link">
+            {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
+            <a className="list__link">
               <i className="fa fa-play"></i>
             </a>
           </li>

@@ -75,11 +75,11 @@
   bottom: 8%;
   justify-content: center;
 }
-.onCardButton{
+/* .onCardButton{
   position: absolute;
   top:25%;
   right:0;
-}
+} */
 .playpause-track,
 .prev-track,
 .next-track {
@@ -187,6 +187,7 @@
   color: rgba(171, 2, 26, 0.95);
   opacity: 1;
   box-shadow: 0 6px 9px rgba(33, 33, 33, 0.1), 0 6px 16px rgba(33, 33, 33, 0.15);
+  cursor: pointer;
 }
 .list--buttons li:nth-of-type(2) a {
   padding-top: 0.82rem;

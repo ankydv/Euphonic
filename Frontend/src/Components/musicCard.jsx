@@ -59,7 +59,7 @@ const MusicCard = () => {
     setPlayerState(event.target.getPlayerState());
   }
   const handlePlayPause = () => {
-    if(playerState == YouTube.PlayerState.PLAYING){
+    if(playerState === YouTube.PlayerState.PLAYING){
       player.pauseVideo();
     }
     else
@@ -83,7 +83,7 @@ const MusicCard = () => {
 
   };
 
-  const playPauseBtnClass = 'fa fa-'+(playerState == 1 ? "pause" : "play");
+  const playPauseBtnClass = 'fa fa-'+(playerState === 1 ? "pause" : "play");
 
   return (
     <div className="music-card">
@@ -98,7 +98,7 @@ const MusicCard = () => {
       <div className="image">
         {currMusic && <img
           alt="Music Art"
-          src={currMusic.thumbnails[1].url}
+          src={currMusic.thumbnails[0].url}
         />}
       </div>
       <div className="wave"></div>
@@ -118,21 +118,24 @@ const MusicCard = () => {
       </div>
 
       <div className="buttons">
-        <ul className="list list--buttons">
+        <ul className="list list--buttons" onClick={(e)=>e.preventDefault()}>
           <li>
-            <a href="#" className="list__link">
+            {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
+            <a className="list__link">
               <i className="fa fa-step-backward"></i>
             </a>
           </li>
 
           <li>
-            <a href="#" className="list__link" onClick={handlePlayPause}>
+            {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
+            <a className="list__link" onClick={handlePlayPause}>
               <i className={playPauseBtnClass}></i>
             </a>
           </li>
 
           <li>
-            <a href="#" className="list__link">
+            {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
+            <a className="list__link">
               <i className="fa fa-step-forward"></i>
             </a>
           </li>

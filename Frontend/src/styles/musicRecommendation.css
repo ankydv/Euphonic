@@ -13,18 +13,46 @@
   overflow-x: auto;
   white-space: nowrap;
   display: flex;
-  gap:30px;
+  gap:15px;
 }
-.music-cards > .music-card{
+.music-cards > .music-card-item{
+  position:relative;
   background: transparent;
-  min-width: 160px;
-  border-radius: 10px;
+  min-width: 200px;
+  width: 200px;
+  /* border-radius: 10px; */
+  border: 1px solid black;
 }
 
-.music-card > img{
+.music-card-item > img{
   position: relative;
-  padding: 5%;
-  width: 90%;
+  /* padding: 5% 5% 0% 5%; */
+  width: 100%;
   border-radius: 10%;
   aspect-ratio: 1/1;
+}
+.onCardButton{
+  position: absolute;
+  top:80%;
+  bottom:0;
+  left: 40%;
+  visibility: hidden;
+  opacity: 0; /* Start with opacity 0, so it fades in when visible */
+  transition: opacity 0.3s ease, visibility 0.3s ease; /* Add transitions for a smooth effect */
+}
+.onCardButton:hover {
+  cursor: pointer;
+}
+.music-card-item:hover .onCardButton {
+  visibility: visible; /* Show onCardButton when hovering over music-card-item */
+  opacity: 1;
+  transition-delay: 0.1s; /* Add a delay before the animation starts */
+}
+
+.music-details p {
+  /* Add this style to prevent text from wrapping */
+  white-space: nowrap;
+  /* Add this style to show ellipsis (...) for overflowing text */
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
