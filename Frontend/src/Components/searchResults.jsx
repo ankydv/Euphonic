@@ -10,12 +10,14 @@ const SearchResults = () =>{
     // const [searchedAlbums, setSearchedAlbums] = useState(null);
     // const [searchedArtists, setSearchedArtists] = useState(null);
     // const [searchedPlaylists, setSearchedPlaylists] = useState(null);
+    // const [searchedFilters, setSearchedFilters] = useState(null);
     const [searchResponse, setSearchResponse] = useState(null);
 
     const server = process.env.REACT_APP_SERVER;
 
     var searchHeading
     var searchQuery = searchParams.get('q');
+    // var type = searchParams.get('type');
     if(searchQuery===null || searchQuery==='')
         searchHeading = "Search Results will appear below";
     else{
@@ -33,7 +35,13 @@ const SearchResults = () =>{
     }, [searchQuery, server]);
     if (searchResponse) {
         var searchResults = searchResponse.reduce((acc, item) => {
-          const { category, ...rest } = item;
+          var { category, ...rest } = item;
+          if(category === 'Profiles')  //Don't add Profiles Category
+            return acc
+        if(category == null){
+            const temp = item.resultType;
+            category = temp.charAt(0).toUpperCase() + temp.slice(1)+'s';
+        }
           const existingIndex = acc.findIndex((group) => group.category === category);
       
           if (existingIndex !== -1) {
@@ -47,39 +55,44 @@ const SearchResults = () =>{
       }
       
 
-    useEffect(() => {
-        console.log(searchResults);
-    }, [searchResults])
+    // useEffect(() => {
+    //     console.log(searchResults);
+    // }, [searchResults])
 
     // useEffect(() => {
-    //     if(searchQuery!=null){
+    //     if(searchQuery!=null && type!=null){
     //         const baseUrl = `${server}api/search/${searchQuery}?type=`;
-    //         console.log(baseUrl)
-    //         let type = "songs";
-    //         axios.get(baseUrl+type)
-    //         .then((songs) => {
-    //             setSearchedSongs(songs.data);
-    //         })
+    //         // let type = "songs";
+    //         // axios.get(baseUrl+type)
+    //         // .then((songs) => {
+    //         //     setSearchedSongs(songs.data);
+    //         // })
 
-    //         type = "albums";
-    //         axios.get(baseUrl+type)
-    //         .then((albums) => {
-    //             setSearchedAlbums(albums.data);
-    //         })
+    //         // type = "albums";
+    //         // axios.get(baseUrl+type)
+    //         // .then((albums) => {
+    //         //     setSearchedAlbums(albums.data);
+    //         // })
 
-    //         type = "artists";
-    //         axios.get(baseUrl+type)
-    //         .then((artists) => {
-    //             setSearchedArtists(artists.data);
-    //         })
+    //         // type = "artists";
+    //         // axios.get(baseUrl+type)
+    //         // .then((artists) => {
+    //         //     setSearchedArtists(artists.data);
+    //         // })
 
-    //         type = "playlists";
+    //         // type = "playlists";
+    //         // axios.get(baseUrl+type)
+    //         // .then((playlists) => {
+    //         //     setSearchedPlaylists(playlists.data);
+    //         // })
+
     //         axios.get(baseUrl+type)
-    //         .then((playlists) => {
-    //             setSearchedPlaylists(playlists.data);
+    //         .then((res) => {
+    //             setSearchedFilters(res.data);
+    //             console.log(searchedFilters);
     //         })
     //     }
-    // }, [searchQuery]);
+    // }, [searchQuery, type]);
 
     return(
         <div className="music-recommendation">
