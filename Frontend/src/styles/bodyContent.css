@@ -2,4 +2,8 @@
   display: grid;
   grid-template-columns: 1fr 4fr;
   gap:4%;
+  /* transition: 200ms; */
+}
+.fullBody{
+  grid-template-columns: 0 1fr;
 }
