@@ -32,12 +32,14 @@ const MusicCardItem = ({ music }) => {
 
   return (
     <div className="music-card-item">
-      <img src={
-        (music.thumbnails[1])?
-          music.thumbnails[1].url
-        :                               // Ternary operator to check if high quality thumbnail is available and set.
-          music.thumbnails[0].url
-      } alt={music.title} />
+      <div className="img-container">
+        <img src={
+          (music.thumbnails[1])?
+            music.thumbnails[1].url
+          :                               // Ternary operator to check if high quality thumbnail is available and set.
+            music.thumbnails[0].url
+        } alt={music.title} />
+      </div>
       <div className="music-details">
         <p>{music.title}</p>
         {music.artists && (
