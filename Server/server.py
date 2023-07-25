@@ -11,7 +11,7 @@ load_dotenv()
 client_server = os.getenv("CLIENT_SERVER")
 
 origins=[
-   client_server,
+   '*',
 ]
 
 app.add_middleware(
