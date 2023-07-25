@@ -1,12 +1,17 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from dotenv import load_dotenv
+import os
 
 from api import songs, search
 
 app = FastAPI()
 
+load_dotenv()
+client_server = os.getenv("CLIENT_SERVER")
+
 origins=[
-    'http://localhost:3000'
+   client_server,
 ]
 
 app.add_middleware(
