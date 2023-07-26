@@ -2,30 +2,25 @@ import React from "react";
 import "../styles/searchBar.css";
 
 import { useState } from 'react';
-import { NavLink, useSearchParams, useLocation } from 'react-router-dom';
+import { useSearchParams } from 'react-router-dom';
 
 const SearchBar = () => {
   const [searchValue, setSearchValue] = useState('');
 
   const [searchParams,setSearchParams] = useSearchParams();
-  const location = useLocation();
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    setSearchParams({q:searchValue})
+    if(searchParams.get('q')!==searchValue)
+      setSearchParams({q:searchValue})
   };
 
   const handleChange = (event) => {
     setSearchValue(event.target.value);
   };
 
-  const shouldNavigate = (event) =>{
-    if(location.pathname == '/search')
-      event.preventDefault();
-  }
   return (
     <form onSubmit={handleSubmit}>
-      <NavLink to="/search" onClick={shouldNavigate}>
       <input
         type="text"
         className="searchBar"
@@ -34,9 +29,7 @@ const SearchBar = () => {
         onChange={handleChange}
         placeholder="Enter search keyword..."
       />
-      </NavLink>
-      
-        <button type="submit">Search</button>
+      <button type="submit">Search</button>
     </form>
   );
 };
