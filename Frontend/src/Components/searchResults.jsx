@@ -29,8 +29,10 @@ const SearchResults = () =>{
         if(searchQuery!=null){
             console.log('useeffect triggered')
             const baseUrl = `${server}api/search/${searchQuery}`;
+            console.log(baseUrl);
             axios.get(baseUrl)
             .then((res) => {
+                console.log(typeof(res.data));
                 setSearchResponse(
                     res.data.reduce((acc, item) => {
                         var { category, ...rest } = item;
