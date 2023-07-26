@@ -18,7 +18,6 @@ const MusicCard = () => {
   
     if (playerState === YouTube.PlayerState.PLAYING) {
       interval = setInterval(() => {
-        console.log('Im running')
         const currentTime = player.getCurrentTime();
         if (currentTime !== null) {
           setCurrDuration(currentTime);

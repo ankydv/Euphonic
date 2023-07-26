@@ -7,7 +7,6 @@ import axios from "axios";
 const server = process.env.REACT_APP_SERVER;
 
 const SearchResults = () =>{
-    console.log('Redering Search...')
     const [searchParams,] = useSearchParams();
     // const [searchedSongs, setSearchedSongs] = useState(null);
     // const [searchedAlbums, setSearchedAlbums] = useState(null);
@@ -15,7 +14,6 @@ const SearchResults = () =>{
     // const [searchedPlaylists, setSearchedPlaylists] = useState(null);
     // const [searchedFilters, setSearchedFilters] = useState(null);
     const [searchResponse, setSearchResponse] = useState(null);
-    console.log(searchResponse)
     var searchHeading
     var searchQuery = searchParams.get('q');
     // var type = searchParams.get('type');
@@ -27,12 +25,9 @@ const SearchResults = () =>{
 
     useEffect(() => {
         if(searchQuery!=null){
-            console.log('useeffect triggered')
             const baseUrl = `${server}api/search/${searchQuery}`;
-            console.log(baseUrl);
             axios.get(baseUrl)
             .then((res) => {
-                console.log(typeof(res.data));
                 setSearchResponse(
                     res.data.reduce((acc, item) => {
                         var { category, ...rest } = item;
