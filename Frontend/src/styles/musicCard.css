@@ -65,6 +65,9 @@
   top: 2%;
   animation: spin 5000ms infinite linear;
 }
+.music-card > .paused, .music-card> .paused:nth-child(3){
+  animation-play-state: paused;
+}
 
 .buttons {
   width: 100%;
@@ -118,7 +121,7 @@
   background: #f05c7f;
   opacity: 0.7;
   -webkit-transition: 0.2s;
-  transition: opacity 0.2s;
+  transition: opacity 0.2s, height 0.1s;
 }
 
 /* Modify the appearance of the slider thumb */
@@ -137,7 +140,12 @@
 /* Change the opacity when mouse is hovered */
 
 .seek_slider:hover {
+  opacity: 0.8;
+  height: 3px;
+}
+.seek_slider:active{
   opacity: 1;
+  height: 4px;
 }
 
 .seek_slider {

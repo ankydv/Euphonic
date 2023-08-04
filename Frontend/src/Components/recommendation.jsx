@@ -30,9 +30,15 @@ const MusicCardItem = ({ music }) => {
   const dispatch = useDispatch();
   const { sendMusic } = bindActionCreators(actionCreators, dispatch);
 
+  const handlePlay = (music) =>{
+    if(music.resultType=='song' || music.resultType == 'video')
+      sendMusic(music)
+  }
+
+  const imgClass = music.resultType == 'artist' ? "img-container artist" : "img-container";
   return (
     <div className="music-card-item">
-      <div className="img-container">
+      <div className={imgClass}>
         <img src={
           (music.thumbnails[1])?
             music.thumbnails[1].url
@@ -41,16 +47,17 @@ const MusicCardItem = ({ music }) => {
         } alt={music.title} />
       </div>
       <div className="music-details">
-        <p>{music.title}</p>
+        <p>{music.resultType == 'artist'? music.artist : music.title}</p>
         {music.artists && (
           <p>
             {music.artists.map((artist, index) => (
               <span key={index}>{artist.name}{index!==music.artists.length-1 && <span>, </span>}</span>
-            ))}
+            ))
+            }
           </p>
         )}
       </div>
-      <div className="onCardButton" onClick={(e) => {sendMusic(music); e.preventDefault()}}>
+      <div className="onCardButton" onClick={() => handlePlay(music)}>
         <ul className="list list--buttons">
           <li>
             {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}

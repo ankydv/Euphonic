@@ -1,9 +1,10 @@
 .bodyContent {
   display: grid;
   grid-template-columns: 1fr 4fr;
-  gap:4%;
-  /* transition: 200ms; */
+  gap:1%;
+  margin-left: 1vw;
+  transition: 200ms;
 }
 .fullBody{
-  grid-template-columns: 0 1fr;
+  grid-template-columns: 0fr 1fr;
 }

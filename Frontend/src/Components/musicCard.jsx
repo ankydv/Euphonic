@@ -1,8 +1,11 @@
+import axios from "axios";
 import "../styles/musicCard.css";
 
 import { useState, useEffect } from "react";
 import { useSelector } from 'react-redux';
 import YouTube from 'react-youtube';
+
+const server = process.env.REACT_APP_SERVER;
 
 const MusicCard = () => {
 
@@ -12,6 +15,7 @@ const MusicCard = () => {
   const [player, setPlayer] = useState(null);
   const [currDuration, setCurrDuration] = useState(0);
   const [totalDuration, setTotalDuration] = useState(0);
+  const [thumbUrl, setThumbUrl] = useState(currMusic?currMusic.thumbnails[0].url : null);
 
   useEffect(() => {
     let interval = null;
@@ -29,6 +33,14 @@ const MusicCard = () => {
     return () => clearInterval(interval);
   }, [playerState, player]);
   
+  useEffect(() => {
+    if(currMusic){
+      axios.get(`${server}api/songinfo/${currMusic.videoId}`)
+      .then((res) => {
+        setThumbUrl(res.data.videoDetails.thumbnail.thumbnails.pop().url);
+      })
+    }
+    }, [currMusic])
 
   const seekTo = (event) => {
     const newValue = parseInt(event.target.value);
@@ -83,7 +95,7 @@ const MusicCard = () => {
   };
 
   const playPauseBtnClass = 'fa fa-'+(playerState === 1 ? "pause" : "play");
-
+  const waveClass = playerState === 1 ? 'wave' : 'wave paused';
   return (
     <div className="music-card">
      {currMusic && <YouTube // if currMusic is present then render youtube iframe
@@ -97,12 +109,12 @@ const MusicCard = () => {
       <div className="image">
         {currMusic && <img
           alt="Music Art"
-          src={currMusic.thumbnails[0].url}
+          src={thumbUrl}
         />}
       </div>
-      <div className="wave"></div>
-      <div className="wave"></div>
-      <div className="wave"></div>
+      <div className={waveClass}></div>
+      <div className={waveClass}></div>
+      <div className={waveClass}></div>
       <div className="slider_container">
       <div className="current-time">{formatTime(currDuration)}</div>
         <input
