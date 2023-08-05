@@ -2,6 +2,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from dotenv import load_dotenv
 import os
+from ytmusicapi import __version__ as yv
 
 from api import songs, search, home
 
@@ -25,7 +26,7 @@ app.add_middleware(
 #test api route
 @app.get('/')
 def ankit():
-    return "Server is working fine"
+    return "Server is working fine "+yv
 
 prefix = "/api"
 app.include_router(songs.router, prefix=prefix, tags=["songs"])
