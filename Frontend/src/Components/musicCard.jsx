@@ -1,13 +1,14 @@
 import axios from "axios";
 import "../styles/musicCard.css";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useSelector } from 'react-redux';
 import YouTube from 'react-youtube';
 
 const server = process.env.REACT_APP_SERVER;
-
+const targetItags = [141, 251, 140, 171];
 const MusicCard = () => {
+  const audioRef = useRef();
 
   const [seekValue, setSeekValue] = useState(0);
   const currMusic = useSelector(state => state.music);
@@ -16,6 +17,8 @@ const MusicCard = () => {
   const [currDuration, setCurrDuration] = useState(0);
   const [totalDuration, setTotalDuration] = useState(0);
   const [thumbUrl, setThumbUrl] = useState(currMusic?currMusic.thumbnails[0].url : null);
+  const [musicInfo, setMusicInfo] = useState(null);
+  const [isPlaying, setIsPlaying] = useState(false);
 
   useEffect(() => {
     let interval = null;
@@ -37,10 +40,18 @@ const MusicCard = () => {
     if(currMusic){
       axios.get(`${server}api/songinfo/${currMusic.videoId}`)
       .then((res) => {
+        setMusicInfo(res.data);
         setThumbUrl(res.data.videoDetails.thumbnail.thumbnails.pop().url);
       })
     }
     }, [currMusic])
+
+  useEffect(() => {
+    console.log('run')
+    setIsPlaying(!audioRef.current.paused);
+  }, [audioRef.current.paused])
+
+  const objToStream = musicInfo ? musicInfo.streamingData.adaptiveFormats.find((obj) => targetItags.includes(obj.itag)) : null;
 
   const seekTo = (event) => {
     const newValue = parseInt(event.target.value);
@@ -59,22 +70,26 @@ const MusicCard = () => {
   }
   
 
-  const handleReady = (event) => {
-    setPlayer(event.target);
-    setCurrDuration(0);
-    setSeekValue(0);
-    setTotalDuration(event.target.getDuration());
+  // const handleReady = (event) => {
+  //   setPlayer(event.target);
+  //   setCurrDuration(0);
+  //   setSeekValue(0);
+  //   setTotalDuration(event.target.getDuration());
+  // }
+  const handleReady = () =>{
+    setPlayer(audioRef.current);
+    audioRef.current.play();
   }
 
   const handleStateChange = (event) => {
     setPlayerState(event.target.getPlayerState());
   }
   const handlePlayPause = () => {
-    if(playerState === YouTube.PlayerState.PLAYING){
-      player.pauseVideo();
+    if(isPlaying){
+      player.pause();
     }
     else
-      player.playVideo();
+      player.play();
   }
 
   const handleEnd = () =>{
@@ -82,10 +97,11 @@ const MusicCard = () => {
   }
 
   const opts = {
-    height: '0',
-    width: '0',
+    quality: 'hd1080',
+    height: 350,
+    width: 350,
     playerVars: {
-      VideoPlaybackQuality:'hd1080',
+      VideoPlaybackQuality: 'hd1080',
       autoplay: 1,
       controls: 1,
       modestbranding: 1,
@@ -94,18 +110,17 @@ const MusicCard = () => {
 
   };
 
-  const playPauseBtnClass = 'fa fa-'+(playerState === 1 ? "pause" : "play");
-  const waveClass = playerState === 1 ? 'wave' : 'wave paused';
+  const playPauseBtnClass = 'fa fa-'+(isPlaying ? "pause" : "play");
+  const waveClass = isPlaying ? 'wave' : 'wave paused';
   return (
     <div className="music-card">
-     {currMusic && <YouTube // if currMusic is present then render youtube iframe
-      className="ytplayer"
-      videoId={currMusic.videoId}
-      opts={opts}
-      onReady={handleReady}
-      onStateChange={handleStateChange}
-      onEnd={handleEnd}
-    />}
+     {objToStream && <audio
+        src={objToStream.url}
+        controls
+        className="ytplayer"
+        onLoadedMetadata={handleReady}
+        ref={audioRef}
+     />}
       <div className="image">
         {currMusic && <img
           alt="Music Art"

@@ -237,5 +237,7 @@
 }
 
 .ytplayer{
+  /* top:20%; */
   position:absolute;
+  z-index: 5;
 }
