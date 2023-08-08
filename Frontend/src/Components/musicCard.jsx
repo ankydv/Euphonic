@@ -3,7 +3,7 @@ import "../styles/musicCard.css";
 
 import { useState, useEffect, useRef } from "react";
 import { useSelector } from 'react-redux';
-import YouTube from 'react-youtube';
+// import YouTube from 'react-youtube';
 
 const server = process.env.REACT_APP_SERVER;
 const targetItags = [141, 251, 140, 171];
@@ -12,7 +12,7 @@ const MusicCard = () => {
 
   const [seekValue, setSeekValue] = useState(0);
   const currMusic = useSelector(state => state.music);
-  const [playerState, setPlayerState] = useState(0);
+  // const [playerState, setPlayerState] = useState(0);
   const [player, setPlayer] = useState(null);
   const [currDuration, setCurrDuration] = useState(0);
   const [totalDuration, setTotalDuration] = useState(0);
@@ -20,21 +20,21 @@ const MusicCard = () => {
   const [musicInfo, setMusicInfo] = useState(null);
   const [isPlaying, setIsPlaying] = useState(false);
 
-  useEffect(() => {
-    let interval = null;
+  // useEffect(() => {
+  //   let interval = null;
   
-    if (playerState === YouTube.PlayerState.PLAYING) {
-      interval = setInterval(() => {
-        const currentTime = player.getCurrentTime();
-        if (currentTime !== null) {
-          setCurrDuration(currentTime);
-          setSeekValue((currentTime / player.getDuration()) * 100);
-        }
-      }, 100);
-    }
+  //   if (playerState === YouTube.PlayerState.PLAYING) {
+  //     interval = setInterval(() => {
+  //       const currentTime = player.getCurrentTime();
+  //       if (currentTime !== null) {
+  //         setCurrDuration(currentTime);
+  //         setSeekValue((currentTime / player.getDuration()) * 100);
+  //       }
+  //     }, 100);
+  //   }
   
-    return () => clearInterval(interval);
-  }, [playerState, player]);
+  //   return () => clearInterval(interval);
+  // }, [playerState, player]);
   
   useEffect(() => {
     if(currMusic){
@@ -46,10 +46,27 @@ const MusicCard = () => {
     }
     }, [currMusic])
 
-  useEffect(() => {
-    console.log('run')
-    setIsPlaying(!audioRef.current.paused);
-  }, [audioRef.current.paused])
+    useEffect(() => {
+      // Function to handle the timeupdate event of the audio element
+      const handleTimeUpdate = () => {
+        setIsPlaying(!audioRef.current.paused);
+          const currentTime = audioRef.current.currentTime;
+          if (currentTime !== null) {
+            setCurrDuration(currentTime);
+            setSeekValue((currentTime / totalDuration) * 100);
+          }
+      };
+  
+      // Add the event listener to the audio element
+      if(audioRef.current)
+        audioRef.current.addEventListener('timeupdate', handleTimeUpdate);
+  
+      // Clean up the event listener when the component is unmounted
+      return () => {
+        if(audioRef.current)
+          audioRef.current.removeEventListener('timeupdate', handleTimeUpdate);
+      };
+    }, []);
 
   const objToStream = musicInfo ? musicInfo.streamingData.adaptiveFormats.find((obj) => targetItags.includes(obj.itag)) : null;
 
@@ -57,9 +74,9 @@ const MusicCard = () => {
     const newValue = parseInt(event.target.value);
     setSeekValue(newValue);
     if (player) {
-      const duration = player.getDuration();
+      const duration = currDuration;
       const seekTime = (newValue / 100) * duration;
-      player.seekTo(seekTime, true);
+      audioRef.current.currentTime = seekTime;
     }
   };
 
@@ -78,12 +95,13 @@ const MusicCard = () => {
   // }
   const handleReady = () =>{
     setPlayer(audioRef.current);
+    setTotalDuration(audioRef.current.duration);
     audioRef.current.play();
   }
 
-  const handleStateChange = (event) => {
-    setPlayerState(event.target.getPlayerState());
-  }
+  // const handleStateChange = (event) => {
+  //   setPlayerState(event.target.getPlayerState());
+  // }
   const handlePlayPause = () => {
     if(isPlaying){
       player.pause();
@@ -92,23 +110,23 @@ const MusicCard = () => {
       player.play();
   }
 
-  const handleEnd = () =>{
-    setCurrDuration(totalDuration);
-  }
+  // const handleEnd = () =>{
+  //   setCurrDuration(totalDuration);
+  // }
 
-  const opts = {
-    quality: 'hd1080',
-    height: 350,
-    width: 350,
-    playerVars: {
-      VideoPlaybackQuality: 'hd1080',
-      autoplay: 1,
-      controls: 1,
-      modestbranding: 1,
-      playsinline: 0
-    }
+  // const opts = {
+  //   quality: 'hd1080',
+  //   height: 350,
+  //   width: 350,
+  //   playerVars: {
+  //     VideoPlaybackQuality: 'hd1080',
+  //     autoplay: 1,
+  //     controls: 1,
+  //     modestbranding: 1,
+  //     playsinline: 0
+  //   }
 
-  };
+  // };
 
   const playPauseBtnClass = 'fa fa-'+(isPlaying ? "pause" : "play");
   const waveClass = isPlaying ? 'wave' : 'wave paused';
@@ -116,7 +134,6 @@ const MusicCard = () => {
     <div className="music-card">
      {objToStream && <audio
         src={objToStream.url}
-        controls
         className="ytplayer"
         onLoadedMetadata={handleReady}
         ref={audioRef}
