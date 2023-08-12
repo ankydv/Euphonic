@@ -1,6 +1,8 @@
 @import url("https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css");
 
 :root {
+  --music-card-top: calc(var(--header-height) - var(--header-before-bottom) + 15px);
+  --music-card-height: calc(100vh - var(--music-card-top) - 12px);
   --ar: 1/2;
   --base-top: 40;
   --base-height: 20;
@@ -21,7 +23,8 @@
 .music-card {
   align-self: flex-start;
   position:sticky;
-  top: calc(5vh + 1.5em + 15px);
+  height: var(--music-card-height);
+  top: var(--music-card-top);
   border-radius: 6px;
   background: #fff;
   box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.4);

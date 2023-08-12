@@ -1,6 +1,6 @@
 .bodyContent {
   display: grid;
-  grid-template-columns: 350px minmax(0, 1fr);
+  grid-template-columns: auto minmax(0, 1fr);
   gap:1%;
   margin-left: 1vw;
   transition: 200ms;
