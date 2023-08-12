@@ -30,6 +30,7 @@ const SearchBar = () => {
     <form onSubmit={handleSubmit}>
       <NavLink to="/search" onClick={shouldNavigate}>
       <input
+        id="searchInput"
         type="text"
         className="searchBar"
         name="txt"

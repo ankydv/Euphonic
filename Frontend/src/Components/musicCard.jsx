@@ -18,7 +18,7 @@ const MusicCard = () => {
   const [thumbUrl, setThumbUrl] = useState(currMusic?currMusic.thumbnails[0].url : null);
 
   const handleSpaceKeyPress = (event) => {
-    if (event.key === " ") {
+    if (event.key === " " && document.activeElement !== document.getElementById("searchInput")) {
       // Prevent default spacebar behavior (scrolling the page)
       event.preventDefault();
       // Toggle play/pause
