@@ -17,21 +17,23 @@ const MusicCard = () => {
   const [totalDuration, setTotalDuration] = useState(0);
   const [thumbUrl, setThumbUrl] = useState(currMusic?currMusic.thumbnails[0].url : null);
 
-  useEffect(() => {
-    let interval = null;
-  
-    if (playerState === YouTube.PlayerState.PLAYING) {
-      interval = setInterval(() => {
-        const currentTime = player.getCurrentTime();
-        if (currentTime !== null) {
-          setCurrDuration(currentTime);
-          setSeekValue((currentTime / player.getDuration()) * 100);
-        }
-      }, 100);
+  const handleSpaceKeyPress = (event) => {
+    if (event.key === " ") {
+      // Prevent default spacebar behavior (scrolling the page)
+      event.preventDefault();
+      // Toggle play/pause
+      handlePlayPause();
     }
-  
-    return () => clearInterval(interval);
-  }, [playerState, player]);
+  };
+
+  useEffect(() => {
+    // Add event listener when the component mounts
+    window.addEventListener("keydown", handleSpaceKeyPress);
+    // Clean up the event listener when the component unmounts
+    return () => {
+      window.removeEventListener("keydown", handleSpaceKeyPress);
+    };
+  }, [playerState]);
   
   useEffect(() => {
     if(currMusic){
@@ -77,10 +79,6 @@ const MusicCard = () => {
       player.playVideo();
   }
 
-  const handleEnd = () =>{
-    setCurrDuration(totalDuration);
-  }
-
   const opts = {
     height: '0',
     width: '0',
@@ -104,8 +102,8 @@ const MusicCard = () => {
       opts={opts}
       onReady={handleReady}
       onStateChange={handleStateChange}
-      onEnd={handleEnd}
     />}
+    
       <div className="image">
         {currMusic && <img
           alt="Music Art"
@@ -125,6 +123,13 @@ const MusicCard = () => {
           className="seek_slider"
           onChange={seekTo}
         />
+        <SeekBarUpdater
+        player={player}
+        playerState={playerState}
+        totalDuration={totalDuration}
+        setCurrDuration={setCurrDuration}
+        setSeekValue={setSeekValue}
+      />
         <div className="current-time">{formatTime(totalDuration)}</div>
       </div>
 
@@ -154,6 +159,27 @@ const MusicCard = () => {
       </div>
     </div>
   );
+};
+
+const SeekBarUpdater = ({ player, playerState, totalDuration, setCurrDuration, setSeekValue }) => {
+  const updateSeekBar = () => {
+    const currentTime = player.getCurrentTime();
+    if (currentTime !== null) {
+      setCurrDuration(currentTime);
+      setSeekValue((currentTime / totalDuration) * 100);
+    }
+    if (playerState === YouTube.PlayerState.PLAYING) {
+      requestAnimationFrame(updateSeekBar);
+    }
+  };
+
+  useEffect(() => {
+    if (playerState === YouTube.PlayerState.PLAYING) {
+      updateSeekBar();
+    }
+  }, [playerState, player, totalDuration, setCurrDuration, setSeekValue]);
+
+  return null; // This component doesn't render anything
 };
 
 export default MusicCard;
