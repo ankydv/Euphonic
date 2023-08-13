@@ -1,13 +1,16 @@
 import axios from "axios";
 import "../styles/musicCard.css";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useSelector } from 'react-redux';
-import YouTube from 'react-youtube';
 
 const server = process.env.REACT_APP_SERVER;
+const targetItags = [141, 251, 140, 171];
 
 const MusicCard = () => {
+
+  const audioRef = useRef();
+  const isSeekBarFocused = useRef(false);
 
   const [seekValue, setSeekValue] = useState(0);
   const currMusic = useSelector(state => state.music);
@@ -15,7 +18,9 @@ const MusicCard = () => {
   const [player, setPlayer] = useState(null);
   const [currDuration, setCurrDuration] = useState(0);
   const [totalDuration, setTotalDuration] = useState(0);
+  const [musicInfo, setMusicInfo] = useState(null);
   const [thumbUrl, setThumbUrl] = useState(currMusic?currMusic.thumbnails[0].url : null);
+  const objToStream = musicInfo ? musicInfo.streamingData.adaptiveFormats.find((obj) => targetItags.includes(obj.itag)) : null;
 
   const handleSpaceKeyPress = (event) => {
     if (event.key === " " && document.activeElement !== document.getElementById("searchInput")) {
@@ -25,6 +30,21 @@ const MusicCard = () => {
       handlePlayPause();
     }
   };
+
+  useEffect(() => {
+    const handleTimeUpdate = () => {
+      setPlayerState(
+        audioRef.current.paused ? 2 : 1
+        );
+    };
+    if(audioRef.current)
+      audioRef.current.addEventListener('timeupdate', handleTimeUpdate);
+
+    return () => {
+      if(audioRef.current)
+        audioRef.current.removeEventListener('timeupdate', handleTimeUpdate);
+    };
+  }, [audioRef.current]);
 
   useEffect(() => {
     // Add event listener when the component mounts
@@ -39,6 +59,7 @@ const MusicCard = () => {
     if(currMusic){
       axios.get(`${server}api/songinfo/${currMusic.videoId}`)
       .then((res) => {
+        setMusicInfo(res.data);
         setThumbUrl(res.data.videoDetails.thumbnail.thumbnails.pop().url);
       })
     }
@@ -46,12 +67,8 @@ const MusicCard = () => {
 
   const seekTo = (event) => {
     const newValue = parseInt(event.target.value);
-    setSeekValue(newValue);
-    if (player) {
-      const duration = player.getDuration();
-      const seekTime = (newValue / 100) * duration;
-      player.seekTo(seekTime, true);
-    }
+    const seekTime = (newValue / 100) * totalDuration;
+    player.currentTime = seekTime;
   };
 
   function formatTime(timeInSeconds) {
@@ -61,48 +78,41 @@ const MusicCard = () => {
   }
   
 
-  const handleReady = (event) => {
-    setPlayer(event.target);
+  const handleReady = () => {
+    setPlayer(audioRef.current);
     setCurrDuration(0);
     setSeekValue(0);
-    setTotalDuration(event.target.getDuration());
+    setTotalDuration(audioRef.current.duration);
+    audioRef.current.play();
   }
 
-  const handleStateChange = (event) => {
-    setPlayerState(event.target.getPlayerState());
-  }
   const handlePlayPause = () => {
-    if(playerState === YouTube.PlayerState.PLAYING){
-      player.pauseVideo();
+    if(playerState === 1){
+      player.pause();
     }
     else
-      player.playVideo();
+      player.play();
   }
 
-  const opts = {
-    height: '0',
-    width: '0',
-    playerVars: {
-      VideoPlaybackQuality:'hd1080',
-      autoplay: 1,
-      controls: 1,
-      modestbranding: 1,
-      playsinline: 0
-    }
-
+  const handleSeekBarFocus = () => {
+    isSeekBarFocused.current = true;
   };
 
+  const handleSeekBarBlur = () => {
+    isSeekBarFocused.current = false;
+  };
+  
   const playPauseBtnClass = 'fa fa-'+(playerState === 1 ? "pause" : "play");
-  const waveClass = playerState === 1 ? 'wave' : 'wave paused';
+  const waveClass = playerState !== 1 ? 'wave' : 'wave paused';
   return (
     <div className="music-card">
-     {currMusic && <YouTube // if currMusic is present then render youtube iframe
-      className="ytplayer"
-      videoId={currMusic.videoId}
-      opts={opts}
-      onReady={handleReady}
-      onStateChange={handleStateChange}
-    />}
+     {objToStream && <audio
+        src={objToStream.url}
+        className="ytplayer"
+        onLoadedMetadata={handleReady}
+        ref={audioRef}
+
+     />}
     
       <div className="image">
         {currMusic && <img
@@ -122,6 +132,11 @@ const MusicCard = () => {
           value={seekValue}
           className="seek_slider"
           onChange={seekTo}
+          onMouseDown={handleSeekBarFocus}
+          onMouseUp={handleSeekBarBlur}
+          onTouchStart={handleSeekBarFocus}
+          onTouchEnd={handleSeekBarBlur}
+    
         />
         <SeekBarUpdater
         player={player}
@@ -129,6 +144,7 @@ const MusicCard = () => {
         totalDuration={totalDuration}
         setCurrDuration={setCurrDuration}
         setSeekValue={setSeekValue}
+        isSeekBarFocused={isSeekBarFocused}
       />
         <div className="current-time">{formatTime(totalDuration)}</div>
       </div>
@@ -161,23 +177,25 @@ const MusicCard = () => {
   );
 };
 
-const SeekBarUpdater = ({ player, playerState, totalDuration, setCurrDuration, setSeekValue }) => {
+const SeekBarUpdater = ({ player, playerState, totalDuration, setCurrDuration, setSeekValue, isSeekBarFocused }) => {
   const updateSeekBar = () => {
-    const currentTime = player.getCurrentTime();
+    const currentTime = player.currentTime;
     if (currentTime !== null) {
       setCurrDuration(currentTime);
-      setSeekValue((currentTime / totalDuration) * 100);
+      if(!isSeekBarFocused.current){
+        setSeekValue((currentTime / totalDuration) * 100);
+      }
     }
-    if (playerState === YouTube.PlayerState.PLAYING) {
+    if (playerState === 1) {
       requestAnimationFrame(updateSeekBar);
     }
   };
 
   useEffect(() => {
-    if (playerState === YouTube.PlayerState.PLAYING) {
+    if (playerState === 1) {
       updateSeekBar();
     }
-  }, [playerState, player, totalDuration, setCurrDuration, setSeekValue]);
+  }, [playerState, player, totalDuration, setCurrDuration, setSeekValue, isSeekBarFocused]);
 
   return null; // This component doesn't render anything
 };

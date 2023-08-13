@@ -68,17 +68,20 @@
   border-radius: 40%;
   background: radial-gradient(#b01de8, #f34235);
   animation: spin 3000ms infinite linear;
+  animation-play-state: paused;
 }
 .music-card > .wave:nth-child(2) {
   top: 2%;
   animation: spin 4000ms infinite linear;
+  animation-play-state: paused;
 }
 .music-card > .wave:nth-child(3) {
   top: 2%;
   animation: spin 5000ms infinite linear;
+  animation-play-state: paused;
 }
 .music-card > .paused, .music-card> .paused:nth-child(3){
-  animation-play-state: paused;
+  animation-play-state: running;
 }
 
 .buttons {
