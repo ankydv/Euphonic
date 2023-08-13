@@ -8,7 +8,7 @@ router = APIRouter()
 @router.get('/charts')
 def getCharts():
     try:
-        return yt.get_charts('IN')
+        return yt.get_charts()
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
