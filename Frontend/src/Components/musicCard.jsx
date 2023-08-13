@@ -65,6 +65,16 @@ const MusicCard = () => {
     }
     }, [currMusic])
 
+    useEffect(() => {
+      if ('mediaSession' in navigator && musicInfo) {
+        navigator.mediaSession.metadata = new MediaMetadata({
+          title: musicInfo.videoDetails.title,
+          artist: musicInfo.videoDetails.author,
+          artwork: [{ src: thumbUrl, type: 'image/png' }],
+        });
+      }
+    }, [musicInfo])
+
   const seekTo = (event) => {
     const newValue = parseInt(event.target.value);
     const seekTime = (newValue / 100) * totalDuration;
@@ -123,6 +133,12 @@ const MusicCard = () => {
       <div className={waveClass}></div>
       <div className={waveClass}></div>
       <div className={waveClass}></div>
+      {musicInfo &&
+      <section className="player__body">
+        <p className="title">{musicInfo.videoDetails.title}</p>
+        <p className="subtitle">{musicInfo.videoDetails.author}</p>
+      </section>
+      } 
       <div className="slider_container">
       <div className="current-time">{formatTime(currDuration)}</div>
         <input
