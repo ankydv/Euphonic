@@ -24,7 +24,7 @@ function executeRequest(url, method = 'GET', headers = {}, data = null, timeout 
     return axios(config);
 }
 
-const endpoint = '/youtubei/v1/player';
+const endpoint = 'https://www.youtube.com/youtubei/v1/player';
 const apiKey = process.env.REACT_APP_YT_API_KEY;  // Replace with your actual API key
 
 const baseQuery = {
