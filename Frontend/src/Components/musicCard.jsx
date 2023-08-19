@@ -3,6 +3,7 @@ import "../styles/musicCard.css";
 
 import { useState, useEffect, useRef } from "react";
 import { useSelector } from 'react-redux';
+import getMusicInfo from "./helpers/music_info";
 
 const server = process.env.REACT_APP_SERVER;
 const targetItags = [141, 251, 140, 171];
@@ -57,11 +58,19 @@ const MusicCard = () => {
   
   useEffect(() => {
     if(currMusic){
-      axios.get(`${server}api/songinfo/${currMusic.videoId}`)
-      .then((res) => {
-        setMusicInfo(res.data);
-        setThumbUrl(res.data.videoDetails.thumbnail.thumbnails.pop().url);
+      // axios.get(`${server}api/songinfo/${currMusic.videoId}`)
+      // .then((res) => {
+      //   setMusicInfo(res.data);
+      //   setThumbUrl(res.data.videoDetails.thumbnail.thumbnails.pop().url);
+      // })
+      getMusicInfo(currMusic.videoId)
+      .then(response => {
+          setMusicInfo(response.data)
+          setThumbUrl(response.data.videoDetails.thumbnail.thumbnails.pop().url);
       })
+      .catch(error => {
+          console.error('Request error:', error.message);
+      });
     }
     }, [currMusic])
 
