@@ -36,6 +36,7 @@ const SearchBar = () => {
 
   const handleSubmit = (event) => {
     if (event) event.preventDefault();
+    console.log(searchValue)
     if (searchParams.get("q") !== searchValue)
       setSearchParams({ q: searchValue });
     setIsFocus(false);
@@ -67,12 +68,13 @@ const SearchBar = () => {
             />
           </NavLink>
         </form>
-        {searchValue && (
+        {searchValue.trim() && (
           <ResultBox
             searchValue={searchValue}
-            setSearchValue={setSearchValue}
-            handleSubmit={handleSubmit}
+            setSearchParams={setSearchParams}
             isFocus={isFocus}
+            setIsFocus={setIsFocus}
+            setSearchValue={setSearchValue}
           />
         )}
         <button type="submit" onClick={handleSubmit} className="icon">
@@ -83,7 +85,7 @@ const SearchBar = () => {
   );
 };
 
-const ResultBox = ({ searchValue, setSearchValue, handleSubmit, isFocus }) => {
+const ResultBox = ({ searchValue,setSearchParams, setSearchValue, isFocus, setIsFocus }) => {
   const [suggestions, setSuggestions] = useState();
 
   useEffect(() => {
@@ -96,7 +98,8 @@ const ResultBox = ({ searchValue, setSearchValue, handleSubmit, isFocus }) => {
 
   const handleClick = (value) => {
     setSearchValue(value);
-    handleSubmit();
+    setIsFocus(false);
+    setSearchParams({ q: value });
   };
 
   return (
