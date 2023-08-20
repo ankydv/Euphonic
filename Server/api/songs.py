@@ -2,6 +2,7 @@ from fastapi import APIRouter, HTTPException
 
 import pytube
 from pytube import exceptions
+from ytmusicapi import YTMusic;
 
 router = APIRouter()
 
@@ -16,14 +17,11 @@ def getSongInfo(id: str):
     except exceptions.RegexMatchError as e:
         raise HTTPException(status_code=400, detail='Invalid Format of song/video ID')
 
-# sub_router = APIRouter()
+@router.get('/watchlist/{videoId}')
+def getWatchList(videoId:str):
+    yt = YTMusic()
+    try:
+        return yt.get_watch_playlist(videoId)
+    except Exception as e:
+         raise HTTPException(status_code=400, detail=str(e))
 
-# @sub_router.get("/title")
-# def getSongTitle(id: str):
-#     return pytube.YouTube(f'v={id}').title
-
-# @sub_router.get("/streaming_data")
-# def getStreaming_data(id: str):
-#     return pytube.YouTube(f'v={id}').streaming_data
-
-# router.include_router(sub_router, prefix="/songinfo/{id}", tags=["songinfo"])
