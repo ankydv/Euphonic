@@ -1,25 +1,102 @@
-.searchBar {
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;700&display=swap');
+
+.searchContainer {
   background: linear-gradient(
     90.1deg,
     #fca7a7 -63.02%,
     rgba(255, 255, 255, 0.63) 90.43%
   );
   border: 0px;
-  border-radius: 100px;
-
   left: 50%;
-
   width: 40%;
-  height: 50%;
+  height: 55px;
   max-width: 500px;
-}
-
-button{
-  left: 60%;
-}
-
-button, .searchBar{
   position: absolute;
-  top: 50%;
+  top: 65%;
   transform: translate(-50%, -50%);
+  max-width: 450px;
+}
+
+.searchContainer .searchInput{
+  background: transparent;
+  width: calc(100% - 55px - 10px);
+  height: 100%;
+  margin-right: 55px;
+  border-radius: 5px;
+  /* position: relative; */
+  /* box-shadow: 0px 1px 5px 3px rgba(0,0,0,0.12); */
+}
+ form{
+  height: 100%;
+  width: 100%;
+}
+
+.searchInput input{
+  background: linear-gradient(
+    90.1deg,
+    #fca7a7 -63.02%,
+    rgba(255, 255, 255, 0.63) 90.43%
+  );
+  padding: 0 5px 0 5px;
+  height: 100%;
+  width: 100%;
+  outline: none;
+  border: none;
+  border-radius: 5px;
+  font-size: 18px;
+}
+
+input:focus{
+  background-color: white;
+  border-radius: 5px 5px 0 0;
+  box-shadow: 0px 1px 5px rgba(0,0,0,0.1);
+}
+
+.searchInput .resultBox{
+  display: none;
+  background: linear-gradient(
+    90.1deg,
+    #fca7a7 -63.02%,
+    rgba(255, 255, 255, 1) 90.43%
+  );
+  height: auto;
+  padding: 0;
+  opacity: 1;
+  max-height: 280px;
+  overflow: hidden;
+  padding: 10px 8px;
+  width: calc(100% - 5px);
+  pointer-events: auto;
+}
+
+.resultBox.visible{
+  display: block;
+}
+
+.resultBox li{
+  font-size: large;
+  list-style: none;
+  padding: 8px 12px;
+  width: 100%;
+  cursor: default;
+  border-radius: 3px;
+}
+
+.resultBox li:hover{
+  background: white;
+}
+
+.searchInput .icon{
+  background: inherit;
+  border: none;
+  position: absolute;
+  right: 0px;
+  top: 0px;
+  height: 55px;
+  width: 55px;
+  text-align: center;
+  line-height: 55px;
+  font-size: 20px;
+  color: #644bff;
+  cursor: pointer;
 }

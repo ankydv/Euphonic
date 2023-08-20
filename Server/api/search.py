@@ -12,3 +12,11 @@ def search(q:str, type:str=None):
         return res
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
+
+@router.get('/searchSuggestions/{q}')
+def getSearchSuggestions(q:str, detail:bool=True):
+    try:
+        res = yt.get_search_suggestions(q,detailed_runs=detail)
+        return res
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=str(e))
