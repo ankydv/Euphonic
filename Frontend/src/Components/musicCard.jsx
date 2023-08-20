@@ -20,7 +20,7 @@ const MusicCard = () => {
   const [currDuration, setCurrDuration] = useState(0);
   const [totalDuration, setTotalDuration] = useState(0);
   const [musicInfo, setMusicInfo] = useState(null);
-  const [thumbUrl, setThumbUrl] = useState(currMusic?currMusic.thumbnails[0].url : null);
+  const [thumbUrl, setThumbUrl] = useState(currMusic.thumbnails?currMusic.thumbnails[0].url : null);
   const objToStream = musicInfo ? musicInfo.streamingData.adaptiveFormats.find((obj) => targetItags.includes(obj.itag)) : null;
 
   const handleSpaceKeyPress = (event) => {

@@ -6,3 +6,12 @@ export const sendMusic = (music) => {
         })
     }
 }
+
+export const sendQueue = (queue) => {
+    return (dispatch) => {
+        dispatch({
+            type: 'sendQueue',
+            payload: queue
+        })
+    }
+}
