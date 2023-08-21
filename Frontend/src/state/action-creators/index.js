@@ -15,3 +15,12 @@ export const sendQueue = (queue) => {
         })
     }
 }
+
+export const sendQueueIndex = (index) => {
+    return (dispatch) => {
+        dispatch({
+            type: 'sendQueueIndex',
+            payload: index
+        })
+    }
+}

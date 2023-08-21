@@ -1,10 +1,11 @@
 import { combineReducers } from "redux";
 import musicReducer from "./musicReducer";
-import queueReducer from "./queueReducer"
+import queueReducer, { queueIndexReducer } from "./queueReducer"
 
 const reducers = combineReducers({
     music:musicReducer,
-    queue:queueReducer
+    queue:queueReducer,
+    queueIndex:queueIndexReducer
 })
 
 export default reducers;

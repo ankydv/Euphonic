@@ -10,22 +10,21 @@ import { actionCreators } from '../state/index';
 const server = process.env.REACT_APP_SERVER;
 
 const Queue = () => {
-  const [currentIndex, setCurrentIndex] = useState(0);
   const currMusic = useSelector((state) => state.music);
-  // const [queue, setQueue] = useState([]);
   const queue = useSelector(state => state.queue);
+  const currentIndex = useSelector(state => state.queueIndex);
 
   const dispatch = useDispatch();
-  const { sendQueue, sendMusic } = bindActionCreators(actionCreators, dispatch);
+  const { sendQueue, sendMusic,sendQueueIndex } = bindActionCreators(actionCreators, dispatch);
 
   const handleNextSong = () => {
-    setCurrentIndex((prevIndex) => prevIndex + 1);
+    sendQueueIndex((prevIndex) => prevIndex + 1);
     handlePlay(currentIndex+1);
   };
 
   const handlePlay = (index) =>{
     sendMusic(queue[index]);
-    setCurrentIndex(index);
+    sendQueueIndex(index);
   }
 
   useEffect(() => {
@@ -36,7 +35,7 @@ const Queue = () => {
       axios.get(`${server}api/watchlist/${currMusic.videoId}`)
       .then((res) => {
         sendQueue(res.data.tracks);
-        setCurrentIndex(0);
+        sendQueueIndex(0);
       })
     }
   }, [currMusic,queue]);
