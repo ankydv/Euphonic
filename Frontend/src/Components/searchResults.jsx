@@ -52,7 +52,7 @@ const SearchResults = () =>{
     }, [searchQuery]);
 
     return(
-        <div className="music-recommendation">
+        <div className="music-recommendation routes">
             <h2>{searchHeading}</h2>
             {/* {searchedSongs!=null && <MusicCards title = "Songs" dataSet={searchedSongs} />}
             {searchedAlbums!=null && <MusicCards title = "Albums" dataSet={searchedAlbums} />}

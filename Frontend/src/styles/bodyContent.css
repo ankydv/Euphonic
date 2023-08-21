@@ -1,9 +1,21 @@
+.bodyContent-inactive {
+  display: grid;
+  gap:1%;
+  margin-left: 1vw;
+  transition: 200ms;
+  grid-template-columns: 0px 3fr;
+}
+
 .bodyContent {
   display: grid;
   grid-template-columns: auto 3fr auto;
   gap:1%;
   margin-left: 1vw;
   transition: 200ms;
+}
+.routes{
+  height: calc(100vh - var(--music-card-top));
+  overflow-y: auto;
 }
 
 @media (max-width: 500px){

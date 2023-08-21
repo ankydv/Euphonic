@@ -3,6 +3,8 @@
     padding: 20px;
     width: 400px;
     top:var(--music-card-top);
+    height: calc(100vh - var(--music-card-top) - 7vh);
+    overflow: auto;
     position: sticky;
   }
   

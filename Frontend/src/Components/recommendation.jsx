@@ -21,7 +21,7 @@ const MusicRecommendation = () => {
   }, [])
 
   return (
-    <div className="music-recommendation">
+    <div className="music-recommendation routes">
         {
         charts!==null &&
         Object.entries(charts).map(([chartKey, chartData], index) => (
