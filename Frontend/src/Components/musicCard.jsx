@@ -151,6 +151,9 @@ const MusicCard = () => {
     handleNext();
   }
 
+  navigator.mediaSession.setActionHandler('nexttrack', handleNext);
+  navigator.mediaSession.setActionHandler('previoustrack', handlePrev);
+
   const playPauseBtnClass = "fa fa-" + (playerState === 1 ? "pause" : "play");
   const waveClass = playerState !== 1 ? "wave" : "wave paused";
   return (
