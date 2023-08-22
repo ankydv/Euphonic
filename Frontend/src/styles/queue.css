@@ -7,6 +7,9 @@
     overflow: auto;
     position: sticky;
   }
+  .up-next-container li:hover{
+    background-color: #f16fa3;
+  }
   
   .up-next-list {
     list-style: none;
@@ -24,6 +27,29 @@
   
   .up-next-list li.active {
     background-color: #f0f0f0;
+  }
+
+  .song-info-container{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: row;
+    gap: 10px;
+  }
+
+  .song-info-container > .image{
+    position: relative;
+    width: 50px;
+  }
+  .song-info-container > .image:before{
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 50px;
+    height: 50px;
+    background: rgba(0, 0, 0, 0.5); /* Adjust the color and opacity as needed */
+    border-radius: 50%;
   }
   
   .song-info {

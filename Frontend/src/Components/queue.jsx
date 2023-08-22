@@ -6,6 +6,7 @@ import axios from "axios";
 import { useDispatch } from 'react-redux';
 import { bindActionCreators } from "redux";
 import { actionCreators } from '../state/index';
+import PlayPause from "./playPause";
 
 const server = process.env.REACT_APP_SERVER;
 
@@ -46,9 +47,13 @@ const Queue = () => {
       <ul className="up-next-list">
         {queue.map((song, index) => (
           <li key={index} className={index === currentIndex ? "active" : ""} onClick={() => handlePlay(index)}>
+            <div className="song-info-container">
+              <img className = "image" src={song.thumbnail[0].url}></img>
+              {currentIndex === index? <PlayPause toggle = {true}></PlayPause> : null}
             <div className="song-info">
-              <span className="song-title">{song.title}</span>
+              <span className="song-title">{song.title}</span><br/>
               <span className="song-artist">{song.artists[0].name}</span>
+            </div>
             </div>
           </li>
         ))}
