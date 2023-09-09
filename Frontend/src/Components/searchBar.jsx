@@ -87,13 +87,26 @@ const SearchBar = () => {
 
 const ResultBox = ({ searchValue,setSearchParams, setSearchValue, isFocus, setIsFocus }) => {
   const [suggestions, setSuggestions] = useState();
+  const [delayedSearchValue, setDelayedSearchValue] = useState('');
 
   useEffect(() => {
-    if (searchValue) {
-      axios.get(`${server}api/searchSuggestions/${searchValue}`).then((res) => {
-        setSuggestions(res.data);
-      });
-    }
+    // Clear the previous timeout
+    const timeoutId = setTimeout(() => {
+      // Check if delayedSearchValue is not empty before making the API call
+      if (delayedSearchValue) {
+        axios.get(`${server}api/searchSuggestions/${delayedSearchValue}`)
+          .then((res) => {
+            setSuggestions(res.data);
+          });
+      }
+    }, 250); // Adjust the delay time as needed (e.g., 500 milliseconds)
+
+    // Cleanup the timeout on component unmount or when searchValue changes
+    return () => clearTimeout(timeoutId);
+  }, [delayedSearchValue]);
+
+  useEffect(() => {
+    setDelayedSearchValue(searchValue);
   }, [searchValue]);
 
   const handleClick = (value) => {
