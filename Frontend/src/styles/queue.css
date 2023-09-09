@@ -39,25 +39,30 @@
 
   .song-info-container > .image{
     position: relative;
-    width: 50px;
+    background-color: black;
   }
-  .song-info-container > .image:before{
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 50px;
+  .song-info-container img{
     height: 50px;
-    background: rgba(0, 0, 0, 0.5); /* Adjust the color and opacity as needed */
-    border-radius: 50%;
+    width: 50px;
   }
-  
+
+  .song-info-container img.active{
+    opacity: 0.5;
+  }
+
   .song-info {
     flex: 1;
+    max-width: 300px;
   }
   
   .song-title {
     font-weight: bold;
+  }
+  .song-title,.song-artist{
+    display: block;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
   
   .song-artist {

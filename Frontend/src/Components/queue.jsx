@@ -18,11 +18,6 @@ const Queue = () => {
   const dispatch = useDispatch();
   const { sendQueue, sendMusic,sendQueueIndex } = bindActionCreators(actionCreators, dispatch);
 
-  const handleNextSong = () => {
-    sendQueueIndex((prevIndex) => prevIndex + 1);
-    handlePlay(currentIndex+1);
-  };
-
   const handlePlay = (index) =>{
     sendMusic(queue[index]);
     sendQueueIndex(index);
@@ -48,22 +43,18 @@ const Queue = () => {
         {queue.map((song, index) => (
           <li key={index} className={index === currentIndex ? "active" : ""} onClick={() => handlePlay(index)}>
             <div className="song-info-container">
-              <img className = "image" src={song.thumbnail[0].url}></img>
+              <div className="image">
+              <img className={index === currentIndex ? "active" : ""} src={song.thumbnail[0].url}></img>
+              </div>
               {currentIndex === index? <PlayPause toggle = {true}></PlayPause> : null}
             <div className="song-info">
-              <span className="song-title">{song.title}</span><br/>
+              <span className="song-title">{song.title}</span>
               <span className="song-artist">{song.artists[0].name}</span>
             </div>
             </div>
           </li>
         ))}
       </ul>
-      <button
-        onClick={handleNextSong}
-        disabled={currentIndex === queue.length - 1}
-      >
-        Next Song
-      </button>
     </div>
   );
 };
