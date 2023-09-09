@@ -16,6 +16,21 @@
 .routes{
   height: calc(100vh - var(--music-card-top));
   overflow-y: auto;
+  padding-left: 3%;
+}
+
+.navigation{
+  display: flex;
+  justify-content: flex-end;
+  gap:10px;
+  position: sticky;
+  z-index: 1;
+  top:5vh;
+  margin-right: 4%;
+}
+
+.button:hover{
+  cursor: pointer;
 }
 
 @media (max-width: 500px){
