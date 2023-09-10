@@ -168,7 +168,7 @@ const MusicCard = () => {
         />
       )}
 
-      <div className="image">
+      <div className="thumbnail">
         {currMusic && <img alt="Music Art" src={thumbUrl} />}
       </div>
       <div className={waveClass}></div>

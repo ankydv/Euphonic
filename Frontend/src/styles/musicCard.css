@@ -36,7 +36,7 @@
     top:0;
   }
 } */
-.music-card > .image img {
+.music-card > .thumbnail img {
   position: relative;
   /* left: 0; */
   /* top: 0; */
@@ -45,7 +45,7 @@
   aspect-ratio: 1/1;
   width: 100%;
 }
-.music-card > .image:after {
+.music-card > .thumbnail:after {
   height: var(--after-img-height);
   content: "";
   left: 0;

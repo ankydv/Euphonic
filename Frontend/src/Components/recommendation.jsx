@@ -6,17 +6,21 @@ import { useDispatch } from 'react-redux';
 import { bindActionCreators } from "redux";
 import { actionCreators } from '../state/index';
 import axios from "axios";
+import { sample_dataset } from "./helpers/sample";
 
  const server = process.env.REACT_APP_SERVER;
 
 const MusicRecommendation = () => {
 
-  const [charts, setCharts] = useState(null);
+  const [charts, setCharts] = useState(sample_dataset);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
+    setIsLoading(true);
     axios.get(`${server}api/charts`)
     .then((res) => {
       setCharts(res.data);
+      setIsLoading(false);
     })
   }, [])
 
@@ -28,7 +32,8 @@ const MusicRecommendation = () => {
           chartData.items && <MusicCards
            key={index} 
            title={chartKey} 
-           dataSet={chartData.items} />
+           dataSet={chartData.items}
+           isLoading={isLoading} />
         ))}
     </div>
   );
@@ -36,7 +41,7 @@ const MusicRecommendation = () => {
 
 export default MusicRecommendation;
 
-const MusicCardItem = ({ music }) => {
+const MusicCardItem = ({ music, isLoading }) => {
   const dispatch = useDispatch();
   const { sendMusic } = bindActionCreators(actionCreators, dispatch);
 
@@ -45,8 +50,29 @@ const MusicCardItem = ({ music }) => {
       sendMusic(music)
   }
 
-  const imgClass = music.resultType == 'artist' ? "img-container artist" : "img-container";
+  const imgClass = music.resultType == 'artist' ? "image shimmer artist" : "image shimmer";
   return (
+    isLoading ?
+    <div className="music-card-item shimmer-container">
+      <div className={imgClass}/>
+      <div className="music-details">
+      <div className="song-title shimmer" />
+        {music.artists && (
+          <div className="song-artist shimmer" />
+        )}
+      </div>
+      <div className="onCardButton" onClick={() => handlePlay(music)}>
+        <ul className="list list--buttons">
+          <li>
+            {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
+            <a className="list__link">
+              <i className="fa fa-play"></i>
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>
+    :
     <div className="music-card-item">
       <div className={imgClass}>
         <img src={
@@ -81,13 +107,29 @@ const MusicCardItem = ({ music }) => {
   );
 };
 
-const MusicCards = ({ title, dataSet }) => {
+const MusicCards = ({ title, dataSet, isLoading }) => {
   return (
+    isLoading ? 
+    <div className="music-cards-container shimmer-container">
+      <div className="heading shimmer"/>
+      <div className="music-cards shimmer-container">
+        {dataSet.map((music, index) => (
+          <MusicCardItem
+            key={index}
+            music={music}
+            isLoading={true}
+            // handlePlay={handlePlay} // Pass the handlePlay function from parent component
+          />
+        ))}
+      </div>
+    </div>
+    :
     <div className="music-cards-container">
       <h2>{title}</h2>
       <div className="music-cards">
         {dataSet.map((music, index) => (
           <MusicCardItem
+            isLoading={false}
             key={index}
             music={music}
             // handlePlay={handlePlay} // Pass the handlePlay function from parent component
