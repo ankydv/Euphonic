@@ -60,7 +60,7 @@ const SearchResults = () => {
   return (
     <div className="music-recommendation">
       <h2>{searchHeading}</h2>
-      {searchResponse != null &&
+      {searchResponse != null && searchQuery &&
         searchResponse.map((category, index) => (
           <MusicCards
             key={index}
