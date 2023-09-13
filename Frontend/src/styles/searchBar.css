@@ -46,7 +46,7 @@
   font-size: 18px;
 }
 
-input:focus{
+.searchInput input:focus{
   background-color: white;
   border-radius: 5px 5px 0 0;
   box-shadow: 0px 1px 5px rgba(0,0,0,0.1);
