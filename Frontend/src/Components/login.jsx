@@ -1,22 +1,49 @@
-import React from "react";
+import React, { useState } from "react";
 import "../styles/login.css";
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch } from 'react-redux';
 import { login } from "../state/action-creators";
+import axios from 'axios';
+
+const  SERVER = process.env.REACT_APP_AUTH_SERVER;
 
 const Login = () => {
+
+  const [credential, setCredential] = useState({email:"",password:""})
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
   // const {login} = bindActionCreators(actionCreators,dispatch);
 
-  const handleLogin = (event) => {
+  const authenticateLogin = async () => {
+    const response = await fetch(`${SERVER}api/auth/login`, {
+      method: "POST",
+      headers: {
+        "Content-Type":"application/json",
+      },
+      body: JSON.stringify({email:credential.email,password:credential.password}),
+    });
+    const json = await response.json();
+    if(json.success){
+      localStorage.setItem('token',json.authtoken);
+      dispatch(login(json.authtoken)); 
+      console.log('success');
+      return true;
+    }
+    else{
+      console.log('invalid credentials');
+      return false;
+    }
+  }
+
+  const handleLogin = async (event) => {
     event.preventDefault();
-    // Perform authentication logic (e.g., API call) to get a token
-    const authToken = 'yourAuthToken'; // Replace with the actual token
-    dispatch(login(authToken)); // Dispatch the login action directly
-    localStorage.setItem('token',authToken);
-    navigate('/');
+    const res = await authenticateLogin();
+    if(res)
+      navigate('/');
+  };
+  const onChange = (e) => {
+    setCredential({ ...credential, [e.target.id]: e.target.value });
   };
 
   return (
@@ -37,7 +64,9 @@ const Login = () => {
               <input
                 type="text"
                 className="form-control"
+                id="email"
                 placeholder="Username"
+                onChange={onChange}
               />
             </div>
             <div className="input-group mb-3">
@@ -49,7 +78,9 @@ const Login = () => {
               <input
                 type="text"
                 className="form-control"
+                id="password"
                 placeholder="Password"
+                onChange={onChange}
               />
             </div>
             <button type="submit" className="btn btn-secondary btn-block">
