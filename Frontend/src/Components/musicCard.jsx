@@ -61,7 +61,7 @@ const MusicCard = () => {
         player.pause();
       navigate('/login');
     }
-    else
+    else if(currDuration)
       player.play();
   },[isLoggedIn])
 
