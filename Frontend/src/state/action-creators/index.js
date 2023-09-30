@@ -24,3 +24,20 @@ export const sendQueueIndex = (index) => {
         })
     }
 }
+
+export const login = (token) => {
+    return (dispatch) => {
+        dispatch({
+            type: 'LOGIN',
+            payload: token,
+        })
+    }
+  };
+  
+  export const logout = () => {
+    return (dispatch) => {
+        dispatch({
+            type: 'LOGOUT',
+        })
+    }
+  };

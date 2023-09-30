@@ -1,8 +1,24 @@
 import React from "react";
 import "../styles/login.css";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { useDispatch } from 'react-redux';
+import { login } from "../state/action-creators";
 
 const Login = () => {
+
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  // const {login} = bindActionCreators(actionCreators,dispatch);
+
+  const handleLogin = (event) => {
+    event.preventDefault();
+    // Perform authentication logic (e.g., API call) to get a token
+    const authToken = 'yourAuthToken'; // Replace with the actual token
+    dispatch(login(authToken)); // Dispatch the login action directly
+    localStorage.setItem('token',authToken);
+    navigate('/');
+  };
+
   return (
       <div className="form-box">
         <div className="header-form">
@@ -11,7 +27,7 @@ const Login = () => {
           </h4>
         </div>
         <div className="body-form">
-          <form>
+          <form onSubmit={handleLogin}>
             <div className="input-group mb-3">
               <div className="input-group-prepend">
                 <span className="input-group-text">
@@ -36,7 +52,7 @@ const Login = () => {
                 placeholder="Password"
               />
             </div>
-            <button type="button" className="btn btn-secondary btn-block">
+            <button type="submit" className="btn btn-secondary btn-block">
               LOGIN
             </button>
             <div className="message">
