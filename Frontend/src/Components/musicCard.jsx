@@ -56,8 +56,11 @@ const MusicCard = () => {
   };
 
   useEffect(() => {
-    if(!isLoggedIn)
-      navigate('/login')
+    if(!isLoggedIn){
+      if(currDuration)
+        player.pause();
+      navigate('/login');
+    }
     else
       player.play();
   },[isLoggedIn])
