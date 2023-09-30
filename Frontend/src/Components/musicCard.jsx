@@ -7,6 +7,7 @@ import getMusicInfo from "./helpers/music_info";
 import { bindActionCreators } from "redux";
 import { actionCreators } from "../state";
 import { sendMusic } from "../state/action-creators";
+import { useNavigate } from "react-router-dom";
 
 const server = process.env.REACT_APP_SERVER;
 const targetItags = [141, 251, 140, 171];
@@ -14,6 +15,9 @@ const targetItags = [141, 251, 140, 171];
 const MusicCard = () => {
   const audioRef = useRef();
   const isSeekBarFocused = useRef(false);
+
+  const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
+  const navigate = useNavigate();
 
   const [seekValue, setSeekValue] = useState(0);
   const currMusic = useSelector((state) => state.music);
@@ -34,7 +38,10 @@ const MusicCard = () => {
     : null;
 
   const dispatch = useDispatch();
-  const { sendQueueIndex,sendMusic } = bindActionCreators(actionCreators, dispatch);
+  const { sendQueueIndex, sendMusic } = bindActionCreators(
+    actionCreators,
+    dispatch
+  );
 
   const handleSpaceKeyPress = (event) => {
     if (
@@ -47,6 +54,13 @@ const MusicCard = () => {
       handlePlayPause();
     }
   };
+
+  useEffect(() => {
+    if(!isLoggedIn)
+      navigate('/login')
+    else
+      player.play();
+  },[isLoggedIn])
 
   useEffect(() => {
     const handleTimeUpdate = () => {
@@ -116,13 +130,13 @@ const MusicCard = () => {
     setCurrDuration(0);
     setSeekValue(0);
     setTotalDuration(audioRef.current.duration);
-    audioRef.current.play();
+    if (isLoggedIn) audioRef.current.play();
   };
 
   const handlePlayPause = () => {
     if (playerState === 1) {
       player.pause();
-    } else player.play();
+    } else if (isLoggedIn) player.play();
   };
 
   const handleSeekBarFocus = () => {
@@ -134,14 +148,14 @@ const MusicCard = () => {
   };
 
   const handleNext = () => {
-    if (queue.length > queueIndex+1) {
+    if (queue.length > queueIndex + 1) {
       sendMusic(queue[queueIndex + 1]);
       sendQueueIndex(queueIndex + 1);
     }
   };
 
   const handlePrev = () => {
-    if (queueIndex>0) {
+    if (queueIndex > 0) {
       sendMusic(queue[queueIndex - 1]);
       sendQueueIndex(queueIndex - 1);
     }
@@ -149,10 +163,10 @@ const MusicCard = () => {
 
   const handleEnd = () => {
     handleNext();
-  }
+  };
 
-  navigator.mediaSession.setActionHandler('nexttrack', handleNext);
-  navigator.mediaSession.setActionHandler('previoustrack', handlePrev);
+  navigator.mediaSession.setActionHandler("nexttrack", handleNext);
+  navigator.mediaSession.setActionHandler("previoustrack", handlePrev);
 
   const playPauseBtnClass = "fa fa-" + (playerState === 1 ? "pause" : "play");
   const waveClass = playerState !== 1 ? "wave" : "wave paused";
