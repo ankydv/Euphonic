@@ -6,6 +6,7 @@
     height: calc(100vh - var(--music-card-top) - 7vh);
     overflow: auto;
     position: sticky;
+    overflow-x: hidden;
   }
   .up-next-container li:not(.shimmer-li):hover{
     background-color: #f16fa3;

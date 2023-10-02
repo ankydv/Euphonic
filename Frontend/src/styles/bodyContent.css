@@ -1,11 +1,6 @@
-.bodyContent-inactive {
-  display: grid;
-  gap:1%;
-  margin-left: 1vw;
-  transition: 200ms;
-  grid-template-columns: 0px 3fr;
+.bodyContent.noMusic{
+  grid-template-columns: 1fr;
 }
-
 .bodyContent {
   position: relative;
   top: 2vh;
@@ -15,6 +10,7 @@
   margin-left: 1vw;
   transition: 200ms;
 }
+
 .routes{
   height: calc(100vh - var(--music-card-top));
   overflow-y: auto;

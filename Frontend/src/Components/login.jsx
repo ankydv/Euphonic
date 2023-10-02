@@ -76,7 +76,7 @@ const Login = () => {
                 </span>
               </div>
               <input
-                type="text"
+                type="password"
                 className="form-control"
                 id="password"
                 placeholder="Password"

@@ -12,14 +12,16 @@ import {
 
 const BodyContent = () => {
   const currMusic = useSelector((state) => state.music);
-  // const bodyClass = `${currMusic ? "bodyContent" : "inactive-bodyContent"}`;
+  const bodyClass = `bodyContent ${currMusic ? "" : "noMusic"}`;
 
   const history = useNavigate();
   const location = useLocation();
   const isNotHome = location.pathname !== "/";
   return (
-    <div className='bodyContent'>
+    <div className={bodyClass}>
+      <div>
       {currMusic && <MusicCard />}
+      </div>
       <div className="routes">
         {isNotHome && (
           <div className="navigation">
@@ -40,7 +42,9 @@ const BodyContent = () => {
         )}
         <MyRoutes />
       </div>
+      <div>
       {currMusic && <Queue />}
+      </div>
     </div>
   );
 };

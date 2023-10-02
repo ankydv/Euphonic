@@ -125,7 +125,9 @@ const MusicCards = ({ title, dataSet, isLoading }) => {
     </div>
     :
     <div className="music-cards-container">
-      <h2>{title}</h2>
+      <div className="musicCards-header">
+      <h2>{title}</h2><a href="#">View All</a>
+      </div>
       <div className="music-cards">
         {dataSet.map((music, index) => (
           <MusicCardItem
