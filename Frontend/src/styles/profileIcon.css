@@ -13,8 +13,10 @@
   justify-content: center;
   flex-direction: column;
 
-  height: 65%;
-  aspect-ratio: 1/1.5;
+  height: 80%;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: rgb(212, 206, 206);
 }
 
 .headIcon {
