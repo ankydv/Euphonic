@@ -11,6 +11,7 @@ import { useNavigate } from "react-router-dom";
 
 const server = process.env.REACT_APP_SERVER;
 const targetItags = [141, 251, 140, 171];
+const host = process.env.REACT_APP_AUTH_SERVER;
 
 const MusicCard = () => {
   const audioRef = useRef();
@@ -127,6 +128,18 @@ const MusicCard = () => {
       .padStart(2, "0");
     return `${minutes}:${seconds}`;
   }
+  const addToHistory = async (music) => {
+    //to do api call
+    const response = await fetch(`${host}api/songs/addhistory`, {
+      method: "POST",
+
+      headers: {
+        "Content-Type": "application/json",
+        "auth-token": localStorage.getItem("token"),
+      },
+      body: JSON.stringify({ music }),
+    });
+  };
 
   const handleReady = () => {
     setPlayer(audioRef.current);
@@ -134,6 +147,7 @@ const MusicCard = () => {
     setSeekValue(0);
     setTotalDuration(audioRef.current.duration);
     if (isLoggedIn) audioRef.current.play();
+    addToHistory(currMusic);
   };
 
   const handlePlayPause = () => {
