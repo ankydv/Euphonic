@@ -48,6 +48,7 @@ const ProfileIcon = () => {
       {currUser && <h3>{currUser['name'].charAt(0).toUpperCase()}</h3>}
     </div>
     <button onClick={handleLogout}>Logout</button>
+    <Link to='/history'>History</Link>
     </>
     :
     <Link to='/login'>Login</Link>

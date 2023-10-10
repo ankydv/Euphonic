@@ -4,6 +4,7 @@ import MusicRecommendation from "./Components/recommendation";
 import SearchResults from './Components/searchResults';
 import Login from './Components/login';
 import Signup from './Components/Signup';
+import History from './Components/History';
 
 const MyRoutes = () => {
   return (
@@ -12,6 +13,7 @@ const MyRoutes = () => {
         <Route path="/search" element={<SearchResults />}/>
         <Route path='/login' Component={Login} />
         <Route path='/signup' Component={Signup} />
+        <Route path='/history' Component={History} />
       </Routes>
   );
 };
