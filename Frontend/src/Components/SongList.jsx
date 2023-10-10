@@ -9,18 +9,18 @@ import PlayPause from "./playPause";
 
 const server = process.env.REACT_APP_SERVER;
 
-const SongList = ({title, list, isLoading, }) => {
+const SongList = ({ title, list, isLoading }) => {
   const currMusic = useSelector((state) => state.music);
 
   const dispatch = useDispatch();
-  const { sendMusic } = bindActionCreators(
-    actionCreators,
-    dispatch
-  );
+  const { sendMusic } = bindActionCreators(actionCreators, dispatch);
 
   const handlePlay = (index) => {
     sendMusic(list[index]);
   };
+  useEffect(() => {
+    console.log(list);
+  }, [list]);
 
   return isLoading ? (
     <div className="song-list-container shimmer-container">
@@ -40,34 +40,42 @@ const SongList = ({title, list, isLoading, }) => {
       </ul>
     </div>
   ) : (
-    <div className="song-list-container">
-      <h2>{title}</h2>
-      <ul className="song-list-list">
-        {list.map((song, index) => (
-          <li
-            key={index}
-            className={song.videoId === currMusic.videoId ? "active" : ""}
-            onClick={() => handlePlay(index)}
-          >
-            <div className="song-info-container">
-              <div className="image">
-                <img
-                  className={song.videoId === currMusic.videoId ? "active" : ""}
-                  src={song.thumbnail[0].url}
-                ></img>
+    list != [] && (
+      <div className="song-list-container">
+        <h2>{title}</h2>
+        <ul className="song-list-list">
+          {list.map((song, index) => (
+            <li key={index} onClick={() => handlePlay(index)}>
+              <div className="song-info-container">
+                <div className="image">
+                  <img
+                    className={
+                      currMusic && song.music.videoId === currMusic.videoId
+                        ? "active"
+                        : ""
+                    }
+                    src={
+                      song.music.thumbnails
+                        ? song.music.thumbnails[0].url
+                        : song.music.thumbnail && song.music.thumbnail[0].url
+                    }
+                  ></img>
+                </div>
+                {currMusic && song.music.videoId === currMusic.videoId && (
+                  <PlayPause toggle={true}></PlayPause>
+                )}
+                <div className="song-info">
+                  <span className="song-title">{song.music.title}</span>
+                  <span className="song-artist">
+                    {song.music.artists[0].name}
+                  </span>
+                </div>
               </div>
-              {song.videoId === currMusic.videoId ? (
-                <PlayPause toggle={true}></PlayPause>
-              ) : null}
-              <div className="song-info">
-                <span className="song-title">{song.title}</span>
-                <span className="song-artist">{song.artists[0].name}</span>
-              </div>
-            </div>
-          </li>
-        ))}
-      </ul>
-    </div>
+            </li>
+          ))}
+        </ul>
+      </div>
+    )
   );
 };
 

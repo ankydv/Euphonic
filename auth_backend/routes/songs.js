@@ -21,16 +21,29 @@ router.post('/addhistory',fetchuser, async (req, res) => {
   try {
     const jsonData = req.body;
 
-    // Create a new History document
-    const history = new History({
-      music: jsonData.music,
-      user: req.user.id,
-    });
+    foundData = await History.findOne({ "music.videoId": jsonData.music.videoId })
 
-    // Save the document to the database
-    const savedHistory = await history.save();
-
-    res.json(savedHistory);
+      if (foundData) {
+        // Data with the specified videoId was found
+        console.log(foundData);
+        foundData.date = Date.now();
+        await foundData.save();
+        console.log(foundData);
+        
+      } else {
+        // No data with the specified videoId was found
+        const history = new History({
+          music: jsonData.music,
+          user: req.user.id,
+        });
+    
+        // Save the document to the database
+        const savedHistory = await history.save();
+    
+        res.json(savedHistory);
+      }
+ 
+    
   } catch (error) {
     console.error(error.message);
     res.status(500).send('Internal Server Error');

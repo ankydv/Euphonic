@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import SongList from './SongList'
 import { useSelector } from 'react-redux';
 import axios from 'axios';
@@ -6,15 +6,23 @@ import axios from 'axios';
 const server = process.env.REACT_APP_AUTH_SERVER;
 
 const History = () => {
-    const queue = useSelector((state) => state.queue);
-    const header = {
-        "auth-token" : localStorage.getItem('token')
+  const [history, setHistory] = useState([]);
+    // const queue = useSelector((state) => state.queue);
+    const config = {
+        headers: {"auth-token" : localStorage.getItem('token')}
     }
     useEffect(() => {
-        axios.get(`${server}api/songs/fetchhistory`,configs={header: header})
-    })
+      axios.get(`${server}api/songs/fetchhistory`, config)
+        .then((res) => {
+          // console.log(typeof(['ankit','dfnks']))
+          setHistory(res.data) // Update the history state with res.data
+        })
+        .catch((error) => {
+          console.error("Error fetching history:", error);
+        }); 
+    }, []);
   return (
-    <SongList title="History" isLoading={false} list={queue} />
+    <SongList title="History" isLoading={false} list={history} />
   )
 }
 

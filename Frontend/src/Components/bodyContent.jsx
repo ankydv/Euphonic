@@ -14,7 +14,7 @@ const BodyContent = () => {
   const currMusic = useSelector((state) => state.music);
   const bodyClass = `bodyContent ${currMusic ? "" : "noMusic"}`;
 
-  const history = useNavigate();
+  const navigate = useNavigate();
   const location = useLocation();
   const isNotHome = location.pathname !== "/";
   return (
@@ -29,14 +29,14 @@ const BodyContent = () => {
               className="button"
               size={30}
               color="#f52a99"
-              onClick={() => history(-1)}
+              onClick={() => navigate(-1)}
             ></BsFillArrowLeftCircleFill>
 
             <BsFillArrowRightCircleFill
               className="button"
               size={30}
               color="#f52a99"
-              onClick={() => history(1)}
+              onClick={() => navigate(1)}
             ></BsFillArrowRightCircleFill>
           </div>
         )}
