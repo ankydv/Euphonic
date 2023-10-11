@@ -6,6 +6,8 @@ import axios from 'axios';
 const server = process.env.REACT_APP_AUTH_SERVER;
 
 const History = () => {
+  const currMusic = useSelector(state => state.music);
+  const historyChange = useSelector(state => state.addHistoryResponse);
   const [history, setHistory] = useState([]);
     // const queue = useSelector((state) => state.queue);
     const config = {
@@ -20,7 +22,7 @@ const History = () => {
         .catch((error) => {
           console.error("Error fetching history:", error);
         }); 
-    }, []);
+    }, [historyChange]);
   return (
     <SongList title="History" isLoading={false} list={history} />
   )

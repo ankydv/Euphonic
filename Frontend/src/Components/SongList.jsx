@@ -59,7 +59,7 @@ const SongList = ({ title, list, isLoading }) => {
                         ? song.music.thumbnails[0].url
                         : song.music.thumbnail && song.music.thumbnail[0].url
                     }
-                  ></img>
+                  ></img>l
                 </div>
                 {currMusic && song.music.videoId === currMusic.videoId && (
                   <PlayPause toggle={true}></PlayPause>

@@ -39,7 +39,7 @@ const MusicCard = () => {
     : null;
 
   const dispatch = useDispatch();
-  const { sendQueueIndex, sendMusic } = bindActionCreators(
+  const { sendQueueIndex, sendMusic, sendAddHistoryResponse } = bindActionCreators(
     actionCreators,
     dispatch
   );
@@ -139,6 +139,7 @@ const MusicCard = () => {
       },
       body: JSON.stringify({ music }),
     });
+    sendAddHistoryResponse(response);
   };
 
   const handleReady = () => {
