@@ -41,3 +41,12 @@ export const login = (token) => {
         })
     }
   };
+
+  export const sendAddHistoryResponse = (index) => {
+    return (dispatch) => {
+        dispatch({
+            type: 'sendAddHistoryResponse',
+            payload: index
+        })
+    }
+}
