@@ -1,6 +1,6 @@
 .song-list-container {
     align-self: flex-start;
-    padding: 20px;
+    /* padding: 20px; */
     /* width: 400px; */
     top:var(--music-card-top);
     /* height: calc(100vh - var(--music-card-top) - 7vh); */
