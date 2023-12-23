@@ -16,7 +16,7 @@ const SongList = ({ title, list, isLoading }) => {
   const { sendMusic } = bindActionCreators(actionCreators, dispatch);
 
   const handlePlay = (index) => {
-    sendMusic(list[index]);
+    sendMusic(list[index].music);
   };
   useEffect(() => {
     console.log(list);
