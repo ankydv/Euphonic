@@ -67,7 +67,7 @@ const SongList = ({ title, list, isLoading }) => {
                 <div className="song-info">
                   <span className="song-title">{song.music.title}</span>
                   <span className="song-artist">
-                    {song.music.artists[0].name}
+                    {song.music.artists[0] && song.music.artists[0].name}
                   </span>
                 </div>
               </div>
