@@ -7,6 +7,15 @@ export const sendMusic = (music) => {
     }
 }
 
+export const sendMusicInfo = (musicInfo) => {
+    return (dispatch) => {
+        dispatch({
+            type: 'sendMusicInfo',
+            payload: musicInfo
+        })
+    }
+}
+
 export const sendQueue = (queue) => {
     return (dispatch) => {
         dispatch({

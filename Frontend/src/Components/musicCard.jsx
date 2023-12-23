@@ -1,6 +1,6 @@
 import axios from "axios";
 import "../styles/musicCard.css";
-
+import React from "react";
 import { useState, useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import getMusicInfo from "./helpers/music_info";
@@ -8,6 +8,9 @@ import { bindActionCreators } from "redux";
 import { actionCreators } from "../state";
 import { sendMusic } from "../state/action-creators";
 import { useNavigate } from "react-router-dom";
+import Snackbar from '@mui/material/Snackbar';
+import MuiAlert, { AlertProps } from '@mui/material/Alert';
+
 
 const server = process.env.REACT_APP_SERVER;
 const targetItags = [141, 251, 140, 171];
@@ -28,7 +31,7 @@ const MusicCard = () => {
   const [player, setPlayer] = useState(null);
   const [currDuration, setCurrDuration] = useState(0);
   const [totalDuration, setTotalDuration] = useState(0);
-  const [musicInfo, setMusicInfo] = useState(null);
+  const musicInfo = useSelector((state) => state.musicInfo);
   const [thumbUrl, setThumbUrl] = useState(
     currMusic.thumbnails ? currMusic.thumbnails[0].url : null
   );
@@ -39,7 +42,7 @@ const MusicCard = () => {
     : null;
 
   const dispatch = useDispatch();
-  const { sendQueueIndex, sendMusic, sendAddHistoryResponse } = bindActionCreators(
+  const { sendQueueIndex, sendMusic, sendAddHistoryResponse, sendMusicInfo } = bindActionCreators(
     actionCreators,
     dispatch
   );
@@ -92,10 +95,16 @@ const MusicCard = () => {
     if (currMusic) {
       getMusicInfo(currMusic.videoId)
         .then((response) => {
-          setMusicInfo(response.data);
-          setThumbUrl(
-            response.data.videoDetails.thumbnail.thumbnails.pop().url
-          );
+          if(response.data.playabilityStatus.status == 'OK'){
+            sendMusicInfo(response.data);
+            setThumbUrl(
+              response.data.videoDetails.thumbnail.thumbnails.pop().url
+            );
+            }
+          else{
+            setOpen(true);
+            setSnackMsg(`${response.data.playabilityStatus.status}: ${response.data.playabilityStatus.reason}`);
+          }
         })
         .catch((error) => {
           console.error("Request error:", error.message);
@@ -183,6 +192,22 @@ const MusicCard = () => {
     handleNext();
   };
 
+  const Alert = React.forwardRef(function Alert(props, ref) {
+    return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
+  });
+  
+    const [open, setOpen] = useState(false);
+    const [snackMsg, setSnackMsg] = useState();
+  
+    const handleCloseSnack = (event, reason) => {
+      if (reason === 'clickaway') {
+        return;
+      }
+  
+      setOpen(false);
+    };
+  
+
   navigator.mediaSession.setActionHandler("nexttrack", handleNext);
   navigator.mediaSession.setActionHandler("previoustrack", handlePrev);
 
@@ -261,6 +286,11 @@ const MusicCard = () => {
           </li>
         </ul>
       </div>
+      <Snackbar open={open} autoHideDuration={3000} onClose={handleCloseSnack}>
+        <Alert onClose={handleCloseSnack} severity="error" sx={{  left:0,width: '300px' ,position: 'absolute', bottom: 10,}}>
+          {snackMsg}
+        </Alert>
+      </Snackbar>
     </div>
   );
 };

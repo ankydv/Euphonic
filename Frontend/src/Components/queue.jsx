@@ -12,7 +12,7 @@ const server = process.env.REACT_APP_SERVER;
 
 const Queue = () => {
   const [isLoading, setIsLoading] = useState(true);
-  const currMusic = useSelector((state) => state.music);
+  const currMusic = useSelector((state) => state.musicInfo);
   const queue = useSelector((state) => state.queue);
   const currentIndex = useSelector((state) => state.queueIndex);
 
@@ -29,14 +29,17 @@ const Queue = () => {
 
   useEffect(() => {
     const isSongInQueue = queue.some(
-      (song) => song.videoId === currMusic.videoId
+      (song) => song.videoId === currMusic.videoDetails.videoId
     );
-    if (!isSongInQueue) {
+    if (!isSongInQueue && currMusic) {
       setIsLoading(true);
-      axios.get(`${server}api/watchlist/${currMusic.videoId}`).then((res) => {
+      axios.get(`${server}api/watchlist/${currMusic.videoDetails.videoId}`).then((res) => {
         sendQueue(res.data.tracks);
         sendQueueIndex(0);
         setIsLoading(false);
+      })
+      .catch((error) => {
+        console.error("Request error:", error.message);
       });
     }
   }, [currMusic, queue]);
