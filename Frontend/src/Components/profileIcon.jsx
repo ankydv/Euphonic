@@ -32,7 +32,7 @@ const ProfileIcon = () => {
   
 
   const handleProfile = () =>{
-    window.open('https://inotebook-496bd.web.app/signup', '_blank');
+    console.log('To be developed')
   }
 
     const handleLogout = () => {
