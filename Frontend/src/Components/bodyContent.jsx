@@ -12,14 +12,16 @@ import {
 
 const BodyContent = () => {
   const currMusic = useSelector((state) => state.music);
-  const bodyClass = `${currMusic ? "bodyContent" : "inactive-bodyContent"}`;
+  const bodyClass = `bodyContent ${currMusic ? "" : "noMusic"}`;
 
-  const history = useNavigate();
+  const navigate = useNavigate();
   const location = useLocation();
   const isNotHome = location.pathname !== "/";
   return (
     <div className={bodyClass}>
+      <div>
       {currMusic && <MusicCard />}
+      </div>
       <div className="routes">
         {isNotHome && (
           <div className="navigation">
@@ -27,20 +29,22 @@ const BodyContent = () => {
               className="button"
               size={30}
               color="#f52a99"
-              onClick={() => history(-1)}
+              onClick={() => navigate(-1)}
             ></BsFillArrowLeftCircleFill>
 
             <BsFillArrowRightCircleFill
               className="button"
               size={30}
               color="#f52a99"
-              onClick={() => history(1)}
+              onClick={() => navigate(1)}
             ></BsFillArrowRightCircleFill>
           </div>
         )}
         <MyRoutes />
       </div>
+      <div>
       {currMusic && <Queue />}
+      </div>
     </div>
   );
 };

@@ -7,4 +7,14 @@ const reducer = (state = null, action) => {
     }
 }
 
+const musicInfoReducer = (state = null, action) => {
+    if(action.type === 'sendMusicInfo'){
+        return action.payload;
+    }
+    else{
+        return state;
+    }
+}
+ 
 export default reducer;
+export {musicInfoReducer};

@@ -1,11 +1,16 @@
 import { combineReducers } from "redux";
-import musicReducer from "./musicReducer";
+import musicReducer, { musicInfoReducer } from "./musicReducer";
 import queueReducer, { queueIndexReducer } from "./queueReducer"
+import authReducer from "./authReducers";
+import reducer from "./historyReducers";
 
 const reducers = combineReducers({
     music:musicReducer,
     queue:queueReducer,
-    queueIndex:queueIndexReducer
+    queueIndex:queueIndexReducer,
+    auth:authReducer,
+    addHistoryResponse:reducer,
+    musicInfo:musicInfoReducer
 })
 
 export default reducers;

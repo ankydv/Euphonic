@@ -1,19 +1,27 @@
 import axios from "axios";
 import "../styles/musicCard.css";
-
+import React from "react";
 import { useState, useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import getMusicInfo from "./helpers/music_info";
 import { bindActionCreators } from "redux";
 import { actionCreators } from "../state";
 import { sendMusic } from "../state/action-creators";
+import { useNavigate } from "react-router-dom";
+import Snackbar from '@mui/material/Snackbar';
+import MuiAlert, { AlertProps } from '@mui/material/Alert';
+
 
 const server = process.env.REACT_APP_SERVER;
 const targetItags = [141, 251, 140, 171];
+const host = process.env.REACT_APP_AUTH_SERVER;
 
 const MusicCard = () => {
   const audioRef = useRef();
   const isSeekBarFocused = useRef(false);
+
+  const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
+  const navigate = useNavigate();
 
   const [seekValue, setSeekValue] = useState(0);
   const currMusic = useSelector((state) => state.music);
@@ -23,7 +31,7 @@ const MusicCard = () => {
   const [player, setPlayer] = useState(null);
   const [currDuration, setCurrDuration] = useState(0);
   const [totalDuration, setTotalDuration] = useState(0);
-  const [musicInfo, setMusicInfo] = useState(null);
+  const musicInfo = useSelector((state) => state.musicInfo);
   const [thumbUrl, setThumbUrl] = useState(
     currMusic.thumbnails ? currMusic.thumbnails[0].url : null
   );
@@ -34,7 +42,10 @@ const MusicCard = () => {
     : null;
 
   const dispatch = useDispatch();
-  const { sendQueueIndex,sendMusic } = bindActionCreators(actionCreators, dispatch);
+  const { sendQueueIndex, sendMusic, sendAddHistoryResponse, sendMusicInfo } = bindActionCreators(
+    actionCreators,
+    dispatch
+  );
 
   const handleSpaceKeyPress = (event) => {
     if (
@@ -47,6 +58,16 @@ const MusicCard = () => {
       handlePlayPause();
     }
   };
+
+  useEffect(() => {
+    if(!isLoggedIn){
+      if(currDuration)
+        player.pause();
+      navigate('/login');
+    }
+    else if(currDuration)
+      player.play();
+  },[isLoggedIn])
 
   useEffect(() => {
     const handleTimeUpdate = () => {
@@ -74,10 +95,16 @@ const MusicCard = () => {
     if (currMusic) {
       getMusicInfo(currMusic.videoId)
         .then((response) => {
-          setMusicInfo(response.data);
-          setThumbUrl(
-            response.data.videoDetails.thumbnail.thumbnails.pop().url
-          );
+          if(response.data.playabilityStatus.status == 'OK'){
+            sendMusicInfo(response.data);
+            setThumbUrl(
+              response.data.videoDetails.thumbnail.thumbnails.pop().url
+            );
+            }
+          else{
+            setOpen(true);
+            setSnackMsg(`${response.data.playabilityStatus.status}: ${response.data.playabilityStatus.reason}`);
+          }
         })
         .catch((error) => {
           console.error("Request error:", error.message);
@@ -110,19 +137,33 @@ const MusicCard = () => {
       .padStart(2, "0");
     return `${minutes}:${seconds}`;
   }
+  const addToHistory = async (music) => {
+    //to do api call
+    const response = await fetch(`${host}api/songs/addhistory`, {
+      method: "POST",
+
+      headers: {
+        "Content-Type": "application/json",
+        "auth-token": localStorage.getItem("token"),
+      },
+      body: JSON.stringify({ music }),
+    });
+    sendAddHistoryResponse(response);
+  };
 
   const handleReady = () => {
     setPlayer(audioRef.current);
     setCurrDuration(0);
     setSeekValue(0);
     setTotalDuration(audioRef.current.duration);
-    audioRef.current.play();
+    if (isLoggedIn) audioRef.current.play();
+    addToHistory(currMusic);
   };
 
   const handlePlayPause = () => {
     if (playerState === 1) {
       player.pause();
-    } else player.play();
+    } else if (isLoggedIn) player.play();
   };
 
   const handleSeekBarFocus = () => {
@@ -134,14 +175,14 @@ const MusicCard = () => {
   };
 
   const handleNext = () => {
-    if (queue.length > queueIndex+1) {
+    if (queue.length > queueIndex + 1) {
       sendMusic(queue[queueIndex + 1]);
       sendQueueIndex(queueIndex + 1);
     }
   };
 
   const handlePrev = () => {
-    if (queueIndex>0) {
+    if (queueIndex > 0) {
       sendMusic(queue[queueIndex - 1]);
       sendQueueIndex(queueIndex - 1);
     }
@@ -149,10 +190,26 @@ const MusicCard = () => {
 
   const handleEnd = () => {
     handleNext();
-  }
+  };
 
-  navigator.mediaSession.setActionHandler('nexttrack', handleNext);
-  navigator.mediaSession.setActionHandler('previoustrack', handlePrev);
+  const Alert = React.forwardRef(function Alert(props, ref) {
+    return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
+  });
+  
+    const [open, setOpen] = useState(false);
+    const [snackMsg, setSnackMsg] = useState();
+  
+    const handleCloseSnack = (event, reason) => {
+      if (reason === 'clickaway') {
+        return;
+      }
+  
+      setOpen(false);
+    };
+  
+
+  navigator.mediaSession.setActionHandler("nexttrack", handleNext);
+  navigator.mediaSession.setActionHandler("previoustrack", handlePrev);
 
   const playPauseBtnClass = "fa fa-" + (playerState === 1 ? "pause" : "play");
   const waveClass = playerState !== 1 ? "wave" : "wave paused";
@@ -229,6 +286,11 @@ const MusicCard = () => {
           </li>
         </ul>
       </div>
+      <Snackbar open={open} autoHideDuration={3000} onClose={handleCloseSnack}>
+        <Alert onClose={handleCloseSnack} severity="error" sx={{  left:0,width: '300px' ,position: 'absolute', bottom: 10,}}>
+          {snackMsg}
+        </Alert>
+      </Snackbar>
     </div>
   );
 };

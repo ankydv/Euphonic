@@ -15,6 +15,12 @@
   display: flex;
   gap:5px;
 }
+.music-cards-container .musicCards-header{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+}
 .music-cards > .music-card-item{
   position:relative;
   padding: 10px 10px 0 10px;

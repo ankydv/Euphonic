@@ -1,40 +1,40 @@
-.up-next-container {
+.song-list-container {
     align-self: flex-start;
     /* padding: 20px; */
-    width: 400px;
+    /* width: 400px; */
     top:var(--music-card-top);
-    height: calc(100vh - var(--music-card-top) - 7vh);
+    /* height: calc(100vh - var(--music-card-top) - 7vh); */
     overflow: auto;
     position: sticky;
     overflow-x: hidden;
   }
-  .up-next-container li:not(.shimmer-li):hover{
+  .song-list-container li:not(.shimmer-li):hover{
     background-color: #f16fa3;
   }
-  .up-next-container .heading.shimmer{
+  .song-list-container .heading.shimmer{
     width: 150px;
     height: 30px;
     margin: 0.83em 0 0.83em 10px;
   }
   
-  .up-next-list {
+  .song-list-list {
     list-style: none;
     padding: 0;
     margin: 0;
   }
   
-  .up-next-list li {
+  .song-list-list li {
     display: flex;
     align-items: center;
     padding: 10px;
     cursor: pointer;
     transition: background-color 0.3s ease;
   }
-  .up-next-list li.shimmer-li{
+  .song-list-list li.shimmer-li{
     cursor: auto;
   }
   
-  .up-next-list li.active {
+  .song-list-list li.active {
     background-color: #f0f0f0;
   }
 
