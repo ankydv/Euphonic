@@ -22,3 +22,6 @@ app.get('/', async (req, res) => {
 app.listen(port, () => {
   console.log(`inotebook backend listening at http://localhost:${port}`);
 });
+
+
+export default app;
