@@ -9,11 +9,13 @@ const History = () => {
   const currMusic = useSelector(state => state.music);
   const historyChange = useSelector(state => state.addHistoryResponse);
   const [history, setHistory] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
     // const queue = useSelector((state) => state.queue);
     const config = {
         headers: {"auth-token" : localStorage.getItem('token')}
     }
     useEffect(() => {
+      setIsLoading(true);
       axios.get(`${server}api/songs/fetchhistory`, config)
         .then((res) => {
           // console.log(typeof(['ankit','dfnks']))
@@ -22,9 +24,10 @@ const History = () => {
         .catch((error) => {
           console.error("Error fetching history:", error);
         }); 
+        setIsLoading(false);
     }, [historyChange]);
   return (
-    <SongList title="History" isLoading={false} list={history} />
+    <SongList title="History" isLoading={isLoading} list={history} />
   )
 }
 

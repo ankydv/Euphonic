@@ -7,6 +7,7 @@ import { bindActionCreators } from "redux";
 import { actionCreators } from '../state/index';
 import axios from "axios";
 import { sample_dataset } from "./helpers/sample";
+import { useNavigate } from "react-router-dom";
 
  const server = process.env.REACT_APP_SERVER;
 
@@ -44,10 +45,13 @@ export default MusicRecommendation;
 const MusicCardItem = ({ music, isLoading }) => {
   const dispatch = useDispatch();
   const { sendMusic } = bindActionCreators(actionCreators, dispatch);
+  const navigate = useNavigate();
 
   const handlePlay = (music) =>{
-    // if(music.resultType=='song' || music.resultType == 'video')
+    if(music.resultType=='song' || music.resultType == 'video')
       sendMusic(music)
+    else if(music.resultType=='artist')
+    navigate(`/artist?q=${music.browseId}`);
   }
 
   const imgClass = music.resultType == 'artist' ? "image shimmer artist" : "image shimmer";
@@ -73,7 +77,7 @@ const MusicCardItem = ({ music, isLoading }) => {
       </div>
     </div>
     :
-    <div className="music-card-item">
+    <div className="music-card-item" onClick={() => handlePlay(music)}>
       <div className={imgClass}>
         <img src={
           (music.thumbnails[1])?

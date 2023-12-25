@@ -22,6 +22,10 @@ const SongList = ({ title, list, isLoading }) => {
     console.log(list);
   }, [list]);
 
+  const findSongLoc = (root) => {
+    return root.music ? root.music : root
+  }
+
   return isLoading ? (
     <div className="song-list-container shimmer-container">
       <div className="heading shimmer" />
@@ -45,29 +49,29 @@ const SongList = ({ title, list, isLoading }) => {
         <h2>{title}</h2>
         <ul className="song-list-list">
           {list.map((song, index) => (
-            <li key={index} onClick={() => handlePlay(index)}>
+            <li key={index} onClick={() => sendMusic(findSongLoc(song))}>
               <div className="song-info-container">
                 <div className="image">
                   <img
                     className={
-                      currMusic && song.music.videoId === currMusic.videoId
+                      currMusic && findSongLoc(song).videoId === currMusic.videoId
                         ? "active"
                         : ""
                     }
                     src={
-                      song.music.thumbnails
-                        ? song.music.thumbnails[0].url
-                        : song.music.thumbnail && song.music.thumbnail[0].url
+                      findSongLoc(song).thumbnails
+                        ? findSongLoc(song).thumbnails[0].url
+                        : findSongLoc(song).thumbnail && findSongLoc(song).thumbnail[0].url
                     }
                   ></img>l
                 </div>
-                {currMusic && song.music.videoId === currMusic.videoId && (
+                {currMusic && findSongLoc(song).videoId === currMusic.videoId && (
                   <PlayPause toggle={true}></PlayPause>
                 )}
                 <div className="song-info">
-                  <span className="song-title">{song.music.title}</span>
+                  <span className="song-title">{findSongLoc(song).title}</span>
                   <span className="song-artist">
-                    {song.music.artists[0] && song.music.artists[0].name}
+                    {findSongLoc(song).artists[0] && findSongLoc(song).artists[0].name}
                   </span>
                 </div>
               </div>
