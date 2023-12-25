@@ -2,6 +2,7 @@ import axios from 'axios';
 import React, { useEffect, useState } from 'react'
 import { useSearchParams } from 'react-router-dom';
 import SongList from './SongList';
+import { MusicCards } from './recommendation';
 
 const ArtistInfo = () => {
 
@@ -30,6 +31,9 @@ const ArtistInfo = () => {
   return (
     <div>
          <SongList title={name} isLoading={isLoading} list={songList} />
+         {artistinfo && <MusicCards title={'Albums'} dataSet={artistinfo.albums.results} isLoading={false} />}
+         {artistinfo && <MusicCards title={'Singles'} dataSet={artistinfo.singles.results} isLoading={false} />}
+         {artistinfo && <MusicCards title={'Videos'} dataSet={artistinfo.videos.results} isLoading={false} />}
     </div>
   )
 }

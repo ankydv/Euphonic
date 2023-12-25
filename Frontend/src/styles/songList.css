@@ -1,12 +1,6 @@
 .song-list-container {
-    align-self: flex-start;
-    /* padding: 20px; */
-    /* width: 400px; */
-    top:var(--music-card-top);
-    /* height: calc(100vh - var(--music-card-top) - 7vh); */
     overflow: auto;
-    position: sticky;
-    overflow-x: hidden;
+    position: relative;
   }
   .song-list-container li:not(.shimmer-li):hover{
     background-color: #f16fa3;
