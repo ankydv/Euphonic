@@ -31,9 +31,13 @@ const ArtistInfo = () => {
   return (
     <div>
          <SongList title={name} isLoading={isLoading} list={songList} />
-         {artistinfo && <MusicCards title={'Albums'} dataSet={artistinfo.albums.results} isLoading={false} />}
-         {artistinfo && <MusicCards title={'Singles'} dataSet={artistinfo.singles.results} isLoading={false} />}
-         {artistinfo && <MusicCards title={'Videos'} dataSet={artistinfo.videos.results} isLoading={false} />}
+         {artistinfo && 
+         <>
+         {artistinfo.albums && <MusicCards title={'Albums'} dataSet={artistinfo.albums.results} isLoading={isLoading} />}
+         {artistinfo.albums && <MusicCards title={'Singles'} dataSet={artistinfo.singles.results} isLoading={isLoading} />}
+         {artistinfo.albums && <MusicCards title={'Videos'} dataSet={artistinfo.videos.results} isLoading={isLoading} />}
+         {artistinfo.albums && <MusicCards title={'Related'} dataSet={artistinfo.related.results} isLoading={isLoading} />}
+         </>}
     </div>
   )
 }
