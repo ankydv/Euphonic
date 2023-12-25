@@ -33,9 +33,9 @@ const ArtistInfo = () => {
          <SongList title={name} isLoading={isLoading} list={songList} />
          {artistinfo && 
          <>
+         {artistinfo.albums && <MusicCards title={'Videos'} dataSet={artistinfo.videos.results} isLoading={isLoading} />}
          {artistinfo.albums && <MusicCards title={'Albums'} dataSet={artistinfo.albums.results} isLoading={isLoading} />}
          {artistinfo.albums && <MusicCards title={'Singles'} dataSet={artistinfo.singles.results} isLoading={isLoading} />}
-         {artistinfo.albums && <MusicCards title={'Videos'} dataSet={artistinfo.videos.results} isLoading={isLoading} />}
          {artistinfo.albums && <MusicCards title={'Related'} dataSet={artistinfo.related.results} isLoading={isLoading} />}
          </>}
     </div>

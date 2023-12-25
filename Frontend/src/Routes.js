@@ -6,6 +6,7 @@ import Login from './Components/login';
 import Signup from './Components/Signup';
 import History from './Components/History';
 import ArtistInfo from './Components/ArtistInfo';
+import AlbumInfo from './Components/AlbumInfo';
 
 const MyRoutes = () => {
   return (
@@ -16,6 +17,7 @@ const MyRoutes = () => {
         <Route path='/signup' Component={Signup} />
         <Route path='/history' Component={History} />
         <Route path='/artist' Component={ArtistInfo} />
+        <Route path='/album' Component={AlbumInfo} />
       </Routes>
   );
 };

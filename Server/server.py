@@ -3,7 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from dotenv import load_dotenv
 import os
 
-from api import songs, search, home, artist
+from api import songs, search, home, artist, album
 
 app = FastAPI()
 
@@ -32,3 +32,4 @@ app.include_router(songs.router, prefix=prefix, tags=["songs"])
 app.include_router(search.router, prefix=prefix, tags=["search"])
 app.include_router(home.router, prefix=prefix, tags=["home"])
 app.include_router(artist.router, prefix=prefix, tags=["artist"])
+app.include_router(album.router, prefix=prefix, tags=["album"])

@@ -42,19 +42,26 @@ const MusicRecommendation = () => {
 
 export default MusicRecommendation;
 
-const MusicCardItem = ({ music, isLoading }) => {
+const MusicCardItem = ({ music, isLoading, itemType }) => {
   const dispatch = useDispatch();
   const { sendMusic } = bindActionCreators(actionCreators, dispatch);
   const navigate = useNavigate();
 
+  const type = itemType ? itemType.toLowerCase() : null;
+  const isAlbum = music.resultType=='album' || type == 'albums';
+  const isArtist = music.resultType=='artist' || type == 'artists' || type == 'related';
+
   const handlePlay = (music) =>{
-    if(music.resultType=='song' || music.resultType == 'video' || music.videoId)
+    console.log(itemType)
+    if(type =='songs' || type == 'videos' || type == 'trending' || music.videoId)
       sendMusic(music)
-    else if(music.resultType=='artist' || music.browseId)
-    navigate(`/artist?q=${music.browseId?music.browseId:music.artists[0].id}`);
+    else if(isArtist)
+      navigate(`/artist?q=${music.browseId?music.browseId:music.artists[0].id}`);
+    else if(isAlbum)
+      navigate(`/album?q=${music.browseId}`);
   }
 
-  const imgClass = music.resultType == 'artist' ? "image shimmer artist" : "image shimmer";
+  const imgClass = isArtist ? "image shimmer artist" : "image shimmer";
   return (
     isLoading ?
     <div className="music-card-item shimmer-container">
@@ -138,6 +145,7 @@ const MusicCards = ({ title, dataSet, isLoading }) => {
             isLoading={false}
             key={index}
             music={music}
+            itemType = {title}
             // handlePlay={handlePlay} // Pass the handlePlay function from parent component
           />
         ))}
