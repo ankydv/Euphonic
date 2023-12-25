@@ -1,5 +1,5 @@
 import axios from 'axios';
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { useSearchParams } from 'react-router-dom';
 import SongList from './SongList';
 import { MusicCards } from './recommendation';
@@ -30,7 +30,7 @@ const ArtistInfo = () => {
 
   return (
     <div>
-         <SongList title={name} isLoading={isLoading} list={songList} />
+         <SongList title={name} isLoading={isLoading} list={songList} shimmerLength={5} />
          {artistinfo && 
          <>
          {artistinfo.albums && <MusicCards title={'Videos'} dataSet={artistinfo.videos.results} isLoading={isLoading} />}

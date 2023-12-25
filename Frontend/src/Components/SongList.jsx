@@ -9,7 +9,7 @@ import PlayPause from "./playPause";
 
 const server = process.env.REACT_APP_SERVER;
 
-const SongList = ({ title, list, isLoading }) => {
+const SongList = ({ title, list, isLoading, shimmerLength }) => {
   const currMusic = useSelector((state) => state.music);
 
   const dispatch = useDispatch();
@@ -30,7 +30,7 @@ const SongList = ({ title, list, isLoading }) => {
     <div className="song-list-container shimmer-container">
       <div className="heading shimmer" />
       <ul className="song-list-list">
-        {Array.apply(null, { length: 15 }).map((song, index) => (
+        {Array.apply(null, { length: shimmerLength?shimmerLength : 15 }).map((song, index) => (
           <li className="shimmer-li" key={index}>
             <div className="song-info-container">
               <div className="image shimmer"></div>

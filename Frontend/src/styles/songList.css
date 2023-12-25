@@ -1,5 +1,4 @@
 .song-list-container {
-    overflow: auto;
     position: relative;
   }
   .song-list-container li:not(.shimmer-li):hover{
