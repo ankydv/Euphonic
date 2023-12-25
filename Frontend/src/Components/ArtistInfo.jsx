@@ -11,6 +11,8 @@ const ArtistInfo = () => {
     var searchQuery = searchParams.get("q");
     const [artistinfo, setArtistInfo] = useState();
 
+    const name = artistinfo ? artistinfo.name : "Loading";
+    const songList = artistinfo ? artistinfo.songs.results : [];
     useEffect(() => {
         if (searchQuery != null) {
           setIsLoading(true);
@@ -27,7 +29,7 @@ const ArtistInfo = () => {
 
   return (
     <div>
-        {artistinfo && <SongList title={'Test'} isLoading={isLoading} list={artistinfo.songs.results} />}
+         <SongList title={name} isLoading={isLoading} list={songList} />
     </div>
   )
 }

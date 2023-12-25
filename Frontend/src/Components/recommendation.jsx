@@ -48,9 +48,9 @@ const MusicCardItem = ({ music, isLoading }) => {
   const navigate = useNavigate();
 
   const handlePlay = (music) =>{
-    if(music.resultType=='song' || music.resultType == 'video')
+    if(music.resultType=='song' || music.resultType == 'video' || music.videoId)
       sendMusic(music)
-    else if(music.resultType=='artist')
+    else if(music.resultType=='artist' || music.browseId)
     navigate(`/artist?q=${music.browseId}`);
   }
 
