@@ -51,7 +51,7 @@ const MusicCardItem = ({ music, isLoading }) => {
     if(music.resultType=='song' || music.resultType == 'video' || music.videoId)
       sendMusic(music)
     else if(music.resultType=='artist' || music.browseId)
-    navigate(`/artist?q=${music.browseId}`);
+    navigate(`/artist?q=${music.browseId?music.browseId:music.artists[0].id}`);
   }
 
   const imgClass = music.resultType == 'artist' ? "image shimmer artist" : "image shimmer";
