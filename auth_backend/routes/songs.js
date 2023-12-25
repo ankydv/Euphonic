@@ -8,7 +8,7 @@ const { body, validationResult } = require("express-validator");
 
 router.get("/fetchhistory", fetchuser, async (req, res) => {
   try {
-    const notes = await History.find({ user: req.user.id });
+    const notes = await History.find({ user: req.user.id }).sort({ date: -1 });
     res.json(notes);
   } catch (error) {
     console.error(error.message);
