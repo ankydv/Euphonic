@@ -50,7 +50,9 @@ const MusicCard = () => {
   const handleSpaceKeyPress = (event) => {
     if (
       event.key === " " &&
-      document.activeElement !== document.getElementById("searchInput")
+      ((document.activeElement.tagName.toLowerCase() === 'input' && document.activeElement.type == 'range') ||
+      document.activeElement.tagName.toLowerCase() !== 'input'
+      )
     ) {
       // Prevent default spacebar behavior (scrolling the page)
       event.preventDefault();
