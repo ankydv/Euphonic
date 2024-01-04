@@ -9,6 +9,8 @@ import {
   BsFillArrowLeftCircleFill,
   BsFillArrowRightCircleFill,
 } from "react-icons/bs";
+import MiniDrawer from "./MiniSideBar.jsx";
+import { Box } from "@mui/material";
 
 const BodyContent = () => {
   const currMusic = useSelector((state) => state.music);
@@ -18,6 +20,9 @@ const BodyContent = () => {
   const location = useLocation();
   const isNotHome = location.pathname !== "/";
   return (
+    <Box sx={{ display: 'flex' }}>
+    <MiniDrawer />
+    {/* <Box component="main" sx={{  p: 3 }}> */}
     <div className={bodyClass}>
       <div>
       {currMusic && <MusicCard />}
@@ -46,6 +51,8 @@ const BodyContent = () => {
       {currMusic && <Queue />}
       </div>
     </div>
+    {/* </Box> */}
+    </Box>
   );
 };
 
