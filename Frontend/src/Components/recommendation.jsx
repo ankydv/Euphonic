@@ -119,6 +119,9 @@ const MusicCardItem = ({ music, isLoading, itemType }) => {
 };
 
 const MusicCards = ({ title, dataSet, isLoading }) => {
+  const handleViewAll = ()=>{
+    console.log('ankit')
+  }
   return (
     isLoading ? 
     <div className="music-cards-container shimmer-container">
@@ -137,7 +140,7 @@ const MusicCards = ({ title, dataSet, isLoading }) => {
     :
     <div className="music-cards-container">
       <div className="musicCards-header">
-      <h2>{title}</h2><a href="#">View All</a>
+      <h2>{title}</h2><button onClick={handleViewAll}>View All</button>
       </div>
       <div className="music-cards">
         {dataSet.map((music, index) => (

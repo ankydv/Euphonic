@@ -18,6 +18,7 @@ const MyRoutes = () => {
         <Route path='/history' Component={History} />
         <Route path='/artist' Component={ArtistInfo} />
         <Route path='/album' Component={AlbumInfo} />
+        <Route></Route>
       </Routes>
   );
 };
