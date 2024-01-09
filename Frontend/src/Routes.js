@@ -7,6 +7,7 @@ import Signup from './Components/Signup';
 import History from './Components/History';
 import ArtistInfo from './Components/ArtistInfo';
 import AlbumInfo from './Components/AlbumInfo';
+import Test from './Components/Test';
 
 const MyRoutes = () => {
   return (
@@ -18,6 +19,7 @@ const MyRoutes = () => {
         <Route path='/history' Component={History} />
         <Route path='/artist' Component={ArtistInfo} />
         <Route path='/album' Component={AlbumInfo} />
+        <Route path='/test' Component={Test} />
       </Routes>
   );
 };
