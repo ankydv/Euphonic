@@ -3,6 +3,10 @@ dotenv.config();
 const express = require("express");
 const connectToMongo = require("./db");
 var cors = require('cors')
+var nodemailer = require("nodemailer");
+const jwt = require("jsonwebtoken");
+const User = require('./models/User');
+const createJwtToken = require('./token');
 // database connection
 connectToMongo();
 const app = express();
@@ -18,7 +22,80 @@ app.use("/api/songs", require("./routes/songs"));
 app.get('/', async (req, res) => {
   res.send('Hello')
 })
+const transporter = nodemailer.createTransport({
+  port: 465,
+  host: "smtp.gmail.com",
+  auth: {
+    user: "subhadipadhikary83@gmail.com",
+    pass: "rjly zbjd goft xkwm",
+  },
+  secure: true,
+});
 
+app.get("/users/all", async (req, res) => {
+  try {
+    const allUsers = await User.find({});
+    res.json({ users: allUsers });
+  } catch (error) {
+    console.log(error);
+    res.json({ error });
+  }
+});
+
+app.get("/users/single", async (req, res) => {
+  try {
+    const user = await User.findById(req.body.id).select("-password");
+    const token = createJwtToken(user);
+    res.json({ user, token });
+  } catch (error) {
+    console.log(error);
+    res.json({ error });
+  }
+});
+
+app.get("/api/user/mail", async (req, res) => {
+  try {
+    const email = req.body.email;
+    const user = await User.findOne({
+      email,
+    }).select("-password");
+    const token = createJwtToken(user._id);
+    const mailData = {
+      from: "subhadipadhikary83@gmail.com", // sender address
+      to: email, // list of receivers
+      subject: "Sending Email using Node.js",
+      text: "That was easy!",
+      html: `
+      link - localhost:5000/api/user/validate?token=${token}
+      `,
+    };
+    transporter.sendMail(mailData);
+    // const user = await User.findById(req.body.id).select("-password");
+    // const token = createJwtToken(user);
+    res.json({ message: "Email Sent Successfully" });
+  } catch (error) {
+    res.json({ error: error.message });
+  }
+});
+
+app.get("/api/user/validate", async (req, res) => {
+  console.log("t1");
+  try {
+    console.log("t2");
+    const token = req.query.token;
+    const payload = jwt.verify(token, "ASIUDOASNDUH(*@HQIENDQ");
+    const user = await User.findById(payload.user).select("-password");
+
+    console.log(user);
+    user.password = req.body.password;
+    console.log("user");
+    user.save();
+    res.json({ message: "Password Changed Successfully" });
+  } catch (error) {
+    console.log(error);
+    res.json({ error });
+  }
+});
 app.listen(port, () => {
   console.log(`inotebook backend listening at http://localhost:${port}`);
 });
