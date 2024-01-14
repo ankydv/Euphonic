@@ -91,7 +91,7 @@ const Login = () => {
                 <input type="checkbox" /> Remember ME
               </div>
               <div>
-                <a href="#">Forgot your password</a>
+                <a href="/resetpassword">Forgot your password</a>
               </div>
             </div>
             <div>

@@ -13,3 +13,11 @@ def getArtistInfo(id: str):
         return info
     except:
         raise HTTPException(status_code=400, detail='Something went wrong')
+    
+@router.get("/artistalbums/{id}")
+def getArtistInfo(id: str, params: str = None):
+    try:
+        info = yt.get_artist_albums(id, params)
+        return info
+    except:
+        raise HTTPException(status_code=400, detail='Something went wrong')
