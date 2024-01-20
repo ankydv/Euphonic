@@ -10,6 +10,7 @@ import { sendMusic } from "../state/action-creators";
 import { useNavigate } from "react-router-dom";
 import Snackbar from '@mui/material/Snackbar';
 import MuiAlert, { AlertProps } from '@mui/material/Alert';
+import { PiHeartStraightFill } from "react-icons/pi";
 
 
 const server = process.env.REACT_APP_SERVER;
@@ -140,17 +141,19 @@ const MusicCard = () => {
     return `${minutes}:${seconds}`;
   }
   const addToHistory = async (music) => {
-    //to do api call
-    const response = await fetch(`${host}api/songs/addhistory`, {
-      method: "POST",
-
-      headers: {
-        "Content-Type": "application/json",
-        "auth-token": localStorage.getItem("token"),
-      },
-      body: JSON.stringify({ music }),
-    });
-    sendAddHistoryResponse(response);
+    try {
+      const response = await axios.post(`${host}api/songs/addhistory`, { music }, {
+        headers: {
+          "Content-Type": "application/json",
+          "auth-token": localStorage.getItem("token"),
+        },
+      });
+  
+      sendAddHistoryResponse(response);
+    } catch (error) {
+      // Handle errors
+      console.error("Error adding to history:", error.message);
+    }
   };
 
   const handleReady = () => {
@@ -208,7 +211,27 @@ const MusicCard = () => {
   
       setOpen(false);
     };
+
+    const addToLiked = async (music) => {
+      try {
+        const response = await axios.post(`${host}api/songs/addliked`, { music }, {
+          headers: {
+            "Content-Type": "application/json",
+            "auth-token": localStorage.getItem("token"),
+          },
+        });
+        console.log('like req sent')
+      } catch (error) {
+        // Handle errors
+        console.error("Error liking:", error.message);
+      }
+    };
   
+    const handleLike = () => {
+      console.log('Like request sent 1');
+      addToLiked(currMusic);
+      console.log('Like request sent')
+    }
 
   navigator.mediaSession.setActionHandler("nexttrack", handleNext);
   navigator.mediaSession.setActionHandler("previoustrack", handlePrev);
@@ -293,6 +316,9 @@ const MusicCard = () => {
           {snackMsg}
         </Alert>
       </Snackbar>
+      <div className="liked" >
+        <PiHeartStraightFill size={35} color="red" style={{cursor:'pointer'}} onClick={() => addToLiked(currMusic)} />
+      </div>
     </div>
   );
 };

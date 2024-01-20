@@ -15,4 +15,5 @@ const SongSchema = new Schema({
   },
 });
 const History = mongoose.model("history", SongSchema);
-module.exports = History;
+const Liked = mongoose.model("liked", SongSchema);
+module.exports = {History, Liked};

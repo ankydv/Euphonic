@@ -1,5 +1,5 @@
 const express = require("express");
-const History = require("../models/songs");
+const {History, Liked} = require("../models/songs");
 const router = express.Router();
 const fetchuser = require("../middleware/fetchuser");
 const { body, validationResult } = require("express-validator");
@@ -49,6 +49,46 @@ router.post('/addhistory',fetchuser, async (req, res) => {
     res.status(500).send('Internal Server Error');
   }
 });
+
+router.get("/fetchliked", fetchuser, async (req, res) => {
+  try {
+    const items = await Liked.find({ user: req.user.id }).sort({ date: -1 });
+    res.json(items);
+  } catch (error) {
+    console.error(error.message);
+    res.status(500).send("internal server error");
+  }
+});
+//route 2 :get all the notes using:post"/api/notes/addhistory" login required
+
+router.post('/addliked',fetchuser, async (req, res) => {
+  try {
+    const jsonData = req.body;
+    console.log('called')
+    foundData = await Liked.findOne({ "music.videoId": jsonData.music.videoId })
+
+      if (foundData) {
+        console.log('Already Liked')
+      } else {
+        // No data with the specified videoId was found
+        const history = new Liked({
+          music: jsonData.music,
+          user: req.user.id,
+        });
+        console.log('liked')
+        // Save the document to the database
+        const savedHistory = await history.save();
+    
+        res.json(savedHistory);
+      }
+ 
+    
+  } catch (error) {
+    console.error(error.message);
+    res.status(500).send('Internal Server Error');
+  }
+});
+
 //route 3 : update an existing note using:post"/api/notes/updatenote" login required
 router.put("/updatenote/:id", fetchuser, async (req, res) => {
   const { title, description, tag } = req.body;
