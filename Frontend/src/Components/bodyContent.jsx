@@ -3,26 +3,37 @@ import "../styles/bodyContent.css";
 import MyRoutes from "../Routes.js";
 import { useSelector } from "react-redux";
 import Queue from "./queue";
+import { useState, useEffect } from "react";
 
 import { useLocation, useNavigate } from "react-router-dom";
 import {
   BsFillArrowLeftCircleFill,
   BsFillArrowRightCircleFill,
 } from "react-icons/bs";
+import Video from "./Video.jsx";
 
 const BodyContent = () => {
   const currMusic = useSelector((state) => state.music);
+  const musicInfo = useSelector((state) => state.musicInfo);
   const bodyClass = `bodyContent ${currMusic ? "" : "noMusic"}`;
 
   const navigate = useNavigate();
   const location = useLocation();
   const isNotHome = location.pathname !== "/";
+
+  const [isVideo, setIsVideo] = useState(false);
+
+    useEffect(() => {
+        setIsVideo(musicInfo && musicInfo.videoDetails.musicVideoType !=="MUSIC_VIDEO_TYPE_ATV");
+        // console.log(musicInfo.videoDetails.musicVideoType)
+    }, [musicInfo])
+
   return (
     <div className={bodyClass}>
       <div>
       {currMusic && <MusicCard />}
       </div>
-      <div className="routes">
+      <div className={`routes ${isVideo ? 'disable' : ''}`}>
         {isNotHome && (
           <div className="navigation">
             <BsFillArrowLeftCircleFill
@@ -41,6 +52,7 @@ const BodyContent = () => {
           </div>
         )}
         <MyRoutes />
+        {isVideo && <Video />}
       </div>
       <div>
       {currMusic && <Queue />}

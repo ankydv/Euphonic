@@ -1,0 +1,16 @@
+.video {
+    position: absolute;
+    display: flex;
+    top: 0;
+    padding:2% 0;
+    height: 100%;
+    /* transform: translate(5%,25%); */
+    /* background:rgba(0, 0, 0, 0.5); */
+    backdrop-filter: blur(20px);
+    z-index: 2;
+}
+
+.video video {
+    justify-self: center;
+    width: 100%;
+}

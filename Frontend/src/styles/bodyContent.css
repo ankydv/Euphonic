@@ -12,9 +12,14 @@
 }
 
 .routes{
+  position: relative;
   height: calc(100vh - var(--music-card-top));
   overflow-y: auto;
   padding-left: 3%;
+  overflow-x: hidden;
+}
+.routes.disable {
+  overflow: hidden;
 }
 
 .navigation{

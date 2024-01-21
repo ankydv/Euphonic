@@ -59,3 +59,20 @@ export const login = (token) => {
         })
     }
 }
+
+export const sendAudioRef = (audioRef) => {
+    return (dispatch) => {
+        dispatch({
+            type: 'sendAudioRef',
+            payload: audioRef
+        })
+    }
+}
+export const sendVideoRef = (videoRef) => {
+    return (dispatch) => {
+        dispatch({
+            type: 'sendVideoRef',
+            payload: videoRef
+        })
+    }
+}
