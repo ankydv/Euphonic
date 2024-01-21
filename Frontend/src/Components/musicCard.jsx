@@ -10,7 +10,8 @@ import { sendMusic } from "../state/action-creators";
 import { useNavigate } from "react-router-dom";
 import Snackbar from '@mui/material/Snackbar';
 import MuiAlert, { AlertProps } from '@mui/material/Alert';
-import { PiHeartStraightFill } from "react-icons/pi";
+import { PiHeartStraightFill, PiHeartStraightLight } from "react-icons/pi";
+import { ImLoop } from "react-icons/im";
 
 
 const server = process.env.REACT_APP_SERVER;
@@ -214,28 +215,56 @@ const MusicCard = () => {
 
     const addToLiked = async (music) => {
       try {
+        setIsLiked(true);
         const response = await axios.post(`${host}api/songs/addliked`, { music }, {
           headers: {
             "Content-Type": "application/json",
             "auth-token": localStorage.getItem("token"),
           },
         });
-        console.log('like req sent')
       } catch (error) {
         // Handle errors
         console.error("Error liking:", error.message);
+        setIsLiked(false);
+      }
+    };
+
+    const removeFromLiked = async (videoId) => {
+      try {
+        setIsLiked(false);
+        const response = await axios.delete(`${host}api/songs/deleteLiked/${videoId}`, {
+          headers: {
+            "Content-Type": "application/json",
+            "auth-token": localStorage.getItem("token"),
+          },
+        });
+      } catch (error) {
+        // Handle errors
+        console.error("Error liking:", error.message);
+        setIsLiked(true);
       }
     };
   
-    const handleLike = () => {
-      console.log('Like request sent 1');
-      addToLiked(currMusic);
-      console.log('Like request sent')
+    const [isLiked, setIsLiked] = useState('loading');
+    useEffect(() => {
+      setIsLiked('loading');
+      const config = {
+        headers: {"auth-token" : localStorage.getItem('token')}
     }
+      axios.get(`${host}api/songs/checkLiked/${currMusic.videoId}`, config)
+      .then(response => {
+        console.log(response.data); // This will log the result from the API
+        setIsLiked(response.data.exists);
+      })
+      .catch(error => {
+        console.error("Error making API request:", error.message);
+      });
+    }, [currMusic])
 
   navigator.mediaSession.setActionHandler("nexttrack", handleNext);
   navigator.mediaSession.setActionHandler("previoustrack", handlePrev);
 
+  
   const playPauseBtnClass = "fa fa-" + (playerState === 1 ? "pause" : "play");
   const waveClass = playerState !== 1 ? "wave" : "wave paused";
   return (
@@ -289,6 +318,10 @@ const MusicCard = () => {
 
       <div className="buttons">
         <ul className="list list--buttons" onClick={(e) => e.preventDefault()}>
+          <li className="liked list__link" >
+            {isLiked === true ? <PiHeartStraightFill size={25} color="red" style={{cursor:'pointer'}} onClick={() => removeFromLiked(currMusic.videoId)} />:
+            <PiHeartStraightLight size={25} color={isLiked === 'loading' ? "gray" : "red"} style={{cursor:'pointer'}} onClick={() => addToLiked(currMusic)} />}
+          </li>
           <li>
             {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
             <a className="list__link">
@@ -309,6 +342,9 @@ const MusicCard = () => {
               <i className="fa fa-step-forward"></i>
             </a>
           </li>
+          <li className="list__link shuffle">
+            <ImLoop size={20} />
+          </li>
         </ul>
       </div>
       <Snackbar open={open} autoHideDuration={3000} onClose={handleCloseSnack}>
@@ -316,9 +352,6 @@ const MusicCard = () => {
           {snackMsg}
         </Alert>
       </Snackbar>
-      <div className="liked" >
-        <PiHeartStraightFill size={35} color="red" style={{cursor:'pointer'}} onClick={() => addToLiked(currMusic)} />
-      </div>
     </div>
   );
 };

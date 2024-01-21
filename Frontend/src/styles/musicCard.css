@@ -237,7 +237,7 @@
   box-shadow: 0 6px 9px rgba(33, 33, 33, 0.1), 0 6px 16px rgba(33, 33, 33, 0.15);
   cursor: pointer;
 }
-.list--buttons li:nth-of-type(2) a {
+.list--buttons li:nth-of-type(3) a {
   padding-top: 0.82rem;
   padding-right: 1rem;
   padding-bottom: 0.82rem;
@@ -284,11 +284,6 @@
   left: 25px;
 }
 
-.music-card .liked {
-  opacity: 0;
-  transition: opacity 0.3s ease-in-out;
-}
-
-.music-card:hover .liked {
-  opacity: 1;
+.shuffle{
+  cursor: pointer;
 }
