@@ -1,11 +1,21 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import "../styles/video.css";
 import { useSelector } from 'react-redux';
+import { RxCross2 } from "react-icons/rx";
 
-const Video = () => {
+import { useDispatch } from "react-redux";
+import { bindActionCreators } from "redux";
+import { actionCreators } from "../state/index";
+
+const Video = ({onClose}) => {
     const musicInfo = useSelector((state) => state.musicInfo);
     const [qualities, setQualities] = useState();
     const [currFormat, setCurrFormat] = useState();
+    const videoRef = useRef(null);
+
+    const dispatch = useDispatch();
+    const {sendVideoRef} = bindActionCreators(actionCreators, dispatch);
+    const audioRef = useSelector((state) => state.audioRef);
     
     const parendDiv = document.querySelector('.routes');
     if (parendDiv) {
@@ -39,10 +49,28 @@ const Video = () => {
     useEffect(() => {
         setCurrFormat(qualities && qualities.find(obj => obj.height == 720 || obj.height == 480))
     })
+
+    useEffect(() => {
+      sendVideoRef(videoRef);
+    },[videoRef])
+    useEffect(() => {
+      console.log(audioRef.current.readyState)
+    },[audioRef])
+
+    const handleReady = () => {
+      if(audioRef.current.readyState === HTMLMediaElement.HAVE_ENOUGH_DATA && videoRef.current.readyState === HTMLMediaElement.HAVE_ENOUGH_DATA){
+        console.log('video ready')
+        audioRef.current.play();
+        videoRef.current.play();
+      }
+    }
   return (
     currFormat && 
     <div className='video'>
-        {<video  autoPlay src={currFormat.url}></video>}
+      <div className='video__controls'>
+      <RxCross2 color='red' size={25} onClick={onClose} />
+      </div>
+        {<video controls  onLoadedMetadata={handleReady} ref={videoRef} src={currFormat.url}></video>}
     </div>
   )
 }

@@ -34,6 +34,7 @@ const MusicCard = () => {
   const [currDuration, setCurrDuration] = useState(0);
   const [totalDuration, setTotalDuration] = useState(0);
   const musicInfo = useSelector((state) => state.musicInfo);
+  const videoRef = useSelector((state) => state.audioRef);
   const [thumbUrl, setThumbUrl] = useState(
     currMusic.thumbnails ? currMusic.thumbnails[0].url : null
   );
@@ -44,7 +45,7 @@ const MusicCard = () => {
     : null;
 
   const dispatch = useDispatch();
-  const { sendQueueIndex, sendMusic, sendAddHistoryResponse, sendMusicInfo } = bindActionCreators(
+  const { sendQueueIndex, sendMusic, sendAddHistoryResponse, sendMusicInfo, sendAudioRef } = bindActionCreators(
     actionCreators,
     dispatch
   );
@@ -156,13 +157,21 @@ const MusicCard = () => {
       console.error("Error adding to history:", error.message);
     }
   };
+  useEffect(() => {
+    sendAudioRef(audioRef);
+  },[audioRef])
 
   const handleReady = () => {
     setPlayer(audioRef.current);
+    sendAudioRef(audioRef);
     setCurrDuration(0);
     setSeekValue(0);
     setTotalDuration(audioRef.current.duration);
-    if (isLoggedIn) audioRef.current.play();
+    if (isLoggedIn && audioRef.current.readyState === HTMLMediaElement.HAVE_ENOUGH_DATA && videoRef.current.readyState === HTMLMediaElement.HAVE_ENOUGH_DATA){
+      console.log('audio ready')
+       audioRef.current.play();
+       videoRef.current.play();
+    }
     addToHistory(currMusic);
   };
 

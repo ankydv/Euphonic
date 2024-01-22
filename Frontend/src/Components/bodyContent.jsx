@@ -22,18 +22,23 @@ const BodyContent = () => {
   const isNotHome = location.pathname !== "/";
 
   const [isVideo, setIsVideo] = useState(false);
+  const [isVideoEnabled, setIsVideoEnabled] = useState(true);
 
     useEffect(() => {
         setIsVideo(musicInfo && musicInfo.videoDetails.musicVideoType !=="MUSIC_VIDEO_TYPE_ATV");
         // console.log(musicInfo.videoDetails.musicVideoType)
     }, [musicInfo])
 
+    const handleClose = () => {
+      setIsVideoEnabled(false);
+    };
+
   return (
     <div className={bodyClass}>
       <div>
       {currMusic && <MusicCard />}
       </div>
-      <div className={`routes ${isVideo ? 'disable' : ''}`}>
+      <div className={`routes ${isVideo && isVideoEnabled ? 'disable' : ''}`}>
         {isNotHome && (
           <div className="navigation">
             <BsFillArrowLeftCircleFill
@@ -52,7 +57,7 @@ const BodyContent = () => {
           </div>
         )}
         <MyRoutes />
-        {isVideo && <Video />}
+        {isVideo && isVideoEnabled && <Video onClose={handleClose} />}
       </div>
       <div>
       {currMusic && <Queue />}
