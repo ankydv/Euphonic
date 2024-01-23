@@ -16,6 +16,8 @@ const Video = ({onClose}) => {
     const dispatch = useDispatch();
     const {sendVideoRef} = bindActionCreators(actionCreators, dispatch);
     const audioRef = useSelector((state) => state.audioRef);
+    const isSeeking = useRef(false);
+
     
     const parendDiv = document.querySelector('.routes');
     if (parendDiv) {
@@ -38,31 +40,76 @@ const Video = ({onClose}) => {
       
           return heightA - heightB;
         });
-        console.log(sortedVideoFormats)
         return sortedVideoFormats;
       }
 
+      useEffect(() => {
+        const handleFocus = async () => {
+          if (isSeeking.current) {
+            // Avoid seeking multiple times if it's already in progress
+            return;
+          }
+
+          // Seek the video to the current audio position
+          if (audioRef.current && videoRef.current) {
+            isSeeking.current = true;
+    
+            const targetTime = audioRef.current.currentTime;
+
+            // Seek video to the dynamically updated audio current time
+            videoRef.current.currentTime = targetTime;
+    
+            // Wait for the video to be buffered to the dynamically updated audio's time
+            
+            isSeeking.current = false;
+
+          }
+        };
+        window.addEventListener('focus', handleFocus);
+        return () => {
+          window.removeEventListener('focus', handleFocus);
+        }
+      },[videoRef])
+
+      const handleWaiting = () => {
+        audioRef.current.pause();
+       };
+       const handlePlaying = (ref) => {
+         ref.current.play();
+       };
     useEffect(() => {
         setQualities(getSortedVideoAdaptiveFormats(musicInfo));
     }, [musicInfo])
 
     useEffect(() => {
-        setCurrFormat(qualities && qualities.find(obj => obj.height == 720 || obj.height == 480))
+      setCurrFormat(qualities && qualities.reduce((max, obj) => {
+        // Check if the current object's height is less than or equal to 1080
+        if (obj.height <= 1080) {
+          // Compare the height with the current maximum
+          return obj.height > max.height ? obj : max;
+        }
+        return max;
+      }, { height: 0, resolution: '' }))
     })
 
     useEffect(() => {
       sendVideoRef(videoRef);
     },[videoRef])
-    useEffect(() => {
-      console.log(audioRef.current.readyState)
-    },[audioRef])
 
     const handleReady = () => {
-      if(audioRef.current.readyState === HTMLMediaElement.HAVE_ENOUGH_DATA && videoRef.current.readyState === HTMLMediaElement.HAVE_ENOUGH_DATA){
-        console.log('video ready')
-        audioRef.current.play();
-        videoRef.current.play();
-      }
+        videoRef.current.addEventListener('waiting', handleWaiting);
+        videoRef.current.addEventListener('playing', () => handlePlaying(audioRef));
+        if (audioRef.current && audioRef.current.readyState === 4) {
+          videoRef.current.play();
+          audioRef.current.play();
+        }
+        
+      // Set up event listener for waiting to detect pauses due to slow network
+      return () => {
+        // Clean up event listeners when the component is unmounted
+          videoRef.current.removeEventListener('waiting', handleWaiting);
+          videoRef.current.removeEventListener('playing', handlePlaying);
+      };
     }
   return (
     currFormat && 
@@ -70,7 +117,7 @@ const Video = ({onClose}) => {
       <div className='video__controls'>
       <RxCross2 color='red' size={25} onClick={onClose} />
       </div>
-        {<video controls  onLoadedMetadata={handleReady} ref={videoRef} src={currFormat.url}></video>}
+        {<video onLoadedMetadata={handleReady} ref={videoRef} src={currFormat.url}></video>}
     </div>
   )
 }

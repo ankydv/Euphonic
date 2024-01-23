@@ -34,7 +34,8 @@ const MusicCard = () => {
   const [currDuration, setCurrDuration] = useState(0);
   const [totalDuration, setTotalDuration] = useState(0);
   const musicInfo = useSelector((state) => state.musicInfo);
-  const videoRef = useSelector((state) => state.audioRef);
+  const videoRef = useSelector((state) => state.videoRef);
+  const isVideo = musicInfo && musicInfo.videoDetails.musicVideoType !=="MUSIC_VIDEO_TYPE_ATV";
   const [thumbUrl, setThumbUrl] = useState(
     currMusic.thumbnails ? currMusic.thumbnails[0].url : null
   );
@@ -131,6 +132,8 @@ const MusicCard = () => {
     const newValue = parseInt(event.target.value);
     const seekTime = (newValue / 100) * totalDuration;
     player.currentTime = seekTime;
+    if(videoRef.current)
+    videoRef.current.currentTime = seekTime;
   };
 
   function formatTime(timeInSeconds) {
@@ -167,18 +170,23 @@ const MusicCard = () => {
     setCurrDuration(0);
     setSeekValue(0);
     setTotalDuration(audioRef.current.duration);
-    if (isLoggedIn && audioRef.current.readyState === HTMLMediaElement.HAVE_ENOUGH_DATA && videoRef.current.readyState === HTMLMediaElement.HAVE_ENOUGH_DATA){
-      console.log('audio ready')
-       audioRef.current.play();
-       videoRef.current.play();
-    }
+    if(!isVideo)
+    audioRef.current.play();
+    else if (videoRef.current && videoRef.current.readyState === 4) {
+      videoRef.current.play();
+      audioRef.current.play();
+  }
     addToHistory(currMusic);
   };
 
   const handlePlayPause = () => {
     if (playerState === 1) {
       player.pause();
-    } else if (isLoggedIn) player.play();
+      if(videoRef.current) videoRef.current.pause();
+    } else if (isLoggedIn) {
+      player.play();
+      if(videoRef.current) videoRef.current.play();
+    }
   };
 
   const handleSeekBarFocus = () => {
@@ -262,7 +270,6 @@ const MusicCard = () => {
     }
       axios.get(`${host}api/songs/checkLiked/${currMusic.videoId}`, config)
       .then(response => {
-        console.log(response.data); // This will log the result from the API
         setIsLiked(response.data.exists);
       })
       .catch(error => {

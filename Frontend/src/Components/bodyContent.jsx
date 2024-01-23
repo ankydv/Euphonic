@@ -26,7 +26,6 @@ const BodyContent = () => {
 
     useEffect(() => {
         setIsVideo(musicInfo && musicInfo.videoDetails.musicVideoType !=="MUSIC_VIDEO_TYPE_ATV");
-        // console.log(musicInfo.videoDetails.musicVideoType)
     }, [musicInfo])
 
     const handleClose = () => {
