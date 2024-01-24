@@ -1,8 +1,11 @@
 .video {
     position: absolute;
     display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap:20px;
     top: 0;
-    padding:2% 0;
+    padding:5% 0;
     height: 100%;
     /* transform: translate(5%,25%); */
     /* background:rgba(0, 0, 0, 0.5); */
@@ -11,8 +14,17 @@
 }
 
 .video video {
+    align-self: center;
     justify-self: center;
     width: 100%;
+}
+
+.video__controls{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 15px;
+    padding-left: 20px;
 }
 
 .video__controls svg {

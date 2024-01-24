@@ -15,6 +15,7 @@ import Video from "./Video.jsx";
 const BodyContent = () => {
   const currMusic = useSelector((state) => state.music);
   const musicInfo = useSelector((state) => state.musicInfo);
+  const videoToggles = useSelector((state) => state.videoToggles);
   const bodyClass = `bodyContent ${currMusic ? "" : "noMusic"}`;
 
   const navigate = useNavigate();
@@ -31,7 +32,9 @@ const BodyContent = () => {
     const handleClose = () => {
       setIsVideoEnabled(false);
     };
-
+   useEffect(() => {
+    console.log(videoToggles.isPictureInPicure);
+   }, [videoToggles])
   return (
     <div className={bodyClass}>
       <div>

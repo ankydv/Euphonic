@@ -12,6 +12,7 @@ import Snackbar from '@mui/material/Snackbar';
 import MuiAlert, { AlertProps } from '@mui/material/Alert';
 import { PiHeartStraightFill, PiHeartStraightLight } from "react-icons/pi";
 import { ImLoop } from "react-icons/im";
+import MaterialUISwitch from "./MaterialUI Components/Switch"
 
 
 const server = process.env.REACT_APP_SERVER;
@@ -277,6 +278,14 @@ const MusicCard = () => {
       });
     }, [currMusic])
 
+    const [isSwitchOn, setIsSwitchOn] = useState(false);
+
+  const handleSwitchChange = () => {
+    setIsSwitchOn((prev) => !prev);
+  };
+  useEffect(() => {
+    console.log(isSwitchOn)
+  },[isSwitchOn])
   navigator.mediaSession.setActionHandler("nexttrack", handleNext);
   navigator.mediaSession.setActionHandler("previoustrack", handlePrev);
 
@@ -368,6 +377,7 @@ const MusicCard = () => {
           {snackMsg}
         </Alert>
       </Snackbar>
+      <MaterialUISwitch checked={isSwitchOn} onChange={handleSwitchChange} sx={{position:'absolute', bottom:0, right:0}} />
     </div>
   );
 };

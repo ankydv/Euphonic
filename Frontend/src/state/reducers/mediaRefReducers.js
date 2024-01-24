@@ -14,5 +14,18 @@ const audioRefReducer = (state = null, action) => {
         return state;
     }
 }
-
-export {audioRefReducer, videoRefReducer}
+const videoTogglesReducer = (state = {
+    isVideoSwitchedOn: false,
+    isPictureInPicure: false,
+}, action) => {
+    if(action.type === 'sendVideoToggle'){
+        return {
+            ...state,
+            ...action.payload,
+        };
+    }
+    else{
+        return state;
+    }
+}
+export {audioRefReducer, videoRefReducer, videoTogglesReducer}

@@ -76,3 +76,11 @@ export const sendVideoRef = (videoRef) => {
         })
     }
 }
+export const sendVideoToggles = (videoToggles) => {
+    return (dispatch) => {
+        dispatch({
+            type: 'sendVideoToggles',
+            payload: videoToggles
+        })
+    }
+}

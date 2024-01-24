@@ -2,6 +2,8 @@ import React, { useEffect, useRef, useState } from 'react'
 import "../styles/video.css";
 import { useSelector } from 'react-redux';
 import { RxCross2 } from "react-icons/rx";
+import { CgMiniPlayer } from "react-icons/cg";
+import { BsArrowsFullscreen } from "react-icons/bs";
 
 import { useDispatch } from "react-redux";
 import { bindActionCreators } from "redux";
@@ -14,7 +16,7 @@ const Video = ({onClose}) => {
     const videoRef = useRef(null);
 
     const dispatch = useDispatch();
-    const {sendVideoRef} = bindActionCreators(actionCreators, dispatch);
+    const {sendVideoRef, sendVideoToggles} = bindActionCreators(actionCreators, dispatch);
     const audioRef = useSelector((state) => state.audioRef);
     const isSeeking = useRef(false);
 
@@ -90,11 +92,22 @@ const Video = ({onClose}) => {
         }
         return max;
       }, { height: 0, resolution: '' }))
-    })
+    },[qualities])
 
     useEffect(() => {
       sendVideoRef(videoRef);
     },[videoRef])
+
+    function handleEnterPiP() {
+      console.log('enter')
+      
+      sendVideoToggles({ isPictureInPicure: true });
+    }
+    
+    function handleLeavePiP() {
+      // Video exited Picture-in-Picture mode
+      sendVideoToggles({ isPictureInPicure: false });
+    }
 
     const handleReady = () => {
         videoRef.current.addEventListener('waiting', handleWaiting);
@@ -104,20 +117,39 @@ const Video = ({onClose}) => {
           audioRef.current.play();
         }
         
-      // Set up event listener for waiting to detect pauses due to slow network
+      videoRef.current.addEventListener('enterpictureinpicture', handleEnterPiP);
+      videoRef.current.addEventListener('leavepictureinpicture', handleLeavePiP);
       return () => {
         // Clean up event listeners when the component is unmounted
           videoRef.current.removeEventListener('waiting', handleWaiting);
           videoRef.current.removeEventListener('playing', handlePlaying);
+          videoRef.current.removeEventListener('enterpictureinpicture', handleEnterPiP);
+          videoRef.current.removeEventListener('leavepictureinpicture', handleLeavePiP);
       };
     }
+
+    const handleTogglePiP = async () => {
+      try {
+        if (document.pictureInPictureElement) {
+          // If already in PiP mode, exit
+          await document.exitPictureInPicture();
+        } else {
+          // Request PiP mode
+          await videoRef.current.requestPictureInPicture();
+        }
+      } catch (error) {
+        console.error('Error toggling PiP mode:', error);
+      }
+    };
   return (
     currFormat && 
     <div className='video'>
       <div className='video__controls'>
-      <RxCross2 color='red' size={25} onClick={onClose} />
+      <RxCross2 color='red' size={30} onClick={onClose} />
+      <CgMiniPlayer size={27} onClick={handleTogglePiP} />
+      <BsArrowsFullscreen size={20} />
       </div>
-        {<video onLoadedMetadata={handleReady} ref={videoRef} src={currFormat.url}></video>}
+        {<video id='videoElement' onLoadedMetadata={handleReady} ref={videoRef} src={currFormat.url}></video>}
     </div>
   )
 }
