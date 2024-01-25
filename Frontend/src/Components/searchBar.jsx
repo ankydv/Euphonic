@@ -48,7 +48,7 @@ const SearchBar = () => {
 
   const shouldNavigate = (event) => {
     event.stopPropagation();
-    if (location.pathname == "/search") event.preventDefault();
+    // if (location.pathname == "/search") event.preventDefault();
     event.stopPropagation();
   };
   return (
