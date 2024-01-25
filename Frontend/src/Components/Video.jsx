@@ -151,13 +151,29 @@ const Video = () => {
       if (isVideoPictureInPicure)
         audioRef.current.pause()
     }
+    const handleFullscreen = () => {
+      const videoElement = videoRef.current;
+  
+      if (videoElement) {
+        if (videoElement.requestFullscreen) {
+          videoElement.requestFullscreen();
+        } else if (videoElement.mozRequestFullScreen) {
+          videoElement.mozRequestFullScreen();
+        } else if (videoElement.webkitRequestFullscreen) {
+          videoElement.webkitRequestFullscreen();
+        } else if (videoElement.msRequestFullscreen) {
+          videoElement.msRequestFullscreen();
+        }
+      }
+    };
+  
   return (
     currFormat && 
     <div className={`video ${videoHide}`}>
       <div className='video__controls'>
       <RxCross2 color='red' size={30} onClick={handleTogglePiP} />
       <CgMiniPlayer size={27} onClick={handleTogglePiP} />
-      <BsArrowsFullscreen size={20} />
+      <BsArrowsFullscreen size={20} onClick={handleFullscreen} />
       </div>
         {<video id='videoElement' onPause={handlePause} onLoadedMetadata={handleReady} ref={videoRef} src={currFormat.url}></video>}
     </div>

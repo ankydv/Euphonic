@@ -14,8 +14,9 @@ const audioRefReducer = (state = null, action) => {
         return state;
     }
 }
-const isVideoSwitchedOnReducer = (state = true, action) => {
+const isVideoSwitchedOnReducer = (state = localStorage.getItem('isVideoSwitchedOn'), action) => {
     if(action.type === 'sendIsVideoSwitchedOn'){
+        localStorage.setItem('isVideoSwitchedOn', action.payload)
         return action.payload;
     }
     else{
