@@ -373,7 +373,7 @@ const MusicCard = () => {
           {snackMsg}
         </Alert>
       </Snackbar>
-      <MaterialUISwitch   checked={isVideoSwitchedOn} onChange={handleSwitchChange} sx={{position:'absolute', bottom:0, right:0}} />
+      {isVideo && <MaterialUISwitch   checked={isVideoSwitchedOn} onChange={handleSwitchChange} sx={{position:'absolute', bottom:0, right:0}} />}
     </div>
   );
 };
