@@ -18,6 +18,9 @@
     justify-self: center;
     width: 100%;
 }
+.video.hide{
+    display: none;
+}
 
 .video__controls{
     display: flex;

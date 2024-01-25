@@ -76,11 +76,19 @@ export const sendVideoRef = (videoRef) => {
         })
     }
 }
-export const sendVideoToggles = (videoToggles) => {
+export const sendIsVideoSwitchedOn = (isVideoSwitchedOn) => {
     return (dispatch) => {
         dispatch({
-            type: 'sendVideoToggles',
-            payload: videoToggles
+            type: 'sendIsVideoSwitchedOn',
+            payload: isVideoSwitchedOn
+        })
+    }
+}
+export const sendisVideoPictureInPicure = (isVideoPictureInPicure) => {
+    return (dispatch) => {
+        dispatch({
+            type: 'sendisVideoPictureInPicure',
+            payload: isVideoPictureInPicure
         })
     }
 }

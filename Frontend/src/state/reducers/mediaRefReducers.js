@@ -14,18 +14,20 @@ const audioRefReducer = (state = null, action) => {
         return state;
     }
 }
-const videoTogglesReducer = (state = {
-    isVideoSwitchedOn: false,
-    isPictureInPicure: false,
-}, action) => {
-    if(action.type === 'sendVideoToggle'){
-        return {
-            ...state,
-            ...action.payload,
-        };
+const isVideoSwitchedOnReducer = (state = true, action) => {
+    if(action.type === 'sendIsVideoSwitchedOn'){
+        return action.payload;
     }
     else{
         return state;
     }
 }
-export {audioRefReducer, videoRefReducer, videoTogglesReducer}
+const isVideoPictureInPicureReducer = (state = false, action) => {
+    if(action.type === 'sendisVideoPictureInPicure'){
+        return action.payload;
+    }
+    else{
+        return state;
+    }
+}
+export {audioRefReducer, videoRefReducer, isVideoSwitchedOnReducer, isVideoPictureInPicureReducer}

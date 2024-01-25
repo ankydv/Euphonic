@@ -6,7 +6,7 @@ import { useDispatch, useSelector } from "react-redux";
 import getMusicInfo from "./helpers/music_info";
 import { bindActionCreators } from "redux";
 import { actionCreators } from "../state";
-import { sendMusic } from "../state/action-creators";
+import { sendMusic, sendIsVideoSwitchedOn } from "../state/action-creators";
 import { useNavigate } from "react-router-dom";
 import Snackbar from '@mui/material/Snackbar';
 import MuiAlert, { AlertProps } from '@mui/material/Alert';
@@ -36,6 +36,7 @@ const MusicCard = () => {
   const [totalDuration, setTotalDuration] = useState(0);
   const musicInfo = useSelector((state) => state.musicInfo);
   const videoRef = useSelector((state) => state.videoRef);
+  const isVideoSwitchedOn = useSelector((state) => state.isVideoSwitchedOn);
   const isVideo = musicInfo && musicInfo.videoDetails.musicVideoType !=="MUSIC_VIDEO_TYPE_ATV";
   const [thumbUrl, setThumbUrl] = useState(
     currMusic.thumbnails ? currMusic.thumbnails[0].url : null
@@ -47,7 +48,7 @@ const MusicCard = () => {
     : null;
 
   const dispatch = useDispatch();
-  const { sendQueueIndex, sendMusic, sendAddHistoryResponse, sendMusicInfo, sendAudioRef } = bindActionCreators(
+  const { sendQueueIndex, sendMusic, sendAddHistoryResponse, sendMusicInfo, sendAudioRef, sendIsVideoSwitchedOn } = bindActionCreators(
     actionCreators,
     dispatch
   );
@@ -65,7 +66,6 @@ const MusicCard = () => {
       handlePlayPause();
     }
   };
-
   useEffect(() => {
     if(!isLoggedIn){
       if(currDuration)
@@ -278,14 +278,9 @@ const MusicCard = () => {
       });
     }, [currMusic])
 
-    const [isSwitchOn, setIsSwitchOn] = useState(false);
-
   const handleSwitchChange = () => {
-    setIsSwitchOn((prev) => !prev);
+    sendIsVideoSwitchedOn(!isVideoSwitchedOn)
   };
-  useEffect(() => {
-    console.log(isSwitchOn)
-  },[isSwitchOn])
   navigator.mediaSession.setActionHandler("nexttrack", handleNext);
   navigator.mediaSession.setActionHandler("previoustrack", handlePrev);
 
@@ -377,7 +372,7 @@ const MusicCard = () => {
           {snackMsg}
         </Alert>
       </Snackbar>
-      <MaterialUISwitch checked={isSwitchOn} onChange={handleSwitchChange} sx={{position:'absolute', bottom:0, right:0}} />
+      <MaterialUISwitch   checked={isVideoSwitchedOn} onChange={handleSwitchChange} sx={{position:'absolute', bottom:0, right:0}} />
     </div>
   );
 };

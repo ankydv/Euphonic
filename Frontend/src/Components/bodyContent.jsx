@@ -15,7 +15,8 @@ import Video from "./Video.jsx";
 const BodyContent = () => {
   const currMusic = useSelector((state) => state.music);
   const musicInfo = useSelector((state) => state.musicInfo);
-  const videoToggles = useSelector((state) => state.videoToggles);
+  const isVideoSwitchedOn = useSelector((state) => state.isVideoSwitchedOn);
+  const isVideoPictureInPicure = useSelector((state) => state.isVideoPictureInPicure);
   const bodyClass = `bodyContent ${currMusic ? "" : "noMusic"}`;
 
   const navigate = useNavigate();
@@ -23,24 +24,18 @@ const BodyContent = () => {
   const isNotHome = location.pathname !== "/";
 
   const [isVideo, setIsVideo] = useState(false);
-  const [isVideoEnabled, setIsVideoEnabled] = useState(true);
 
     useEffect(() => {
         setIsVideo(musicInfo && musicInfo.videoDetails.musicVideoType !=="MUSIC_VIDEO_TYPE_ATV");
     }, [musicInfo])
+    const shouldRender = isVideo && isVideoSwitchedOn;
 
-    const handleClose = () => {
-      setIsVideoEnabled(false);
-    };
-   useEffect(() => {
-    console.log(videoToggles.isPictureInPicure);
-   }, [videoToggles])
   return (
     <div className={bodyClass}>
       <div>
       {currMusic && <MusicCard />}
       </div>
-      <div className={`routes ${isVideo && isVideoEnabled ? 'disable' : ''}`}>
+      <div className={`routes ${shouldRender && !isVideoPictureInPicure ? 'disable' : ''}`}>
         {isNotHome && (
           <div className="navigation">
             <BsFillArrowLeftCircleFill
@@ -59,7 +54,7 @@ const BodyContent = () => {
           </div>
         )}
         <MyRoutes />
-        {isVideo && isVideoEnabled && <Video onClose={handleClose} />}
+        {shouldRender && <Video />}
       </div>
       <div>
       {currMusic && <Queue />}

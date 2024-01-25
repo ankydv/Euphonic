@@ -8,18 +8,21 @@ import { BsArrowsFullscreen } from "react-icons/bs";
 import { useDispatch } from "react-redux";
 import { bindActionCreators } from "redux";
 import { actionCreators } from "../state/index";
+import { useLocation } from 'react-router-dom';
 
-const Video = ({onClose}) => {
+const Video = () => {
     const musicInfo = useSelector((state) => state.musicInfo);
+    const isVideoPictureInPicure = useSelector((state) => state.isVideoPictureInPicure);
     const [qualities, setQualities] = useState();
     const [currFormat, setCurrFormat] = useState();
     const videoRef = useRef(null);
 
     const dispatch = useDispatch();
-    const {sendVideoRef, sendVideoToggles} = bindActionCreators(actionCreators, dispatch);
+    const {sendVideoRef, sendisVideoPictureInPicure} = bindActionCreators(actionCreators, dispatch);
     const audioRef = useSelector((state) => state.audioRef);
     const isSeeking = useRef(false);
-
+    const videoHide = isVideoPictureInPicure ? "hide" : "";
+    const location = useLocation();
     
     const parendDiv = document.querySelector('.routes');
     if (parendDiv) {
@@ -99,20 +102,22 @@ const Video = ({onClose}) => {
     },[videoRef])
 
     function handleEnterPiP() {
-      console.log('enter')
-      
-      sendVideoToggles({ isPictureInPicure: true });
+      sendisVideoPictureInPicure(true);
     }
     
     function handleLeavePiP() {
-      // Video exited Picture-in-Picture mode
-      sendVideoToggles({ isPictureInPicure: false });
+      sendisVideoPictureInPicure(false);
     }
-
+    useEffect(() => {
+      if(!document.pictureInPictureElement)
+      videoRef.current && videoRef.current.requestPictureInPicture()
+    },[location])
     const handleReady = () => {
         videoRef.current.addEventListener('waiting', handleWaiting);
         videoRef.current.addEventListener('playing', () => handlePlaying(audioRef));
         if (audioRef.current && audioRef.current.readyState === 4) {
+          if(audioRef.current.currentTime!==videoRef.current.currentTime)
+          videoRef.current.currentTime=audioRef.current.currentTime;
           videoRef.current.play();
           audioRef.current.play();
         }
@@ -141,15 +146,20 @@ const Video = ({onClose}) => {
         console.error('Error toggling PiP mode:', error);
       }
     };
+
+    const handlePause = () => {
+      if (isVideoPictureInPicure)
+        audioRef.current.pause()
+    }
   return (
     currFormat && 
-    <div className='video'>
+    <div className={`video ${videoHide}`}>
       <div className='video__controls'>
-      <RxCross2 color='red' size={30} onClick={onClose} />
+      <RxCross2 color='red' size={30} onClick={handleTogglePiP} />
       <CgMiniPlayer size={27} onClick={handleTogglePiP} />
       <BsArrowsFullscreen size={20} />
       </div>
-        {<video id='videoElement' onLoadedMetadata={handleReady} ref={videoRef} src={currFormat.url}></video>}
+        {<video id='videoElement' onPause={handlePause} onLoadedMetadata={handleReady} ref={videoRef} src={currFormat.url}></video>}
     </div>
   )
 }

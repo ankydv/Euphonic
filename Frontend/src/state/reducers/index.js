@@ -3,7 +3,7 @@ import musicReducer, { musicInfoReducer } from "./musicReducer";
 import queueReducer, { queueIndexReducer } from "./queueReducer"
 import authReducer from "./authReducers";
 import reducer from "./historyReducers";
-import { audioRefReducer, videoRefReducer, videoTogglesReducer } from "./mediaRefReducers";
+import { audioRefReducer, videoRefReducer, isVideoSwitchedOnReducer, isVideoPictureInPicureReducer } from "./mediaRefReducers";
 
 const reducers = combineReducers({
     music:musicReducer,
@@ -14,7 +14,8 @@ const reducers = combineReducers({
     musicInfo:musicInfoReducer,
     audioRef:audioRefReducer,
     videoRef:videoRefReducer,
-    videoToggles:videoTogglesReducer,
+    isVideoSwitchedOn:isVideoSwitchedOnReducer,
+    isVideoPictureInPicure:isVideoPictureInPicureReducer,
 })
 
 export default reducers;
