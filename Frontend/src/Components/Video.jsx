@@ -148,7 +148,7 @@ const Video = () => {
     };
 
     const handlePause = () => {
-      if (isVideoPictureInPicure)
+      if (isVideoPictureInPicure || document.fullscreenElement!=null)
         audioRef.current.pause()
     }
     const handleFullscreen = () => {
@@ -166,6 +166,10 @@ const Video = () => {
         }
       }
     };
+
+    const handleSeek = ()=>{
+      audioRef.current.currentTime = videoRef.current.currentTime;
+    }
   
   return (
     currFormat && 
@@ -175,7 +179,7 @@ const Video = () => {
       <CgMiniPlayer size={27} onClick={handleTogglePiP} />
       <BsArrowsFullscreen size={20} onClick={handleFullscreen} />
       </div>
-        {<video id='videoElement' onPause={handlePause} onLoadedMetadata={handleReady} ref={videoRef} src={currFormat.url}></video>}
+        {<video id='videoElement' onSeeked={handleSeek} onPause={handlePause} onLoadedMetadata={handleReady} ref={videoRef} src={currFormat.url}></video>}
     </div>
   )
 }
