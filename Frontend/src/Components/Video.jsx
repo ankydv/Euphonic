@@ -4,6 +4,7 @@ import { useSelector } from 'react-redux';
 import { RxCross2 } from "react-icons/rx";
 import { CgMiniPlayer } from "react-icons/cg";
 import { BsArrowsFullscreen } from "react-icons/bs";
+import CircularProgress from '@mui/material/CircularProgress';
 
 import { useDispatch } from "react-redux";
 import { bindActionCreators } from "redux";
@@ -23,6 +24,7 @@ const Video = () => {
     const isSeeking = useRef(false);
     const videoHide = isVideoPictureInPicure ? "hide" : "";
     const location = useLocation();
+    const [isWaiting, setIsWaitiing] = useState(false);
     
     const parendDiv = document.querySelector('.routes');
     if (parendDiv) {
@@ -78,9 +80,11 @@ const Video = () => {
 
       const handleWaiting = () => {
         audioRef.current.pause();
+        setIsWaitiing(true);
        };
        const handlePlaying = (ref) => {
          ref.current.play();
+         setIsWaitiing(false);
        };
     useEffect(() => {
         setQualities(getSortedVideoAdaptiveFormats(musicInfo));
@@ -183,7 +187,16 @@ const Video = () => {
       <CgMiniPlayer size={27} onClick={handleTogglePiP} />
       <BsArrowsFullscreen size={20} onClick={handleFullscreen} />
       </div>
-        {<video onEnded={handleEnd} id='videoElement' onSeeked={handleSeek} onPause={handlePause} onLoadedMetadata={handleReady} ref={videoRef} src={currFormat.url}></video>}
+        {
+          <div className='video__wrapper'>
+            <video onEnded={handleEnd} id='videoElement' onSeeked={handleSeek} onPause={handlePause} onLoadedMetadata={handleReady} ref={videoRef} src={currFormat.url}></video>
+            {isWaiting && 
+            <div className="loader__wrapper">
+              <CircularProgress className='loader' color='secondary' />
+            </div>
+            }
+          </div>
+        }
     </div>
   )
 }
