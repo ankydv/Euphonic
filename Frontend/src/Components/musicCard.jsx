@@ -200,6 +200,7 @@ const MusicCard = () => {
 
   const handleNext = () => {
     if (queue.length > queueIndex + 1) {
+      console.log('end');
       sendMusic(queue[queueIndex + 1]);
       sendQueueIndex(queueIndex + 1);
     }

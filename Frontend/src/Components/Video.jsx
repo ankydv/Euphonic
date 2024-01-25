@@ -170,6 +170,10 @@ const Video = () => {
     const handleSeek = ()=>{
       audioRef.current.currentTime = videoRef.current.currentTime;
     }
+
+    const handleEnd = () => {
+      audioRef.current.play();
+    }
   
   return (
     currFormat && 
@@ -179,7 +183,7 @@ const Video = () => {
       <CgMiniPlayer size={27} onClick={handleTogglePiP} />
       <BsArrowsFullscreen size={20} onClick={handleFullscreen} />
       </div>
-        {<video id='videoElement' onSeeked={handleSeek} onPause={handlePause} onLoadedMetadata={handleReady} ref={videoRef} src={currFormat.url}></video>}
+        {<video onEnded={handleEnd} id='videoElement' onSeeked={handleSeek} onPause={handlePause} onLoadedMetadata={handleReady} ref={videoRef} src={currFormat.url}></video>}
     </div>
   )
 }
