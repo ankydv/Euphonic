@@ -171,7 +171,7 @@ const MusicCard = () => {
     setCurrDuration(0);
     setSeekValue(0);
     setTotalDuration(audioRef.current.duration);
-    if(!isVideo)
+    if(!isVideo || !isVideoSwitchedOn)
     audioRef.current.play();
     else if (videoRef.current && videoRef.current.readyState === 4) {
       videoRef.current.play();
