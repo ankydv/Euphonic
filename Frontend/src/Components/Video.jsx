@@ -5,6 +5,7 @@ import { RxCross2 } from "react-icons/rx";
 import { CgMiniPlayer } from "react-icons/cg";
 import { BsArrowsFullscreen } from "react-icons/bs";
 import CircularProgress from '@mui/material/CircularProgress';
+import Backdrop from '@mui/material/Backdrop';
 
 import { useDispatch } from "react-redux";
 import { bindActionCreators } from "redux";
@@ -25,6 +26,7 @@ const Video = () => {
     const videoHide = isVideoPictureInPicure ? "hide" : "";
     const location = useLocation();
     const [isWaiting, setIsWaitiing] = useState(false);
+    const [isLoading, setIsLoading] = useState(true);
     
     const parendDiv = document.querySelector('.routes');
     if (parendDiv) {
@@ -52,7 +54,7 @@ const Video = () => {
 
       useEffect(() => {
         const handleFocus = async () => {
-          if (isSeeking.current) {
+          if (isSeeking.current || document.pictureInPictureElement) {
             // Avoid seeking multiple times if it's already in progress
             return;
           }
@@ -117,6 +119,7 @@ const Video = () => {
       videoRef.current && videoRef.current.requestPictureInPicture()
     },[location])
     const handleReady = () => {
+      setIsLoading(false);
         videoRef.current.addEventListener('waiting', handleWaiting);
         videoRef.current.addEventListener('playing', () => handlePlaying(audioRef));
         if (audioRef.current && audioRef.current.readyState === 4) {
@@ -178,6 +181,10 @@ const Video = () => {
     const handleEnd = () => {
       audioRef.current.play();
     }
+
+    const handleLoadStart = () => {
+      setIsLoading(true);
+    };
   
   return (
     currFormat && 
@@ -188,12 +195,17 @@ const Video = () => {
       <BsArrowsFullscreen size={20} onClick={handleFullscreen} />
       </div>
         {
-          <div className='video__wrapper'>
-            <video onEnded={handleEnd} id='videoElement' onSeeked={handleSeek} onPause={handlePause} onLoadedMetadata={handleReady} ref={videoRef} src={currFormat.url}></video>
-            {isWaiting && 
+          <div className={`video__wrapper ${isLoading?"isLoading":""}`} style={isLoading?{aspectRatio:currFormat.width/currFormat.height}:{}}>
+            <video onLoadStart={handleLoadStart} onEnded={handleEnd} id='videoElement' onSeeked={handleSeek} onPause={handlePause} onLoadedMetadata={handleReady} ref={videoRef} src={currFormat.url}></video>
+            {(isWaiting || isLoading) && 
             <div className="loader__wrapper">
+              <Backdrop
+                sx={{ color: '#fff',}}
+                open={true}
+              >
               <CircularProgress className='loader' color='secondary' />
-            </div>
+              </Backdrop>
+           </div>
             }
           </div>
         }

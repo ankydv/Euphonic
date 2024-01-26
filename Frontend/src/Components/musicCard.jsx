@@ -284,6 +284,8 @@ const MusicCard = () => {
   };
   navigator.mediaSession.setActionHandler("nexttrack", handleNext);
   navigator.mediaSession.setActionHandler("previoustrack", handlePrev);
+  navigator.mediaSession.setActionHandler("pause", handlePlayPause);
+  navigator.mediaSession.setActionHandler("play", handlePlayPause);
 
   
   const playPauseBtnClass = "fa fa-" + (playerState === 1 ? "pause" : "play");

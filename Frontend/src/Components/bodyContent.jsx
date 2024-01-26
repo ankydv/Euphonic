@@ -30,6 +30,19 @@ const BodyContent = () => {
     }, [musicInfo])
     const shouldRender = isVideo && isVideoSwitchedOn;
 
+    useEffect(() => {
+      const exitPipMode = async () => {
+        try {
+          if (document.pictureInPictureElement && !shouldRender) {
+            await document.exitPictureInPicture();
+          }
+        } catch (error) {
+          console.error('Error toggling PiP mode:', error);
+        }
+      };
+      exitPipMode();
+    }, [shouldRender]);
+
   return (
     <div className={bodyClass}>
       <div>
