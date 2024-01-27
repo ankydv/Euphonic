@@ -53,7 +53,7 @@ const MusicCard = () => {
     dispatch
   );
 
-  const handleSpaceKeyPress = (event) => {
+  const handleKeyPress = (event) => {
     if (
       event.key === " " &&
       ((document.activeElement.tagName.toLowerCase() === 'input' && document.activeElement.type == 'range') ||
@@ -64,6 +64,10 @@ const MusicCard = () => {
       event.preventDefault();
       // Toggle play/pause
       handlePlayPause();
+    }
+    else if(event.altKey && event.key === 'v'){
+      handleSwitchChange();
+      event.preventDefault();
     }
   };
   useEffect(() => {
@@ -91,10 +95,10 @@ const MusicCard = () => {
 
   useEffect(() => {
     // Add event listener when the component mounts
-    window.addEventListener("keydown", handleSpaceKeyPress);
+    window.addEventListener("keydown", handleKeyPress);
     // Clean up the event listener when the component unmounts
     return () => {
-      window.removeEventListener("keydown", handleSpaceKeyPress);
+      window.removeEventListener("keydown", handleKeyPress);
     };
   }, [playerState]);
 
@@ -200,7 +204,6 @@ const MusicCard = () => {
 
   const handleNext = () => {
     if (queue.length > queueIndex + 1) {
-      console.log('end');
       sendMusic(queue[queueIndex + 1]);
       sendQueueIndex(queueIndex + 1);
     }

@@ -38,6 +38,16 @@
 .video:hover .video__controls{
     opacity: 1;
 }
+.video__controls .quality {
+    position: relative;
+    justify-self: flex-start;
+    background-color: rgba(0,0,0,0.3);
+    border-radius: 5%;
+}
+.quality p {
+    padding: 0;
+    margin: 0;
+}
 .video__wrapper{
     position: relative;
 }
@@ -52,4 +62,11 @@
     transform: translate(-50%, -50%);
     width: 100%;
     height: 100%;
+}
+.quality__toggle__container{
+    position: absolute;
+    z-index: 1;
+    background-color: rgba(0,0,0,0.3);
+    left: 50%;
+    transform: translate(-50%, 0);
 }
