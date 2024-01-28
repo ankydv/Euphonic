@@ -6,6 +6,9 @@ import { logout } from "../state/action-creators";
 import { useDispatch } from "react-redux";
 import { useEffect, useState } from "react";
 import axios from "axios";
+import Avatar from '@mui/material/Avatar';
+import { deepPurple } from '@mui/material/colors';
+
 
 const  SERVER = process.env.REACT_APP_AUTH_SERVER;
 
@@ -45,7 +48,12 @@ const ProfileIcon = () => {
     {isLoggedIn?
     <>
     <div className="profileIcon" onClick={handleProfile}>
-      {currUser && <h3>{currUser['name'].charAt(0).toUpperCase()}</h3>}
+      {currUser && <Avatar
+        sx={{ bgcolor: deepPurple[500], cursor: 'pointer' }}
+        alt="Remy Sharp"
+        src="/broken-image.jpg"
+      >{currUser['name'].charAt(0).toUpperCase()}
+        </Avatar>}
     </div>
     <button onClick={handleLogout}>Logout</button>
     <Link to='/history'>History</Link>
