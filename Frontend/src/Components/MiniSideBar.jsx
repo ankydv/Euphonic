@@ -1,24 +1,23 @@
 import * as React from 'react';
 import Header from './header';
 import { styled, useTheme } from '@mui/material/styles';
-import Box from '@mui/material/Box';
 import MuiDrawer from '@mui/material/Drawer';
 import MuiAppBar from '@mui/material/AppBar';
-import Toolbar from '@mui/material/Toolbar';
 import List from '@mui/material/List';
 import CssBaseline from '@mui/material/CssBaseline';
-import Typography from '@mui/material/Typography';
 import Divider from '@mui/material/Divider';
 import IconButton from '@mui/material/IconButton';
-// import MenuIcon from '@mui/icons-material/Menu';
-// import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
-// import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
-import InboxIcon from '@mui/icons-material/MoveToInbox';
-import MailIcon from '@mui/icons-material/Mail';
+import { Link, useLocation } from 'react-router-dom';
+import { LuLogOut } from "react-icons/lu";
+import { FaRegHeart } from "react-icons/fa";
+import { FaHistory } from "react-icons/fa";
+import { useDispatch, useSelector } from 'react-redux';
+import { logout } from "../state/action-creators";
+import { FaAnglesRight, FaAnglesLeft } from "react-icons/fa6";
 
 const drawerWidth = 240;
 
@@ -90,6 +89,21 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' 
 export default function MiniDrawer() {
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
+  const dispatch = useDispatch();
+  const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
+
+  const routeIcons = {
+    history: FaHistory,
+    liked: FaRegHeart,
+  };
+  
+  const routes = Object.keys(routeIcons);
+  
+  // Inside your component
+  const location = useLocation();
+  
+  // Helper function to check if a route is active
+  const isActiveRoute = (route) => location.pathname.includes(route);
 
   const handleDrawerOpen = () => {
     setOpen(true);
@@ -99,48 +113,70 @@ export default function MiniDrawer() {
     setOpen(false);
   };
 
+  const handleLogout = () => {
+    dispatch(logout());
+    localStorage.removeItem('token');
+}
+
   return (
     <>
       <CssBaseline />
-      <AppBar position="fixed" open={open}>
+      <AppBar color='inherit' position="fixed" sx={{ height: 0 }} open={open}>
         <Header />
       </AppBar>
+      {isLoggedIn && 
       <Drawer variant="permanent" open={open}>
         <DrawerHeader>
-          <IconButton onClick={handleDrawerClose}>
-            {theme.direction === 'rtl' ? <p>Right</p> : <p>Left</p>}
+          <IconButton onClick={handleDrawerClose} sx={{
+            opacity: !open ? 0 : 1,
+            transition: 'opacity 0.5s ease',
+            }} >
+            <FaAnglesLeft size={20} />
           </IconButton>
         </DrawerHeader>
         <Divider />
-        <button onClick={handleDrawerOpen}>Open</button>
-        <List>
-          {['Inbox', 'Starred', 'Send email', 'Drafts'].map((text, index) => (
-            <ListItem key={text} disablePadding sx={{ display: 'block' }}>
-              <ListItemButton
-                sx={{
-                  minHeight: 48,
-                  justifyContent: open ? 'initial' : 'center',
-                  px: 2.5,
-                }}
-              >
-                <ListItemIcon
-                  sx={{
-                    minWidth: 0,
-                    mr: open ? 3 : 'auto',
-                    justifyContent: 'center',
-                  }}
-                >
-                  {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-                </ListItemIcon>
-                <ListItemText primary={text} sx={{ opacity: open ? 1 : 0 }} />
-              </ListItemButton>
-            </ListItem>
-          ))}
-        </List>
+        { <IconButton 
+          onClick={handleDrawerOpen}  
+          title='open' 
+          sx={{
+            opacity: open ? 0 : 1,
+            transition: 'opacity 0.5s ease',
+            }}>
+              <FaAnglesRight size={20} />
+        </IconButton>}
         <Divider />
         <List>
-          {['All mail', 'Trash', 'Spam'].map((text, index) => (
-            <ListItem key={text} disablePadding sx={{ display: 'block' }}>
+  {routes.map((route, index) => (
+    <ListItem key={route} disablePadding sx={{ display: 'block' }}>
+      <ListItemButton
+        component={Link} // Using Link from react-router-dom
+        to={`/${route}`} // Path to the route
+        title={route}
+        sx={{
+          minHeight: 48,
+          justifyContent: open ? 'initial' : 'center',
+          px: 2.5,
+          backgroundColor: isActiveRoute(route) ? 'rgba(0, 0, 0, 0.1)' : 'transparent', // Highlight active route
+        }}
+      >
+        <ListItemIcon
+          sx={{
+            minWidth: 0,
+            mr: open ? 3 : 'auto',
+            justifyContent: 'center',
+          }}
+        >
+          {React.createElement(routeIcons[route], {size: 20, color: isActiveRoute(route) ? 'red' : ''})}
+        </ListItemIcon>
+        <ListItemText primary={route.charAt(0).toUpperCase() + route.slice(1)} sx={{ opacity: open ? 1 : 0 }} />
+      </ListItemButton>
+    </ListItem>
+  ))}
+</List>
+        <Divider />
+        <List>
+          {['Logout'].map((text, index) => (
+            <ListItem onClick={handleLogout} key={text} disablePadding title={text} sx={{ display: 'block' }}>
               <ListItemButton
                 sx={{
                   minHeight: 48,
@@ -155,7 +191,7 @@ export default function MiniDrawer() {
                     justifyContent: 'center',
                   }}
                 >
-                  {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
+                  <LuLogOut size={25} />
                 </ListItemIcon>
                 <ListItemText primary={text} sx={{ opacity: open ? 1 : 0 }} />
               </ListItemButton>
@@ -163,6 +199,7 @@ export default function MiniDrawer() {
           ))}
         </List>
       </Drawer>
+      }
       </>
   );
 }

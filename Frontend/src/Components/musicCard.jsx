@@ -6,10 +6,9 @@ import { useDispatch, useSelector } from "react-redux";
 import getMusicInfo from "./helpers/music_info";
 import { bindActionCreators } from "redux";
 import { actionCreators } from "../state";
-import { sendMusic, sendIsVideoSwitchedOn } from "../state/action-creators";
 import { useNavigate } from "react-router-dom";
 import Snackbar from '@mui/material/Snackbar';
-import MuiAlert, { AlertProps } from '@mui/material/Alert';
+import MuiAlert from '@mui/material/Alert';
 import { PiHeartStraightFill, PiHeartStraightLight } from "react-icons/pi";
 import { ImLoop } from "react-icons/im";
 import MaterialUISwitch from "./MaterialUI Components/Switch"
@@ -379,7 +378,10 @@ const MusicCard = () => {
           {snackMsg}
         </Alert>
       </Snackbar>
-      {isVideo && <MaterialUISwitch   checked={isVideoSwitchedOn} onChange={handleSwitchChange} sx={{position:'absolute', bottom:0, right:0}} />}
+      {isVideo && 
+      <div className="switch__container">
+        <MaterialUISwitch   checked={isVideoSwitchedOn} onChange={handleSwitchChange} />
+      </div>}
     </div>
   );
 };

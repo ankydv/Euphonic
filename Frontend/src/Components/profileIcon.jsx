@@ -1,13 +1,12 @@
 import "../styles/variables.css";
 import "../styles/profileIcon.css";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
-import { logout } from "../state/action-creators";
-import { useDispatch } from "react-redux";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import Avatar from '@mui/material/Avatar';
 import { deepPurple } from '@mui/material/colors';
+import Button from '@mui/material/Button';
 
 
 const  SERVER = process.env.REACT_APP_AUTH_SERVER;
@@ -15,9 +14,8 @@ const  SERVER = process.env.REACT_APP_AUTH_SERVER;
 const ProfileIcon = () => {
 
   const [currUser, setCurrUser] = useState(null);
-
   const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
-  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   useEffect(() => {
     const headers = {
@@ -33,36 +31,23 @@ const ProfileIcon = () => {
       });
   }, [isLoggedIn]);
   
-
   const handleProfile = () =>{
     console.log('To be developed')
   }
 
-    const handleLogout = () => {
-        dispatch(logout());
-        localStorage.removeItem('token');
-    }
-
   return (
-    <>
-    {isLoggedIn?
-    <>
     <div className="profileIcon" onClick={handleProfile}>
-      {currUser && <Avatar
+      {
+      isLoggedIn ? currUser && <Avatar
         sx={{ bgcolor: deepPurple[500], cursor: 'pointer' }}
         alt="Remy Sharp"
         src="/broken-image.jpg"
       >{currUser['name'].charAt(0).toUpperCase()}
-        </Avatar>}
+        </Avatar>
+        :
+        <Button variant="outlined" color="secondary" size="large" sx={{color:'white', borderColor: 'white'}} onClick={(() => navigate('/login'))} >Login</Button>
+        }
     </div>
-    <button onClick={handleLogout}>Logout</button>
-    <Link to='/history'>History</Link>
-    <Link to='/liked'>Liked Songs</Link>
-    </>
-    :
-    <Link to='/login'>Login</Link>
-    }
-    </>
   );
 };
 
