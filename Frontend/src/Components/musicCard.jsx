@@ -6,10 +6,13 @@ import { useDispatch, useSelector } from "react-redux";
 import getMusicInfo from "./helpers/music_info";
 import { bindActionCreators } from "redux";
 import { actionCreators } from "../state";
-import { sendMusic } from "../state/action-creators";
+import { sendMusic, sendIsVideoSwitchedOn } from "../state/action-creators";
 import { useNavigate } from "react-router-dom";
 import Snackbar from '@mui/material/Snackbar';
 import MuiAlert, { AlertProps } from '@mui/material/Alert';
+import { PiHeartStraightFill, PiHeartStraightLight } from "react-icons/pi";
+import { ImLoop } from "react-icons/im";
+import MaterialUISwitch from "./MaterialUI Components/Switch"
 
 
 const server = process.env.REACT_APP_SERVER;
@@ -32,6 +35,9 @@ const MusicCard = () => {
   const [currDuration, setCurrDuration] = useState(0);
   const [totalDuration, setTotalDuration] = useState(0);
   const musicInfo = useSelector((state) => state.musicInfo);
+  const videoRef = useSelector((state) => state.videoRef);
+  const isVideoSwitchedOn = useSelector((state) => state.isVideoSwitchedOn);
+  const isVideo = musicInfo && musicInfo.videoDetails.musicVideoType !=="MUSIC_VIDEO_TYPE_ATV";
   const [thumbUrl, setThumbUrl] = useState(
     currMusic.thumbnails ? currMusic.thumbnails[0].url : null
   );
@@ -42,12 +48,12 @@ const MusicCard = () => {
     : null;
 
   const dispatch = useDispatch();
-  const { sendQueueIndex, sendMusic, sendAddHistoryResponse, sendMusicInfo } = bindActionCreators(
+  const { sendQueueIndex, sendMusic, sendAddHistoryResponse, sendMusicInfo, sendAudioRef, sendIsVideoSwitchedOn } = bindActionCreators(
     actionCreators,
     dispatch
   );
 
-  const handleSpaceKeyPress = (event) => {
+  const handleKeyPress = (event) => {
     if (
       event.key === " " &&
       ((document.activeElement.tagName.toLowerCase() === 'input' && document.activeElement.type == 'range') ||
@@ -59,8 +65,11 @@ const MusicCard = () => {
       // Toggle play/pause
       handlePlayPause();
     }
+    else if(event.altKey && event.key === 'v'){
+      handleSwitchChange();
+      event.preventDefault();
+    }
   };
-
   useEffect(() => {
     if(!isLoggedIn){
       if(currDuration)
@@ -86,10 +95,10 @@ const MusicCard = () => {
 
   useEffect(() => {
     // Add event listener when the component mounts
-    window.addEventListener("keydown", handleSpaceKeyPress);
+    window.addEventListener("keydown", handleKeyPress);
     // Clean up the event listener when the component unmounts
     return () => {
-      window.removeEventListener("keydown", handleSpaceKeyPress);
+      window.removeEventListener("keydown", handleKeyPress);
     };
   }, [playerState]);
 
@@ -128,6 +137,8 @@ const MusicCard = () => {
     const newValue = parseInt(event.target.value);
     const seekTime = (newValue / 100) * totalDuration;
     player.currentTime = seekTime;
+    if(videoRef.current)
+    videoRef.current.currentTime = seekTime;
   };
 
   function formatTime(timeInSeconds) {
@@ -140,32 +151,47 @@ const MusicCard = () => {
     return `${minutes}:${seconds}`;
   }
   const addToHistory = async (music) => {
-    //to do api call
-    const response = await fetch(`${host}api/songs/addhistory`, {
-      method: "POST",
-
-      headers: {
-        "Content-Type": "application/json",
-        "auth-token": localStorage.getItem("token"),
-      },
-      body: JSON.stringify({ music }),
-    });
-    sendAddHistoryResponse(response);
+    try {
+      const response = await axios.post(`${host}api/songs/addhistory`, { music }, {
+        headers: {
+          "Content-Type": "application/json",
+          "auth-token": localStorage.getItem("token"),
+        },
+      });
+  
+      sendAddHistoryResponse(response);
+    } catch (error) {
+      // Handle errors
+      console.error("Error adding to history:", error.message);
+    }
   };
+  useEffect(() => {
+    sendAudioRef(audioRef);
+  },[audioRef])
 
   const handleReady = () => {
     setPlayer(audioRef.current);
+    sendAudioRef(audioRef);
     setCurrDuration(0);
     setSeekValue(0);
     setTotalDuration(audioRef.current.duration);
-    if (isLoggedIn) audioRef.current.play();
+    if(!isVideo || !isVideoSwitchedOn)
+    audioRef.current.play();
+    else if (videoRef.current && videoRef.current.readyState === 4) {
+      videoRef.current.play();
+      audioRef.current.play();
+  }
     addToHistory(currMusic);
   };
 
   const handlePlayPause = () => {
     if (playerState === 1) {
       player.pause();
-    } else if (isLoggedIn) player.play();
+      if(videoRef.current) videoRef.current.pause();
+    } else if (isLoggedIn) {
+      player.play();
+      if(videoRef.current) videoRef.current.play();
+    }
   };
 
   const handleSeekBarFocus = () => {
@@ -208,11 +234,63 @@ const MusicCard = () => {
   
       setOpen(false);
     };
-  
 
+    const addToLiked = async (music) => {
+      try {
+        setIsLiked(true);
+        const response = await axios.post(`${host}api/songs/addliked`, { music }, {
+          headers: {
+            "Content-Type": "application/json",
+            "auth-token": localStorage.getItem("token"),
+          },
+        });
+      } catch (error) {
+        // Handle errors
+        console.error("Error liking:", error.message);
+        setIsLiked(false);
+      }
+    };
+
+    const removeFromLiked = async (videoId) => {
+      try {
+        setIsLiked(false);
+        const response = await axios.delete(`${host}api/songs/deleteLiked/${videoId}`, {
+          headers: {
+            "Content-Type": "application/json",
+            "auth-token": localStorage.getItem("token"),
+          },
+        });
+      } catch (error) {
+        // Handle errors
+        console.error("Error liking:", error.message);
+        setIsLiked(true);
+      }
+    };
+  
+    const [isLiked, setIsLiked] = useState('loading');
+    useEffect(() => {
+      setIsLiked('loading');
+      const config = {
+        headers: {"auth-token" : localStorage.getItem('token')}
+    }
+      axios.get(`${host}api/songs/checkLiked/${currMusic.videoId}`, config)
+      .then(response => {
+        setIsLiked(response.data.exists);
+      })
+      .catch(error => {
+        console.error("Error making API request:", error.message);
+      });
+    }, [currMusic])
+
+  const handleSwitchChange = () => {
+    sendIsVideoSwitchedOn(!isVideoSwitchedOn)
+  };
   navigator.mediaSession.setActionHandler("nexttrack", handleNext);
   navigator.mediaSession.setActionHandler("previoustrack", handlePrev);
+  navigator.mediaSession.setActionHandler("pause", handlePlayPause);
+  navigator.mediaSession.setActionHandler("play", handlePlayPause);
 
+  
   const playPauseBtnClass = "fa fa-" + (playerState === 1 ? "pause" : "play");
   const waveClass = playerState !== 1 ? "wave" : "wave paused";
   return (
@@ -266,6 +344,10 @@ const MusicCard = () => {
 
       <div className="buttons">
         <ul className="list list--buttons" onClick={(e) => e.preventDefault()}>
+          <li className="liked list__link" >
+            {isLiked === true ? <PiHeartStraightFill size={25} color="red" style={{cursor:'pointer'}} onClick={() => removeFromLiked(currMusic.videoId)} />:
+            <PiHeartStraightLight size={25} color={isLiked === 'loading' ? "gray" : "red"} style={{cursor:'pointer'}} onClick={() => addToLiked(currMusic)} />}
+          </li>
           <li>
             {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
             <a className="list__link">
@@ -286,6 +368,9 @@ const MusicCard = () => {
               <i className="fa fa-step-forward"></i>
             </a>
           </li>
+          <li className="list__link shuffle">
+            <ImLoop size={20} />
+          </li>
         </ul>
       </div>
       <Snackbar open={open} autoHideDuration={3000} onClose={handleCloseSnack}>
@@ -293,6 +378,7 @@ const MusicCard = () => {
           {snackMsg}
         </Alert>
       </Snackbar>
+      {isVideo && <MaterialUISwitch   checked={isVideoSwitchedOn} onChange={handleSwitchChange} sx={{position:'absolute', bottom:0, right:0}} />}
     </div>
   );
 };

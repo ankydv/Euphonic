@@ -237,7 +237,7 @@
   box-shadow: 0 6px 9px rgba(33, 33, 33, 0.1), 0 6px 16px rgba(33, 33, 33, 0.15);
   cursor: pointer;
 }
-.list--buttons li:nth-of-type(2) a {
+.list--buttons li:nth-of-type(3) a {
   padding-top: 0.82rem;
   padding-right: 1rem;
   padding-bottom: 0.82rem;
@@ -282,4 +282,8 @@
   position: absolute;
   top: 0;
   left: 25px;
+}
+
+.shuffle{
+  cursor: pointer;
 }

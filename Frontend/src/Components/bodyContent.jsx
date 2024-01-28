@@ -3,22 +3,48 @@ import "../styles/bodyContent.css";
 import MyRoutes from "../Routes.js";
 import { useSelector } from "react-redux";
 import Queue from "./queue";
+import { useState, useEffect } from "react";
 
 import { useLocation, useNavigate } from "react-router-dom";
 import {
   BsFillArrowLeftCircleFill,
   BsFillArrowRightCircleFill,
 } from "react-icons/bs";
+import Video from "./Video.jsx";
 import MiniDrawer from "./MiniSideBar.jsx";
 import { Box } from "@mui/material";
 
 const BodyContent = () => {
   const currMusic = useSelector((state) => state.music);
+  const musicInfo = useSelector((state) => state.musicInfo);
+  const isVideoSwitchedOn = useSelector((state) => state.isVideoSwitchedOn);
+  const isVideoPictureInPicure = useSelector((state) => state.isVideoPictureInPicure);
   const bodyClass = `bodyContent ${currMusic ? "" : "noMusic"}`;
 
   const navigate = useNavigate();
   const location = useLocation();
   const isNotHome = location.pathname !== "/";
+
+  const [isVideo, setIsVideo] = useState(false);
+
+    useEffect(() => {
+        setIsVideo(musicInfo && musicInfo.videoDetails.musicVideoType !=="MUSIC_VIDEO_TYPE_ATV");
+    }, [musicInfo])
+    const shouldRender = isVideo && isVideoSwitchedOn;
+
+    useEffect(() => {
+      const exitPipMode = async () => {
+        try {
+          if (document.pictureInPictureElement && !shouldRender) {
+            await document.exitPictureInPicture();
+          }
+        } catch (error) {
+          console.error('Error toggling PiP mode:', error);
+        }
+      };
+      exitPipMode();
+    }, [shouldRender]);
+
   return (
     <Box sx={{ display: 'flex' }}>
     <MiniDrawer />
@@ -27,7 +53,7 @@ const BodyContent = () => {
       <div>
       {currMusic && <MusicCard />}
       </div>
-      <div className="routes">
+      <div className={`routes ${shouldRender && !isVideoPictureInPicure ? 'disable' : ''}`}>
         {isNotHome && (
           <div className="navigation">
             <BsFillArrowLeftCircleFill
@@ -46,6 +72,7 @@ const BodyContent = () => {
           </div>
         )}
         <MyRoutes />
+        {shouldRender && <Video />}
       </div>
       <div>
       {currMusic && <Queue />}

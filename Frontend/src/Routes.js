@@ -7,6 +7,8 @@ import Signup from './Components/Signup';
 import History from './Components/History';
 import ArtistInfo from './Components/ArtistInfo';
 import AlbumInfo from './Components/AlbumInfo';
+import ForgotPassword from './Components/ForgotPassword';
+import Liked from './Components/Liked';
 import Test from './Components/Test';
 
 const MyRoutes = () => {
@@ -19,6 +21,8 @@ const MyRoutes = () => {
         <Route path='/history' Component={History} />
         <Route path='/artist' Component={ArtistInfo} />
         <Route path='/album' Component={AlbumInfo} />
+        <Route path='/resetpassword' Component={ForgotPassword} />
+        <Route path='/liked' Component={Liked} />
         <Route path='/test' Component={Test} />
       </Routes>
   );

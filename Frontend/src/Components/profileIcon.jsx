@@ -49,6 +49,7 @@ const ProfileIcon = () => {
     </div>
     <button onClick={handleLogout}>Logout</button>
     <Link to='/history'>History</Link>
+    <Link to='/liked'>Liked Songs</Link>
     </>
     :
     <Link to='/login'>Login</Link>
