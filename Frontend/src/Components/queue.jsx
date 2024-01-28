@@ -29,7 +29,13 @@ const Queue = () => {
 
   useEffect(() => {
     const isSongInQueue = queue.some(
-      (song) => song.videoId === currMusic.videoDetails.videoId
+      (song, index) => {
+        if(song.videoId === currMusic.videoDetails.videoId){
+          sendQueueIndex(index);
+          return true;
+        }
+        return false;
+      }
     );
     if (!isSongInQueue && currMusic) {
       setIsLoading(true);

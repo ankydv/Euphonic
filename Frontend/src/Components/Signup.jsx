@@ -13,7 +13,6 @@ const Signup = (props) => {
     let navigate = useNavigate();
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log(credential)
     const {name,email,password}=credential
     const response = await fetch(`${SERVER}api/auth/createuser`, {
       method: "POST",
@@ -25,13 +24,11 @@ const Signup = (props) => {
       }),
     });
     const json = await response.json();
-    console.log(json);
     if (json.success) {
       // Save the auth token and redirect
       localStorage.setItem("token", json.authtoken);
       dispatch(login(json.authtoken))
       navigate("/");
-       console.log('success')
     } else {
       // props.showAlert("Invalid Details","danger");
       console.log('failse')

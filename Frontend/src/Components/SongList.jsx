@@ -18,9 +18,6 @@ const SongList = ({ title, list, isLoading, shimmerLength }) => {
   const handlePlay = (index) => {
     sendMusic(list[index].music);
   };
-  useEffect(() => {
-    console.log(list);
-  }, [list]);
 
   const findSongLoc = (root) => {
     return root.music ? root.music : root
