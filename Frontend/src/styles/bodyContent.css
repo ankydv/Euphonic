@@ -3,7 +3,7 @@
 }
 .bodyContent {
   position: relative;
-  top: 2vh;
+  top: 7vh;
   display: grid;
   grid-template-columns: auto 3fr auto;
   gap:1%;
