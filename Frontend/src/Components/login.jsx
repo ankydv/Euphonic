@@ -3,7 +3,6 @@ import "../styles/login.css";
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch } from 'react-redux';
 import { login } from "../state/action-creators";
-import axios from 'axios';
 
 const  SERVER = process.env.REACT_APP_AUTH_SERVER;
 
@@ -27,11 +26,9 @@ const Login = () => {
     if(json.success){
       localStorage.setItem('token',json.authtoken);
       dispatch(login(json.authtoken)); 
-      console.log('success');
       return true;
     }
     else{
-      console.log('invalid credentials');
       return false;
     }
   }

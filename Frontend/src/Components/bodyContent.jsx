@@ -19,6 +19,7 @@ const BodyContent = () => {
   const musicInfo = useSelector((state) => state.musicInfo);
   const isVideoSwitchedOn = useSelector((state) => state.isVideoSwitchedOn);
   const isVideoPictureInPicure = useSelector((state) => state.isVideoPictureInPicure);
+  const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
   const bodyClass = `bodyContent ${currMusic ? "" : "noMusic"}`;
 
   const navigate = useNavigate();
@@ -30,7 +31,7 @@ const BodyContent = () => {
     useEffect(() => {
         setIsVideo(musicInfo && musicInfo.videoDetails.musicVideoType !=="MUSIC_VIDEO_TYPE_ATV");
     }, [musicInfo])
-    const shouldRender = isVideo && isVideoSwitchedOn;
+    const shouldRender = isVideo && isVideoSwitchedOn && isLoggedIn;
 
     useEffect(() => {
       const exitPipMode = async () => {

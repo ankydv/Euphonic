@@ -10,7 +10,6 @@ const History = () => {
   const historyChange = useSelector(state => state.addHistoryResponse);
   const [history, setHistory] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
-    // const queue = useSelector((state) => state.queue);
     const config = {
         headers: {"auth-token" : localStorage.getItem('token')}
     }
@@ -18,7 +17,6 @@ const History = () => {
       setIsLoading(true);
       axios.get(`${server}api/songs/fetchhistory`, config)
         .then((res) => {
-          // console.log(typeof(['ankit','dfnks']))
           setHistory(res.data) // Update the history state with res.data
         })
         .catch((error) => {

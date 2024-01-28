@@ -52,7 +52,6 @@ const MusicCardItem = ({ music, isLoading, itemType }) => {
   const isArtist = music.resultType=='artist' || type == 'artists' || type == 'related';
 
   const handlePlay = (music) =>{
-    console.log(itemType)
     if(type =='songs' || type == 'videos' || type == 'trending' || music.videoId)
       sendMusic(music)
     else if(isArtist)
@@ -120,7 +119,6 @@ const MusicCardItem = ({ music, isLoading, itemType }) => {
 
 const MusicCards = ({ title, dataSet, isLoading }) => {
   const handleViewAll = ()=>{
-    console.log('ankit')
   }
   return (
     isLoading ? 
