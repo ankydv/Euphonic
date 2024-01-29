@@ -6,10 +6,9 @@ import { useDispatch, useSelector } from "react-redux";
 import getMusicInfo from "./helpers/music_info";
 import { bindActionCreators } from "redux";
 import { actionCreators } from "../state";
-import { sendMusic, sendIsVideoSwitchedOn } from "../state/action-creators";
 import { useNavigate } from "react-router-dom";
 import Snackbar from '@mui/material/Snackbar';
-import MuiAlert, { AlertProps } from '@mui/material/Alert';
+import MuiAlert from '@mui/material/Alert';
 import { PiHeartStraightFill, PiHeartStraightLight } from "react-icons/pi";
 import { ImLoop } from "react-icons/im";
 import MaterialUISwitch from "./MaterialUI Components/Switch"
@@ -53,7 +52,7 @@ const MusicCard = () => {
     dispatch
   );
 
-  const handleSpaceKeyPress = (event) => {
+  const handleKeyPress = (event) => {
     if (
       event.key === " " &&
       ((document.activeElement.tagName.toLowerCase() === 'input' && document.activeElement.type == 'range') ||
@@ -64,6 +63,10 @@ const MusicCard = () => {
       event.preventDefault();
       // Toggle play/pause
       handlePlayPause();
+    }
+    else if(event.altKey && event.key === 'v'){
+      handleSwitchChange();
+      event.preventDefault();
     }
   };
   useEffect(() => {
@@ -91,10 +94,10 @@ const MusicCard = () => {
 
   useEffect(() => {
     // Add event listener when the component mounts
-    window.addEventListener("keydown", handleSpaceKeyPress);
+    window.addEventListener("keydown", handleKeyPress);
     // Clean up the event listener when the component unmounts
     return () => {
-      window.removeEventListener("keydown", handleSpaceKeyPress);
+      window.removeEventListener("keydown", handleKeyPress);
     };
   }, [playerState]);
 
@@ -171,6 +174,7 @@ const MusicCard = () => {
     setCurrDuration(0);
     setSeekValue(0);
     setTotalDuration(audioRef.current.duration);
+    if(!isLoggedIn) return;
     if(!isVideo || !isVideoSwitchedOn)
     audioRef.current.play();
     else if (videoRef.current && videoRef.current.readyState === 4) {
@@ -200,7 +204,6 @@ const MusicCard = () => {
 
   const handleNext = () => {
     if (queue.length > queueIndex + 1) {
-      console.log('end');
       sendMusic(queue[queueIndex + 1]);
       sendQueueIndex(queueIndex + 1);
     }
@@ -284,6 +287,8 @@ const MusicCard = () => {
   };
   navigator.mediaSession.setActionHandler("nexttrack", handleNext);
   navigator.mediaSession.setActionHandler("previoustrack", handlePrev);
+  navigator.mediaSession.setActionHandler("pause", handlePlayPause);
+  navigator.mediaSession.setActionHandler("play", handlePlayPause);
 
   
   const playPauseBtnClass = "fa fa-" + (playerState === 1 ? "pause" : "play");
@@ -373,7 +378,10 @@ const MusicCard = () => {
           {snackMsg}
         </Alert>
       </Snackbar>
-      <MaterialUISwitch   checked={isVideoSwitchedOn} onChange={handleSwitchChange} sx={{position:'absolute', bottom:0, right:0}} />
+      {isVideo && 
+      <div className="switch__container">
+        <MaterialUISwitch   checked={isVideoSwitchedOn} onChange={handleSwitchChange} />
+      </div>}
     </div>
   );
 };

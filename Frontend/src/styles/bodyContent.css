@@ -3,12 +3,13 @@
 }
 .bodyContent {
   position: relative;
-  top: 2vh;
+  top: 7vh;
   display: grid;
   grid-template-columns: auto 3fr auto;
   gap:1%;
   margin-left: 1vw;
   transition: 200ms;
+  flex-grow: 1;
 }
 
 .routes{
@@ -34,6 +35,9 @@
 
 .button:hover{
   cursor: pointer;
+}
+.MuiDrawer-docked{
+  background-color: red;
 }
 
 @media (max-width: 500px){

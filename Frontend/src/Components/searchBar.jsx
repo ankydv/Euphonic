@@ -36,7 +36,6 @@ const SearchBar = () => {
 
   const handleSubmit = (event) => {
     if (event) event.preventDefault();
-    console.log(searchValue)
     if (searchParams.get("q") !== searchValue)
       setSearchParams({ q: searchValue });
     setIsFocus(false);
