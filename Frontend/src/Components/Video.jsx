@@ -5,11 +5,13 @@ import { RxCross2 } from "react-icons/rx";
 import { CgMiniPlayer } from "react-icons/cg";
 import { BsArrowsFullscreen } from "react-icons/bs";
 import CircularProgress from '@mui/material/CircularProgress';
+import Backdrop from '@mui/material/Backdrop';
 
 import { useDispatch } from "react-redux";
 import { bindActionCreators } from "redux";
 import { actionCreators } from "../state/index";
 import { useLocation } from 'react-router-dom';
+import QualityToggle, { QualityLabel } from './MaterialUI Components/VideoQuality';
 
 const Video = () => {
     const musicInfo = useSelector((state) => state.musicInfo);
@@ -25,6 +27,9 @@ const Video = () => {
     const videoHide = isVideoPictureInPicure ? "hide" : "";
     const location = useLocation();
     const [isWaiting, setIsWaitiing] = useState(false);
+    const [isLoading, setIsLoading] = useState(true);
+    const [isOutOfFocus, setIsOutOfFocus] = useState(false);
+    const [isQualityModalOpened, setIsQualityModalOpened] = useState(false);
     
     const parendDiv = document.querySelector('.routes');
     if (parendDiv) {
@@ -37,7 +42,7 @@ const Video = () => {
         }
       
         const videoFormats = musicInfo.streamingData.adaptiveFormats.filter((format) =>
-          format.mimeType.startsWith('video')
+          format.mimeType.startsWith('video/webm')
         );
       
         // Sort the array based on the 'height' property
@@ -52,13 +57,12 @@ const Video = () => {
 
       useEffect(() => {
         const handleFocus = async () => {
-          if (isSeeking.current) {
+          if (isSeeking.current || document.pictureInPictureElement) {
             // Avoid seeking multiple times if it's already in progress
             return;
           }
-
           // Seek the video to the current audio position
-          if (audioRef.current && videoRef.current) {
+          if (audioRef.current && videoRef.current && isOutOfFocus===true) {
             isSeeking.current = true;
     
             const targetTime = audioRef.current.currentTime;
@@ -69,6 +73,7 @@ const Video = () => {
             // Wait for the video to be buffered to the dynamically updated audio's time
             
             isSeeking.current = false;
+            setIsOutOfFocus(false);
 
           }
         };
@@ -76,8 +81,7 @@ const Video = () => {
         return () => {
           window.removeEventListener('focus', handleFocus);
         }
-      },[videoRef])
-
+      },[videoRef,isOutOfFocus])
       const handleWaiting = () => {
         audioRef.current.pause();
         setIsWaitiing(true);
@@ -91,15 +95,18 @@ const Video = () => {
     }, [musicInfo])
 
     useEffect(() => {
-      setCurrFormat(qualities && qualities.reduce((max, obj) => {
-        // Check if the current object's height is less than or equal to 1080
-        if (obj.height <= 1080) {
-          // Compare the height with the current maximum
-          return obj.height > max.height ? obj : max;
-        }
-        return max;
-      }, { height: 0, resolution: '' }))
-    },[qualities])
+      if (qualities && qualities.length > 0) {
+        // Get the target height (either from localStorage or default value)
+        const targetQualityLabel = localStorage.getItem('defaultVideoQuality') || "720p";
+        
+        // Find the first object with a height less than or equal to the target height
+        const maxResolution = qualities.find(obj => obj.qualityLabel === targetQualityLabel) || qualities[qualities.length - 1];
+    
+        // Set the current format to the found object, or null if not found
+        setCurrFormat(maxResolution);
+      }
+    }, [qualities]);
+    
 
     useEffect(() => {
       sendVideoRef(videoRef);
@@ -117,6 +124,7 @@ const Video = () => {
       videoRef.current && videoRef.current.requestPictureInPicture()
     },[location])
     const handleReady = () => {
+      setIsLoading(false);
         videoRef.current.addEventListener('waiting', handleWaiting);
         videoRef.current.addEventListener('playing', () => handlePlaying(audioRef));
         if (audioRef.current && audioRef.current.readyState === 4) {
@@ -154,6 +162,9 @@ const Video = () => {
     const handlePause = () => {
       if (isVideoPictureInPicure || document.fullscreenElement!=null)
         audioRef.current.pause()
+      else if(document.visibilityState === "hidden"){
+        setIsOutOfFocus(true);
+      }
     }
     const handleFullscreen = () => {
       const videoElement = videoRef.current;
@@ -178,22 +189,37 @@ const Video = () => {
     const handleEnd = () => {
       audioRef.current.play();
     }
+
+    const handleLoadStart = () => {
+      setIsLoading(true);
+    };
   
   return (
     currFormat && 
     <div className={`video ${videoHide}`}>
       <div className='video__controls'>
-      <RxCross2 color='red' size={30} onClick={handleTogglePiP} />
-      <CgMiniPlayer size={27} onClick={handleTogglePiP} />
-      <BsArrowsFullscreen size={20} onClick={handleFullscreen} />
+        <RxCross2 color='red' size={30} onClick={handleTogglePiP} />
+        <CgMiniPlayer size={27} onClick={handleTogglePiP} />
+        <BsArrowsFullscreen size={20} onClick={handleFullscreen} />
+        <div className='quality'>
+          <QualityLabel isQualityModalOpened={isQualityModalOpened} setIsQualityModalOpened={setIsQualityModalOpened} qualityLabel={currFormat.qualityLabel} />
+          {isQualityModalOpened && <div className='quality__toggle__container'>
+            <QualityToggle qualities={qualities} currQuality={currFormat} setCurrQuality={setCurrFormat} setIsQualityModalOpened={setIsQualityModalOpened} />
+          </div>}
+        </div>
       </div>
         {
-          <div className='video__wrapper'>
-            <video onEnded={handleEnd} id='videoElement' onSeeked={handleSeek} onPause={handlePause} onLoadedMetadata={handleReady} ref={videoRef} src={currFormat.url}></video>
-            {isWaiting && 
+          <div className={`video__wrapper ${isLoading?"isLoading":""}`} style={isLoading?{aspectRatio:currFormat.width/currFormat.height}:{}}>
+            <video onLoadStart={handleLoadStart} onEnded={handleEnd} id='videoElement' onSeeked={handleSeek} onPause={handlePause} onLoadedMetadata={handleReady} ref={videoRef} src={currFormat.url}></video>
+            {(isWaiting || isLoading) && 
             <div className="loader__wrapper">
+              <Backdrop
+                sx={{ color: '#fff',}}
+                open={true}
+              >
               <CircularProgress className='loader' color='secondary' />
-            </div>
+              </Backdrop>
+           </div>
             }
           </div>
         }
