@@ -1,10 +1,10 @@
 import { createTheme } from '@mui/material/styles';
 
 const lightPrimaryColor = 'rgba(118, 155, 249, 0.67)';
-const lightSecondaryColor = '#ffcfe0';
+const lightSecondaryColor = '#FF0000';
 
 const darkPrimaryColor = 'rgba(118, 155, 249, 0.67)';
-const darkSecondaryColor = '#ffcfe0';
+const darkSecondaryColor = '#FF0000';
 
 const lightBackgroundColor = '#FFFFFF'; // Light mode background color
 const darkBackgroundColor = '#121212'; // Dark mode background color

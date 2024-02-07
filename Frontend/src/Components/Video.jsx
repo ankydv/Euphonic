@@ -193,12 +193,13 @@ const Video = () => {
     const handleLoadStart = () => {
       setIsLoading(true);
     };
-  
   return (
     currFormat && 
+    <>
+    <div className={`video ${videoHide}`} style={{width: '120%', height: '105%', left:'-15%', backgroundImage: `url(${musicInfo?.lastThumbnailUrl})`, backgroundSize: 'cover',backgroundPosition: 'center',filter: 'blur(25px) brightness(80%)', transition: 'background-image 0.5s ease',}}></div>
     <div className={`video ${videoHide}`}>
       <div className='video__controls'>
-        <RxCross2 color='red' size={30} onClick={handleTogglePiP} />
+        <RxCross2 size={30} onClick={handleTogglePiP} />
         <CgMiniPlayer size={27} onClick={handleTogglePiP} />
         <BsArrowsFullscreen size={20} onClick={handleFullscreen} />
         <div className='quality'>
@@ -224,6 +225,7 @@ const Video = () => {
           </div>
         }
     </div>
+    </>
   )
 }
 

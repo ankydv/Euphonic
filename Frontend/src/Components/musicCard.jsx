@@ -106,10 +106,11 @@ const MusicCard = () => {
       getMusicInfo(currMusic.videoId)
         .then((response) => {
           if(response.data.playabilityStatus.status == 'OK'){
-            sendMusicInfo(response.data);
-            setThumbUrl(
-              response.data.videoDetails.thumbnail.thumbnails.pop().url
-            );
+            const thumbnails = response.data.videoDetails.thumbnail.thumbnails;
+            const lastThumbnail = thumbnails.pop();
+            const lastThumbnailUrl = lastThumbnail.url; 
+            setThumbUrl(lastThumbnailUrl); 
+            sendMusicInfo({...response.data, lastThumbnailUrl: lastThumbnailUrl});
             }
           else{
             setOpen(true);
