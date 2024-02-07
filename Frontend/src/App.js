@@ -6,25 +6,13 @@ import { useEffect } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { orange } from '@mui/material/colors';
+import { lightTheme } from './theme';
 
 
 function App() {
-    const outerTheme = createTheme({
-        palette: {
-          primary: {
-            main: orange[500],
-          },
-        },
-      });
-  const navigate = useNavigate();
-//   useEffect(() => {
-//     if(!localStorage.getItem('token')) {
-//       navigate('/login')
-//     } 
-// })
 
   return (
-    <ThemeProvider theme={outerTheme}>
+    <ThemeProvider theme={lightTheme}>
     <div className="App">
       {/* <Header/> */}
       <BodyContent/>

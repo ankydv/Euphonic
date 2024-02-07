@@ -187,10 +187,10 @@ const MusicCard = () => {
   const handlePlayPause = () => {
     if (playerState === 1) {
       player.pause();
-      if(videoRef.current) videoRef.current.pause();
+      videoRef?.current?.pause();
     } else if (isLoggedIn) {
       player.play();
-      if(videoRef.current) videoRef.current.play();
+      videoRef?.current?.play();
     }
   };
 
