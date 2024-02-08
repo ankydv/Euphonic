@@ -18,7 +18,7 @@ const MusicRecommendation = () => {
 
   useEffect(() => {
     setIsLoading(true);
-    axios.get(`${server}api/charts`)
+    axios.get(`${server}api/home`)
     .then((res) => {
       setCharts(res.data);
       setIsLoading(false);
@@ -28,12 +28,11 @@ const MusicRecommendation = () => {
   return (
     <div className="music-recommendation">
         {
-        charts!==null &&
-        Object.entries(charts).map(([chartKey, chartData], index) => (
-          chartData.items && <MusicCards
+        charts.map((chartData, index) => (
+          chartData &&<MusicCards
            key={index} 
-           title={chartKey} 
-           dataSet={chartData.items}
+           title={chartData.title} 
+           dataSet={chartData.contents}
            isLoading={isLoading} />
         ))}
     </div>
@@ -47,8 +46,8 @@ const MusicCardItem = ({ music, isLoading, itemType }) => {
   const { sendMusic } = bindActionCreators(actionCreators, dispatch);
   const navigate = useNavigate();
 
-  const type = itemType ? itemType.toLowerCase() : null;
-  const isAlbum = music.resultType=='album' || type == 'albums';
+  const type = itemType?.toLowerCase();
+  const isAlbum = music.resultType=='album' || type?.includes('albums');
   const isArtist = music.resultType=='artist' || type == 'artists' || type == 'related';
 
   const handlePlay = (music) =>{
