@@ -52,14 +52,14 @@ const MusicCardItem = ({ music, isLoading, itemType }) => {
   const isPlayList = Boolean(music?.playlistId);
 
   const handlePlay = (music) =>{
-    if(type =='songs' || type == 'videos' || type == 'trending' || music.videoId)
+    if(type =='songs' || type == 'videos' || type == 'trending' || music?.videoId)
       sendMusic(music)
     else if(isArtist)
-      navigate(`/artist?q=${music.browseId?music.browseId:music.artists[0].id}`);
+      navigate(`/artist?q=${music?.browseId?music?.browseId:music?.artists[0].id}`);
     else if(isAlbum)
-      navigate(`/album?q=${music.browseId}`);
+      navigate(`/album?q=${music?.browseId}`);
     else if(isPlayList)
-      navigate(`/playlist?q=${music.playlistId}`)
+      navigate(`/playlist?q=${music?.playlistId}`)
   }
 
   const imgClass = isArtist ? "image shimmer artist" : "image shimmer";
@@ -69,7 +69,7 @@ const MusicCardItem = ({ music, isLoading, itemType }) => {
       <div className={imgClass}/>
       <div className="music-details">
       <div className="song-title shimmer" />
-        {music.artists && (
+        {music?.artists && (
           <div className="song-artist shimmer" />
         )}
       </div>
@@ -95,11 +95,11 @@ const MusicCardItem = ({ music, isLoading, itemType }) => {
         } alt={music?.title} />
       </div>
       <div className="music-details">
-        <p>{music?.resultType == 'artist'? music.artist : music.title}</p>
-        {music.artists && (
+        <p>{music?.resultType == 'artist'? music?.artist : music?.title}</p>
+        {music?.artists && (
           <p>
-            {music.artists.map((artist, index) => (
-              <span key={index}>{artist.name}{index!==music.artists.length-1 && <span>, </span>}</span>
+            {music?.artists.map((artist, index) => (
+              <span key={index}>{artist.name}{index!==music?.artists.length-1 && <span>, </span>}</span>
             ))
             }
           </p>

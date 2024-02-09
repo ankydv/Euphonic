@@ -137,7 +137,7 @@ const MusicCard = () => {
     const newValue = parseInt(event.target.value);
     const seekTime = (newValue / 100) * totalDuration;
     player.currentTime = seekTime;
-    if(videoRef.current)
+    if(videoRef && videoRef.current)
     videoRef.current.currentTime = seekTime;
   };
 
