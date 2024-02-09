@@ -21,6 +21,9 @@
 }
 
 .video__controls{
+    position: absolute;
+    top: -20%;
+    right: 0;
     display: flex;
     flex-direction: row-reverse;
     align-items: center;
