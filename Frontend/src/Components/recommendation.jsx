@@ -95,7 +95,7 @@ const MusicCardItem = ({ music, isLoading, itemType }) => {
         } alt={music?.title} />
       </div>
       <div className="music-details">
-        <p>{music.resultType == 'artist'? music.artist : music.title}</p>
+        <p>{music?.resultType == 'artist'? music.artist : music.title}</p>
         {music.artists && (
           <p>
             {music.artists.map((artist, index) => (
