@@ -81,7 +81,7 @@ const MusicCard = () => {
 
   useEffect(() => {
     const handleTimeUpdate = () => {
-      setPlayerState(audioRef.current.paused ? 2 : 1);
+      setPlayerState(audioRef?.current?.paused ? 2 : 1);
     };
     if (audioRef.current)
       audioRef.current.addEventListener("timeupdate", handleTimeUpdate);

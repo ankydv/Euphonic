@@ -47,8 +47,9 @@ const MusicCardItem = ({ music, isLoading, itemType }) => {
   const navigate = useNavigate();
 
   const type = itemType?.toLowerCase();
-  const isAlbum = music.resultType=='album' || type?.includes('albums');
-  const isArtist = music.resultType=='artist' || type == 'artists' || type == 'related';
+  const isAlbum = music?.resultType=='album' || type?.includes('albums');
+  const isArtist = music?.resultType=='artist' || type == 'artists' || type == 'related';
+  const isPlayList = Boolean(music?.playlistId);
 
   const handlePlay = (music) =>{
     if(type =='songs' || type == 'videos' || type == 'trending' || music.videoId)
@@ -57,6 +58,8 @@ const MusicCardItem = ({ music, isLoading, itemType }) => {
       navigate(`/artist?q=${music.browseId?music.browseId:music.artists[0].id}`);
     else if(isAlbum)
       navigate(`/album?q=${music.browseId}`);
+    else if(isPlayList)
+      navigate(`/playlist?q=${music.playlistId}`)
   }
 
   const imgClass = isArtist ? "image shimmer artist" : "image shimmer";
@@ -85,11 +88,11 @@ const MusicCardItem = ({ music, isLoading, itemType }) => {
     <div className="music-card-item" onClick={() => handlePlay(music)}>
       <div className={imgClass}>
         <img src={
-          (music.thumbnails[1])?
-            music.thumbnails[1].url
+          (music?.thumbnails[1])?
+            music?.thumbnails[1].url
           :                               // Ternary operator to check if high quality thumbnail is available and set.
-            music.thumbnails[0].url
-        } alt={music.title} />
+            music?.thumbnails[0].url
+        } alt={music?.title} />
       </div>
       <div className="music-details">
         <p>{music.resultType == 'artist'? music.artist : music.title}</p>
