@@ -3,7 +3,7 @@ from fastapi import APIRouter, HTTPException
 from ytmusicapi import YTMusic;
 
 router = APIRouter()
-yt = YTMusic()
+yt = YTMusic(location='IN')
 
 #get all info of song using videoid
 @router.get("/albuminfo/{id}")

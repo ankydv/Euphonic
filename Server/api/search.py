@@ -1,7 +1,7 @@
 from fastapi import APIRouter, HTTPException
 from ytmusicapi import YTMusic
 
-yt = YTMusic()
+yt = YTMusic(location='IN')
 router = APIRouter()
 
 #route to search items
