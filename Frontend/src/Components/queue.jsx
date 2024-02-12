@@ -8,6 +8,7 @@ import { bindActionCreators } from "redux";
 import { actionCreators } from "../state/index";
 import PlayPause from "./playPause";
 import { Box, List, ListItemButton, Typography } from "@mui/material";
+import SongList from "./SongList";
 
 const server = process.env.REACT_APP_SERVER;
 
@@ -51,53 +52,11 @@ const Queue = () => {
     }
   }, [currMusic, queue]);
 
-  return isLoading ? (
-    <Box className="up-next-container shimmer-container">
-      <Box className="heading shimmer" />
-      <ListItemButton className="up-next-list">
-        {Array.apply(null, { length: 15 }).map((song, index) => (
-          <li className="shimmer-li" key={index}>
-            <Box className="song-info-container">
-              <Box className="image shimmer"></Box>
-              <Box className="song-info">
-                <Box className="song-title shimmer" />
-                <Box className="song-artist shimmer" />
-              </Box>
-            </Box>
-          </li>
-        ))}
-      </ListItemButton>
+  return (
+    <Box className = "up-next-container">
+      <SongList title={'Up Next'} list={queue} isLoading={isLoading} isQueue={true} />
     </Box>
-  ) : (
-    <Box className="up-next-container">
-      <h2>Up Next</h2>
-      <List className="up-next-list">
-        {queue.map((song, index) => (
-          <ListItemButton
-            key={index}
-            selected={index === currentIndex}
-            onClick={() => handlePlay(index)}
-          >
-            <Box className="song-info-container">
-              <Box className="image">
-                <img
-                  className={index === currentIndex ? "active" : ""}
-                  src={song.thumbnail[0].url}
-                ></img>
-              </Box>
-              {currentIndex === index ? (
-                <PlayPause toggle={true}></PlayPause>
-              ) : null}
-              <Box className="song-info">
-                <Typography variant="ghost" className="song-title">{song.title}</Typography>
-                <Typography className="song-artist">{song.artists[0].name}</Typography>
-              </Box>
-            </Box>
-          </ListItemButton>
-        ))}
-      </List>
-    </Box>
-  );
+  )
 };
 
 export default Queue;

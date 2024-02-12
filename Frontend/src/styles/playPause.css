@@ -8,7 +8,9 @@
     outline: 0;
     background: transparent;
     position: absolute;
-    left: 23px;
+    left: 50%; /* Move the button to the middle horizontally */
+    top: 50%;
+    transform: translate(-50%, -50%); 
   }
   
   .play-pause__playhead {

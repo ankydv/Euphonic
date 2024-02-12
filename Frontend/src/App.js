@@ -1,20 +1,16 @@
 import './App.css';
-import Header from "./Components/header";
 import BodyContent from "./Components/bodyContent";
-import { useNavigate } from 'react-router-dom';
-import { useEffect } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { createTheme, ThemeProvider } from '@mui/material/styles';
-import { orange } from '@mui/material/colors';
-import { lightTheme } from './theme';
+import { ThemeProvider } from '@mui/material/styles';
+import { darkTheme, lightTheme } from './theme';
+import { useSelector } from 'react-redux';
 
 
 function App() {
-
+  const theme = useSelector((state) => state.theme);
   return (
-    <ThemeProvider theme={lightTheme}>
+    <ThemeProvider theme={theme === 'dark' ? darkTheme : lightTheme}>
     <div className="App">
-      {/* <Header/> */}
       <BodyContent/>
     </div>
     </ThemeProvider>

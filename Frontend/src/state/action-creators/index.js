@@ -92,3 +92,11 @@ export const sendisVideoPictureInPicure = (isVideoPictureInPicure) => {
         })
     }
 }
+export const sendTheme = (theme) => {
+    return (dispatch) => {
+        dispatch({
+            type: 'sendTheme',
+            payload: theme
+        })
+    }
+}

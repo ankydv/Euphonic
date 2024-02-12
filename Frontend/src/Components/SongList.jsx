@@ -6,18 +6,21 @@ import { useDispatch } from "react-redux";
 import { bindActionCreators } from "redux";
 import { actionCreators } from "../state/index";
 import PlayPause from "./playPause";
-import { Box, List, ListItem, ListItemButton } from "@mui/material";
+import { Box, List, ListItem, ListItemButton, Skeleton } from "@mui/material";
 
 const server = process.env.REACT_APP_SERVER;
 
-const SongList = ({ title, list, isLoading, shimmerLength }) => {
+const SongList = ({ title, list, isLoading, shimmerLength, handleSongClick, isQueue }) => {
   const currMusic = useSelector((state) => state.music);
 
   const dispatch = useDispatch();
   const { sendMusic } = bindActionCreators(actionCreators, dispatch);
 
-  const handlePlay = (index) => {
-    sendMusic(list[index].music);
+  const handleSongSelect = (song, index) => {
+    if(!handleSongClick)
+      sendMusic(song);
+    else
+      handleSongClick(song, index)
   };
 
   const findSongLoc = (root) => {
@@ -47,7 +50,7 @@ const SongList = ({ title, list, isLoading, shimmerLength }) => {
         <h2>{title}</h2>
         <List className="song-list-list">
           {list.map((song, index) => (
-            <ListItemButton key={index} onClick={() => sendMusic(findSongLoc(song))}>
+            <ListItemButton key={index} selected={isQueue && currMusic?.videoId === findSongLoc(song).videoId} onClick={() => handleSongSelect(findSongLoc(song), index)}>
               <Box className="song-info-container">
                 <Box className="image">
                   <img
@@ -62,10 +65,10 @@ const SongList = ({ title, list, isLoading, shimmerLength }) => {
                         : findSongLoc(song).thumbnail && findSongLoc(song).thumbnail[0].url
                     }
                   ></img>l
-                </Box>
-                {currMusic && findSongLoc(song).videoId === currMusic.videoId && (
+                  {currMusic && findSongLoc(song).videoId === currMusic.videoId && (
                   <PlayPause toggle={true}></PlayPause>
                 )}
+                </Box>
                 <Box className="song-info">
                   <span className="song-title">{findSongLoc(song).title}</span>
                   <span className="song-artist">

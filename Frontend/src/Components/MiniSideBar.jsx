@@ -18,6 +18,8 @@ import { FaHistory } from "react-icons/fa";
 import { useDispatch, useSelector } from 'react-redux';
 import { logout } from "../state/action-creators";
 import { FaAnglesRight, FaAnglesLeft } from "react-icons/fa6";
+import { RiMenuUnfoldFill, RiMenuFoldFill } from "react-icons/ri";
+import { Typography } from '@mui/material';
 
 const drawerWidth = 240;
 
@@ -87,6 +89,20 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' 
   }),
 );
 
+const AnimatedIconButton = ({ isOpen, handleDrawerClose, handleDrawerOpen }) => {
+  return (
+    <IconButton
+      sx={{
+        transition: 'transform 0.3s ease',
+        transform: isOpen ? 'rotate(0deg)' : 'rotate(180deg)',
+      }}
+      onClick={isOpen ? handleDrawerClose : handleDrawerOpen}
+    >
+      <RiMenuFoldFill size={30} /> 
+    </IconButton>
+  );
+};
+
 export default function MiniDrawer() {
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
@@ -122,30 +138,14 @@ export default function MiniDrawer() {
   return (
     <>
       <CssBaseline />
-      <AppBar position="fixed" color='default' sx={{ height: '9vh' }} open={open}>
+      <AppBar position="fixed" color='default' sx={{ height: '9vh', maxHeight: '65px', display: 'flex', flexDirection: 'row', padding: '0 10px' }} open={open}>
+       {isLoggedIn && <AnimatedIconButton isOpen={open} handleDrawerClose={handleDrawerClose} handleDrawerOpen={handleDrawerOpen} />}
         <Header />
       </AppBar>
       {isLoggedIn && 
       <Drawer variant="permanent" open={open} sx={{backgroundColor: 'primary'}}>
         <DrawerHeader>
-          <IconButton onClick={handleDrawerClose} sx={{
-            opacity: !open ? 0 : 1,
-            transition: 'opacity 0.5s ease',
-            }} >
-            <FaAnglesLeft size={20} />
-          </IconButton>
         </DrawerHeader>
-        <Divider />
-        { <IconButton 
-          onClick={handleDrawerOpen}  
-          title='open' 
-          sx={{
-            opacity: open ? 0 : 1,
-            transition: 'opacity 0.5s ease',
-            }}>
-              <FaAnglesRight size={20} />
-        </IconButton>}
-        <Divider />
         <List>
   {routes.map((route, index) => (
     <ListItem key={route} disablePadding sx={{ display: 'block' }}>

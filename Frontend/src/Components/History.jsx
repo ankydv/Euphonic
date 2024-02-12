@@ -18,11 +18,11 @@ const History = () => {
       axios.get(`${server}api/songs/fetchhistory`, config)
         .then((res) => {
           setHistory(res.data) // Update the history state with res.data
+          setIsLoading(false);
         })
         .catch((error) => {
           console.error("Error fetching history:", error);
         }); 
-        setIsLoading(false);
     }, [historyChange]);
   return (
     <SongList title="History" isLoading={isLoading} list={history} />
