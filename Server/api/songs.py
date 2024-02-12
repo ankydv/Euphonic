@@ -5,6 +5,7 @@ from pytube import exceptions
 from ytmusicapi import YTMusic;
 
 router = APIRouter()
+yt = YTMusic(location='IN')
 
 #get all info of song using videoid
 @router.get("/songinfo/{id}")
@@ -19,7 +20,6 @@ def getSongInfo(id: str):
 
 @router.get('/watchlist/{videoId}')
 def getWatchList(videoId:str):
-    yt = YTMusic()
     try:
         return yt.get_watch_playlist(videoId)
     except Exception as e:

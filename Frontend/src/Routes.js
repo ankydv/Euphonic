@@ -10,6 +10,7 @@ import AlbumInfo from './Components/AlbumInfo';
 import ForgotPassword from './Components/ForgotPassword';
 import Liked from './Components/Liked';
 import Test from './Components/Test';
+import PlayListInfo from './Components/PlayListInfo';
 
 const MyRoutes = () => {
   return (
@@ -21,6 +22,7 @@ const MyRoutes = () => {
         <Route path='/history' Component={History} />
         <Route path='/artist' Component={ArtistInfo} />
         <Route path='/album' Component={AlbumInfo} />
+        <Route path='/playlist' Component={PlayListInfo} />
         <Route path='/resetpassword' Component={ForgotPassword} />
         <Route path='/liked' Component={Liked} />
         <Route path='/test' Component={Test} />

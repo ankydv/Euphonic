@@ -1,14 +1,17 @@
 from fastapi import APIRouter, HTTPException
 from ytmusicapi import YTMusic
 
-yt = YTMusic()
+yt = YTMusic(location='IN')
 router = APIRouter()
 
 #to get songs on homepage
-@router.get('/charts')
-def getCharts():
+@router.get('/home')
+def getHome():
     try:
-        return yt.get_charts('IN')
+        a = yt.get_home()
+        b = yt.get_charts("IN")
+        a.append({'title': 'Artists', 'contents': b['artists']['items']})
+        return a
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 

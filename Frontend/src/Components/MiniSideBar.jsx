@@ -75,6 +75,7 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' 
     flexShrink: 0,
     whiteSpace: 'nowrap',
     boxSizing: 'border-box',
+    backgroundColor: theme.palette.background.default,
     ...(open && {
       ...openedMixin(theme),
       '& .MuiDrawer-paper': openedMixin(theme),
@@ -125,7 +126,7 @@ export default function MiniDrawer() {
         <Header />
       </AppBar>
       {isLoggedIn && 
-      <Drawer variant="permanent" open={open}>
+      <Drawer variant="permanent" open={open} sx={{backgroundColor: 'primary'}}>
         <DrawerHeader>
           <IconButton onClick={handleDrawerClose} sx={{
             opacity: !open ? 0 : 1,
@@ -166,7 +167,7 @@ export default function MiniDrawer() {
             justifyContent: 'center',
           }}
         >
-          {React.createElement(routeIcons[route], {size: 20, color: isActiveRoute(route) ? 'red' : ''})}
+          {React.createElement(routeIcons[route], {size: 20, color: isActiveRoute(route) ? theme.palette.secondary.main : ''})}
         </ListItemIcon>
         <ListItemText primary={route.charAt(0).toUpperCase() + route.slice(1)} sx={{ opacity: open ? 1 : 0 }} />
       </ListItemButton>

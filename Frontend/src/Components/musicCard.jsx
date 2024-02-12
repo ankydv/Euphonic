@@ -81,7 +81,7 @@ const MusicCard = () => {
 
   useEffect(() => {
     const handleTimeUpdate = () => {
-      setPlayerState(audioRef.current.paused ? 2 : 1);
+      setPlayerState(audioRef?.current?.paused ? 2 : 1);
     };
     if (audioRef.current)
       audioRef.current.addEventListener("timeupdate", handleTimeUpdate);
@@ -106,10 +106,11 @@ const MusicCard = () => {
       getMusicInfo(currMusic.videoId)
         .then((response) => {
           if(response.data.playabilityStatus.status == 'OK'){
-            sendMusicInfo(response.data);
-            setThumbUrl(
-              response.data.videoDetails.thumbnail.thumbnails.pop().url
-            );
+            const thumbnails = response.data.videoDetails.thumbnail.thumbnails;
+            const lastThumbnail = thumbnails.pop();
+            const lastThumbnailUrl = lastThumbnail.url; 
+            setThumbUrl(lastThumbnailUrl); 
+            sendMusicInfo({...response.data, lastThumbnailUrl: lastThumbnailUrl});
             }
           else{
             setOpen(true);
@@ -136,7 +137,7 @@ const MusicCard = () => {
     const newValue = parseInt(event.target.value);
     const seekTime = (newValue / 100) * totalDuration;
     player.currentTime = seekTime;
-    if(videoRef.current)
+    if(videoRef && videoRef.current)
     videoRef.current.currentTime = seekTime;
   };
 
@@ -187,10 +188,10 @@ const MusicCard = () => {
   const handlePlayPause = () => {
     if (playerState === 1) {
       player.pause();
-      if(videoRef.current) videoRef.current.pause();
+      videoRef?.current?.pause();
     } else if (isLoggedIn) {
       player.play();
-      if(videoRef.current) videoRef.current.play();
+      videoRef?.current?.play();
     }
   };
 

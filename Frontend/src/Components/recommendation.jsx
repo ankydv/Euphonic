@@ -18,7 +18,7 @@ const MusicRecommendation = () => {
 
   useEffect(() => {
     setIsLoading(true);
-    axios.get(`${server}api/charts`)
+    axios.get(`${server}api/home`)
     .then((res) => {
       setCharts(res.data);
       setIsLoading(false);
@@ -28,12 +28,11 @@ const MusicRecommendation = () => {
   return (
     <div className="music-recommendation">
         {
-        charts!==null &&
-        Object.entries(charts).map(([chartKey, chartData], index) => (
-          chartData.items && <MusicCards
+        charts.map((chartData, index) => (
+          chartData &&<MusicCards
            key={index} 
-           title={chartKey} 
-           dataSet={chartData.items}
+           title={chartData.title} 
+           dataSet={chartData.contents}
            isLoading={isLoading} />
         ))}
     </div>
@@ -47,17 +46,20 @@ const MusicCardItem = ({ music, isLoading, itemType }) => {
   const { sendMusic } = bindActionCreators(actionCreators, dispatch);
   const navigate = useNavigate();
 
-  const type = itemType ? itemType.toLowerCase() : null;
-  const isAlbum = music.resultType=='album' || type == 'albums';
-  const isArtist = music.resultType=='artist' || type == 'artists' || type == 'related';
+  const type = itemType?.toLowerCase();
+  const isAlbum = music?.resultType=='album' || type?.includes('albums');
+  const isArtist = music?.resultType=='artist' || type == 'artists' || type == 'related';
+  const isPlayList = Boolean(music?.playlistId);
 
   const handlePlay = (music) =>{
-    if(type =='songs' || type == 'videos' || type == 'trending' || music.videoId)
+    if(type =='songs' || type == 'videos' || type == 'trending' || music?.videoId)
       sendMusic(music)
     else if(isArtist)
-      navigate(`/artist?q=${music.browseId?music.browseId:music.artists[0].id}`);
+      navigate(`/artist?q=${music?.browseId?music?.browseId:music?.artists[0].id}`);
     else if(isAlbum)
-      navigate(`/album?q=${music.browseId}`);
+      navigate(`/album?q=${music?.browseId}`);
+    else if(isPlayList)
+      navigate(`/playlist?q=${music?.playlistId}`)
   }
 
   const imgClass = isArtist ? "image shimmer artist" : "image shimmer";
@@ -67,7 +69,7 @@ const MusicCardItem = ({ music, isLoading, itemType }) => {
       <div className={imgClass}/>
       <div className="music-details">
       <div className="song-title shimmer" />
-        {music.artists && (
+        {music?.artists && (
           <div className="song-artist shimmer" />
         )}
       </div>
@@ -86,18 +88,18 @@ const MusicCardItem = ({ music, isLoading, itemType }) => {
     <div className="music-card-item" onClick={() => handlePlay(music)}>
       <div className={imgClass}>
         <img src={
-          (music.thumbnails[1])?
-            music.thumbnails[1].url
+          (music?.thumbnails[1])?
+            music?.thumbnails[1].url
           :                               // Ternary operator to check if high quality thumbnail is available and set.
-            music.thumbnails[0].url
-        } alt={music.title} />
+            music?.thumbnails[0].url
+        } alt={music?.title} />
       </div>
       <div className="music-details">
-        <p>{music.resultType == 'artist'? music.artist : music.title}</p>
-        {music.artists && (
+        <p>{music?.resultType == 'artist'? music?.artist : music?.title}</p>
+        {music?.artists && (
           <p>
-            {music.artists.map((artist, index) => (
-              <span key={index}>{artist.name}{index!==music.artists.length-1 && <span>, </span>}</span>
+            {music?.artists.map((artist, index) => (
+              <span key={index}>{artist.name}{index!==music?.artists.length-1 && <span>, </span>}</span>
             ))
             }
           </p>
