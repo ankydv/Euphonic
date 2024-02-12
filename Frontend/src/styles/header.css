@@ -4,45 +4,15 @@
 }
 
 .header {
-  z-index: 1;
-  position: sticky;
-  top:0px;
-  /* background-color: gray; */
+  position: relative;
   width: 100%;
-  height: var(--header-height);
+  height: 100%;
   display: flex;
   flex-flow: row;
-  /* margin-top: 1.5vh;
-  margin-bottom: 1vh; */
-  padding-top: 1vh;
   align-items: center;
-
-  background: linear-gradient(
-    238.5deg,
-    var(--primary-color) 9.98%,
-    var(--secondary-color) 60.68%,
-    rgba(255, 255, 255, 0.03) 105.42%
-  ) fixed;
-
+  justify-content: space-between;
+  padding: 5px 10px;
   backdrop-filter: blur(10px);
-}
-
-.header:before {
-  position: absolute;
-  z-index: -1;
-  top: 0;
-  right: 0;
-  bottom: var(--header-before-bottom);
-  left: 0;
-  border: inherit;
-  border-color: transparent;
-  background: inherit;
-  background-clip: border-box;
-  -webkit-filter: blur(9px);
-  filter: blur(2px);
-  -webkit-clip-path: inset(0);
-  clip-path: inset(0);
-  content: "";
 }
 /* @media (max-width: 500px){
   .header{

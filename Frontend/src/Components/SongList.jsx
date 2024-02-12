@@ -6,6 +6,7 @@ import { useDispatch } from "react-redux";
 import { bindActionCreators } from "redux";
 import { actionCreators } from "../state/index";
 import PlayPause from "./playPause";
+import { Box, List, ListItem, ListItemButton } from "@mui/material";
 
 const server = process.env.REACT_APP_SERVER;
 
@@ -24,31 +25,31 @@ const SongList = ({ title, list, isLoading, shimmerLength }) => {
   }
 
   return isLoading ? (
-    <div className="song-list-container shimmer-container">
-      <div className="heading shimmer" />
-      <ul className="song-list-list">
+    <Box className="song-list-container shimmer-container">
+      <Box className="heading shimmer" />
+      <List className="song-list-list">
         {Array.apply(null, { length: shimmerLength?shimmerLength : 15 }).map((song, index) => (
-          <li className="shimmer-li" key={index}>
-            <div className="song-info-container">
-              <div className="image shimmer"></div>
-              <div className="song-info">
-                <div className="song-title shimmer" />
-                <div className="song-artist shimmer" />
-              </div>
-            </div>
-          </li>
+          <ListItemButton className="shimmer-ListItemButton" key={index}>
+            <Box className="song-info-container">
+              <Box className="image shimmer"></Box>
+              <Box className="song-info">
+                <Box className="song-title shimmer" />
+                <Box className="song-artist shimmer" />
+              </Box>
+            </Box>
+          </ListItemButton>
         ))}
-      </ul>
-    </div>
+      </List>
+    </Box>
   ) : (
     list != [] && (
-      <div className="song-list-container">
+      <Box className="song-list-container">
         <h2>{title}</h2>
-        <ul className="song-list-list">
+        <List className="song-list-list">
           {list.map((song, index) => (
-            <li key={index} onClick={() => sendMusic(findSongLoc(song))}>
-              <div className="song-info-container">
-                <div className="image">
+            <ListItemButton key={index} onClick={() => sendMusic(findSongLoc(song))}>
+              <Box className="song-info-container">
+                <Box className="image">
                   <img
                     className={
                       currMusic && findSongLoc(song).videoId === currMusic.videoId
@@ -61,21 +62,21 @@ const SongList = ({ title, list, isLoading, shimmerLength }) => {
                         : findSongLoc(song).thumbnail && findSongLoc(song).thumbnail[0].url
                     }
                   ></img>l
-                </div>
+                </Box>
                 {currMusic && findSongLoc(song).videoId === currMusic.videoId && (
                   <PlayPause toggle={true}></PlayPause>
                 )}
-                <div className="song-info">
+                <Box className="song-info">
                   <span className="song-title">{findSongLoc(song).title}</span>
                   <span className="song-artist">
                     {findSongLoc(song).artists[0] && findSongLoc(song).artists[0].name}
                   </span>
-                </div>
-              </div>
-            </li>
+                </Box>
+              </Box>
+            </ListItemButton>
           ))}
-        </ul>
-      </div>
+        </List>
+      </Box>
     )
   );
 };

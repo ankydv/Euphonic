@@ -7,13 +7,10 @@
     rgba(255, 255, 255, 0.63) 90.43%
   );
   border: 0px;
-  left: 50%;
   width: 40%;
   height: 55px;
   max-width: 500px;
-  position: absolute;
-  top: 65%;
-  transform: translate(-50%, -50%);
+  position: relative;
   max-width: 450px;
 }
 

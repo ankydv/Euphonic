@@ -122,7 +122,7 @@ export default function MiniDrawer() {
   return (
     <>
       <CssBaseline />
-      <AppBar color='inherit' position="fixed" sx={{ height: 0 }} open={open}>
+      <AppBar position="fixed" color='default' sx={{ height: '9vh' }} open={open}>
         <Header />
       </AppBar>
       {isLoggedIn && 

@@ -7,6 +7,7 @@ import { useDispatch } from "react-redux";
 import { bindActionCreators } from "redux";
 import { actionCreators } from "../state/index";
 import PlayPause from "./playPause";
+import { Box, List, ListItemButton, Typography } from "@mui/material";
 
 const server = process.env.REACT_APP_SERVER;
 
@@ -51,51 +52,51 @@ const Queue = () => {
   }, [currMusic, queue]);
 
   return isLoading ? (
-    <div className="up-next-container shimmer-container">
-      <div className="heading shimmer" />
-      <ul className="up-next-list">
+    <Box className="up-next-container shimmer-container">
+      <Box className="heading shimmer" />
+      <ListItemButton className="up-next-list">
         {Array.apply(null, { length: 15 }).map((song, index) => (
           <li className="shimmer-li" key={index}>
-            <div className="song-info-container">
-              <div className="image shimmer"></div>
-              <div className="song-info">
-                <div className="song-title shimmer" />
-                <div className="song-artist shimmer" />
-              </div>
-            </div>
+            <Box className="song-info-container">
+              <Box className="image shimmer"></Box>
+              <Box className="song-info">
+                <Box className="song-title shimmer" />
+                <Box className="song-artist shimmer" />
+              </Box>
+            </Box>
           </li>
         ))}
-      </ul>
-    </div>
+      </ListItemButton>
+    </Box>
   ) : (
-    <div className="up-next-container">
+    <Box className="up-next-container">
       <h2>Up Next</h2>
-      <ul className="up-next-list">
+      <List className="up-next-list">
         {queue.map((song, index) => (
-          <li
+          <ListItemButton
             key={index}
-            className={index === currentIndex ? "active" : ""}
+            selected={index === currentIndex}
             onClick={() => handlePlay(index)}
           >
-            <div className="song-info-container">
-              <div className="image">
+            <Box className="song-info-container">
+              <Box className="image">
                 <img
                   className={index === currentIndex ? "active" : ""}
                   src={song.thumbnail[0].url}
                 ></img>
-              </div>
+              </Box>
               {currentIndex === index ? (
                 <PlayPause toggle={true}></PlayPause>
               ) : null}
-              <div className="song-info">
-                <span className="song-title">{song.title}</span>
-                <span className="song-artist">{song.artists[0].name}</span>
-              </div>
-            </div>
-          </li>
+              <Box className="song-info">
+                <Typography variant="ghost" className="song-title">{song.title}</Typography>
+                <Typography className="song-artist">{song.artists[0].name}</Typography>
+              </Box>
+            </Box>
+          </ListItemButton>
         ))}
-      </ul>
-    </div>
+      </List>
+    </Box>
   );
 };
 

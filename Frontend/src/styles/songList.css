@@ -27,7 +27,7 @@
     cursor: auto;
   }
   
-  .song-list-list li.active {
+  .Mui-selected {
     background-color: #f0f0f0;
   }
 

@@ -9,7 +9,7 @@
     overflow-x: hidden;
   }
   .up-next-container li:not(.shimmer-li):hover{
-    background-color: #f16fa3;
+    background-color: #e8edcb;
   }
   .up-next-container .heading.shimmer{
     width: 150px;
