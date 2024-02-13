@@ -1,14 +1,11 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import "../styles/songList.css";
 import { useSelector } from "react-redux";
 
 import { useDispatch } from "react-redux";
 import { bindActionCreators } from "redux";
 import { actionCreators } from "../state/index";
-import PlayPause from "./playPause";
-import { Box, List, ListItem, ListItemButton, Skeleton } from "@mui/material";
-
-const server = process.env.REACT_APP_SERVER;
+import { Box, List, ListItemButton } from "@mui/material";
 
 const SongList = ({ title, list, isLoading, shimmerLength, handleSongClick, isQueue }) => {
   const currMusic = useSelector((state) => state.music);
@@ -66,7 +63,9 @@ const SongList = ({ title, list, isLoading, shimmerLength, handleSongClick, isQu
                     }
                   ></img>l
                   {currMusic && findSongLoc(song).videoId === currMusic.videoId && (
-                  <PlayPause toggle={true}></PlayPause>
+                  <div className="music-animation">
+                    <iframe style={{width: '100%', height: '100%'}} src="https://lottie.host/embed/cbe6b02b-aa3a-49d0-a453-d86309f0d3a0/Lp7WR9eOSy.json"></iframe>
+                  </div>
                 )}
                 </Box>
                 <Box className="song-info">

@@ -4,6 +4,7 @@ import "../styles/searchBar.css";
 import { useState } from "react";
 import { NavLink, useSearchParams, useLocation } from "react-router-dom";
 import axios from "axios";
+import { Input, TextField } from "@mui/material";
 
 const server = process.env.REACT_APP_SERVER;
 
@@ -55,13 +56,15 @@ const SearchBar = () => {
       <div class="searchInput">
         <form onSubmit={handleSubmit} autoComplete="off">
           <NavLink to="/search" onClick={shouldNavigate}>
-            <input
-              id="searchInput"
+            <TextField
+            className="mui-input"
+              color="primary"
+              id="searchInput" 
               type="text"
               name="txt"
               value={searchValue}
               onChange={handleChange}
-              placeholder="Enter search keyword..."
+              placeholder="What's on your mind?"
               onFocus={() => setIsFocus(true)}
               // onBlur={() => setIsFocus(false)}
             />
@@ -76,9 +79,6 @@ const SearchBar = () => {
             setSearchValue={setSearchValue}
           />
         )}
-        <button type="submit" onClick={handleSubmit} className="icon">
-          <i class="fas fa-search"></i>
-        </button>
       </div>
     </div>
   );
