@@ -2,9 +2,10 @@ import React, { useEffect, useRef } from "react";
 import "../styles/searchBar.css";
 
 import { useState } from "react";
-import { NavLink, useSearchParams, useLocation } from "react-router-dom";
+import { NavLink, useSearchParams, useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
-import { Input, TextField } from "@mui/material";
+import { Input, List, li, TextField, Typography, ListItemButton } from "@mui/material";
+import { useTheme } from "@emotion/react";
 
 const server = process.env.REACT_APP_SERVER;
 
@@ -14,6 +15,7 @@ const SearchBar = () => {
 
   const [searchParams, setSearchParams] = useSearchParams();
   const location = useLocation();
+  const navigate = useNavigate();
 
   const containerRef = useRef(null);
 
@@ -46,29 +48,27 @@ const SearchBar = () => {
     setSearchValue(event.target.value);
   };
 
-  const shouldNavigate = (event) => {
-    event.stopPropagation();
-    // if (location.pathname == "/search") event.preventDefault();
-    event.stopPropagation();
-  };
+  const handleFocus = () => {
+    if(location.pathname!=='/search')
+      navigate('/search')
+    setIsFocus(true)
+  }
   return (
     <div class="searchContainer" ref={containerRef}>
       <div class="searchInput">
         <form onSubmit={handleSubmit} autoComplete="off">
-          <NavLink to="/search" onClick={shouldNavigate}>
-            <TextField
+          <TextField
             className="mui-input"
-              color="primary"
-              id="searchInput" 
-              type="text"
-              name="txt"
-              value={searchValue}
-              onChange={handleChange}
-              placeholder="What's on your mind?"
-              onFocus={() => setIsFocus(true)}
-              // onBlur={() => setIsFocus(false)}
-            />
-          </NavLink>
+            color="primary"
+            id="searchInput" 
+            type="text"
+            name="txt"
+            value={searchValue}
+            onChange={handleChange}
+            placeholder="What's on your mind?"
+            onFocus={handleFocus}
+            // onBlur={() => setIsFocus(false)}
+          />
         </form>
         {searchValue.trim() && (
           <ResultBox
@@ -86,26 +86,15 @@ const SearchBar = () => {
 
 const ResultBox = ({ searchValue,setSearchParams, setSearchValue, isFocus, setIsFocus }) => {
   const [suggestions, setSuggestions] = useState();
-  const [delayedSearchValue, setDelayedSearchValue] = useState('');
+  const theme = useTheme();
 
   useEffect(() => {
-    // Clear the previous timeout
-    const timeoutId = setTimeout(() => {
-      // Check if delayedSearchValue is not empty before making the API call
-      if (delayedSearchValue) {
-        axios.get(`${server}api/searchSuggestions/${delayedSearchValue}`)
-          .then((res) => {
-            setSuggestions(res.data);
-          });
-      }
-    }, 250); // Adjust the delay time as needed (e.g., 500 milliseconds)
-
-    // Cleanup the timeout on component unmount or when searchValue changes
-    return () => clearTimeout(timeoutId);
-  }, [delayedSearchValue]);
-
-  useEffect(() => {
-    setDelayedSearchValue(searchValue);
+    if (searchValue) {
+      axios.get(`${server}api/searchSuggestions/${searchValue}`)
+        .then((res) => {
+          setSuggestions(res.data);
+        });
+    }
   }, [searchValue]);
 
   const handleClick = (value) => {
@@ -115,21 +104,21 @@ const ResultBox = ({ searchValue,setSearchParams, setSearchValue, isFocus, setIs
   };
 
   return (
-    <div className={`resultBox ${isFocus ? "visible" : "hidden"}`}>
+    <List className={`resultBox ${isFocus ? "visible" : "hidden"}`} style={{backgroundColor: theme.palette.background.default}}>
       {suggestions &&
         suggestions.map((suggestion, index) => (
-          <li key={index} onClick={() => handleClick(suggestion.text)}>
+          <ListItemButton key={index} onClick={() => handleClick(suggestion.text)} style={{whiteSpace: 'pre-wrap'}}>
             {suggestion.runs.map((textObj, ind) => (
-              <text
+              <Typography
                 key={ind}
-                style={{ fontWeight: textObj.bold ? "bold" : "normal" }}
+                fontWeight = {textObj.bold ? "bold" : "normal"}
               >
                 {textObj.text}
-              </text>
+              </Typography>
             ))}
-          </li>
+          </ListItemButton>
         ))}
-    </div>
+    </List>
   );
 };
 export default SearchBar;
