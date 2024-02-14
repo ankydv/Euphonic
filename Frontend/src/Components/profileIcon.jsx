@@ -56,7 +56,7 @@ const ProfileIcon = () => {
         sx={{ bgcolor: deepPurple[500], cursor: 'pointer' }}
         alt="Remy Sharp"
         src="/broken-image.jpg"
-      >{currUser['name'].charAt(0).toUpperCase()}
+      >{currUser['firstName'].charAt(0).toUpperCase()}
         </Avatar>
         :
         <Button variant="outlined" color="secondary" size="large" sx={{color:'white', borderColor: 'white'}} onClick={(() => navigate('/login'))} >Login</Button>
