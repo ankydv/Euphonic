@@ -10,7 +10,7 @@ import Liked from './Components/Liked';
 import Test from './Components/Test';
 import PlayListInfo from './Components/PlayListInfo';
 import SignIn from './Components/SignIn';
-import SignUp from './Components/SignUp';
+import SignUp from './Components/Signup';
 
 const MyRoutes = () => {
   return (
