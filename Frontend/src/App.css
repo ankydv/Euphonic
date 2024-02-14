@@ -30,3 +30,13 @@
     height: 30px;
     margin: 0.83em 0 0.83em 10px;
   }
+
+  /* Hide the spin buttons for number input */
+input[type='number']::-webkit-inner-spin-button,
+input[type='number']::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+input[type='number'] {
+  -moz-appearance: textfield; /* Firefox */
+}

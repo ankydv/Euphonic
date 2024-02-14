@@ -19,6 +19,7 @@ app.use(express.json());
 // availabel routes
 app.use("/api/auth", require("./routes/auth"));
 app.use("/api/songs", require("./routes/songs"));
+app.use('/api/verifications', require('./routes/verifications'));
 app.get('/', async (req, res) => {
   res.send('Hello')
 })
@@ -101,4 +102,4 @@ app.listen(port, () => {
 });
 
 
-module.exports = app;
+module.exports = [app, transporter];
