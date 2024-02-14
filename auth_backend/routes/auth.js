@@ -11,7 +11,8 @@ const jwt_secret = "subhaisagood$oy";
 router.post(
   "/createuser",
   [
-    body("name", "Enter a valid name").isLength({ min: 3 }),
+    body("firstName", "Enter a valid name").isLength({ min: 3 }),
+    body("lastName", "Enter a valid name").isLength({ min: 3 }),
     body("email", "Enter a valid email").isEmail(),
     body("password", "enter a password atleast 5 characters").isLength({
       min: 5,
@@ -39,7 +40,8 @@ router.post(
 
       //create a new user
       user = await User.create({
-        name: req.body.name,
+        firstName: req.body.firstName,
+        lastName: req.body.lastName,
         email: req.body.email,
         password: secPass,
       });
