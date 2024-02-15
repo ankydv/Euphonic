@@ -20,7 +20,7 @@ router.get('/checkUser', async (req, res) => {
     try {
         const user = await User.findOne({ email: req.query.email });
         if (user)
-            res.json({ success: false });
+            res.json({ success: false, error: 'Email already registered' });
         else
             res.json({ success: true });
     } catch (error) {
@@ -57,5 +57,27 @@ router.get('/sendOtp', async(req, res) => {
         res.status(500).json({success: false, error: "Failed to send OTP" });
 }
 })
+
+router.post('/verify-otp', async (req, res) => {
+    try {
+        const { email, otp } = req.body;
+
+        if (!email || !otp) {
+            return res.status(400).json({ message: 'Email and OTP are required' });
+        }
+        const otpDoc = await OTP.findOne({ email });
+        if (!otpDoc) {
+            return res.status(404).json({ message: 'OTP not found for the provided email' });
+        }
+        if (otpDoc.otp !== otp) {
+            return res.status(400).json({ message: 'Invalid OTP' });
+        }
+        await OTP.deleteOne({ email });
+        return res.status(200).json({success: true, message: 'OTP verified successfully' });
+    } catch (error) {
+        console.error('Error verifying OTP:', error);
+        return res.status(500).json({ message: 'Internal server error' });
+    }
+});
 
 module.exports = router;

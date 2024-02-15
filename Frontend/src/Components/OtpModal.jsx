@@ -10,6 +10,9 @@ import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Container from '@mui/material/Container';
+import axios from 'axios';
+
+const SERVER = process.env.REACT_APP_AUTH_SERVER;
 
 const style = {
   position: 'absolute',
@@ -23,21 +26,51 @@ const style = {
   p: 4,
 };
 
-export default function OtpModal() {
-  const [open, setOpen] = React.useState(true);
-  const handleOpen = () => setOpen(true);
+export default function OtpModal({email, open, setOpen, next}) {
+  const [sent, setSent] = React.useState(false);
   const handleClose = (event, reason) => {
     if(reason === 'backdropClick')
       return
     setOpen(false)
   };
   const [isLoading, setIsLoading] = React.useState(false);
-  
-  function handleSubmit(event){
+  const isFirstRun = React.useRef(true);
+  React.useEffect(() => {
+    const fetchData = async () => {
+        try {
+            const res = await axios.get(`${SERVER}api/verifications/sendOtp?email=${email}`);
+            console.log(email);
+            console.log('otp sent');
+        } catch (error) {
+            console.error('Error sending OTP:', error);
+        }
+    };
+
+    if (isFirstRun.current) {
+        isFirstRun.current = false;
+        fetchData();
+    }
+}, []);
+
+  async function handleSubmit(event){
     event.preventDefault();
     const formData = new FormData(event.currentTarget);
     const otp = formData.get('otp');
-    prompt(otp);
+    const body = { email, otp: otp.toString() }
+    console.log(body);
+    try {
+      const response = await axios.post(`${SERVER}api/verifications/verify-otp`, body);
+      if(response.data.success){
+        console.log(response.data.message)
+        handleClose()
+        next();
+      }
+      else{
+        console.log(response.data.message);
+      }
+  } catch (error) {
+      console.error('Error verifying OTP:', error);
+  }
   }
   return (
     <Modal

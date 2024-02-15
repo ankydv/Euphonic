@@ -9,6 +9,7 @@ import Box from "@mui/material/Box";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
+import axios from 'axios';
 
 import { useDispatch } from "react-redux";
 import { login } from "../state/action-creators";
@@ -22,14 +23,37 @@ export default function SignUp() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
-
+  const [isOtpModalOpen, setIsOtpModalOpen] = useState(false);
+  const [email, setEmail] = useState();
+  const [formData, setFormData] = useState();
+  const checkUser = async (email)=>{
+    const res = await axios.get(`${SERVER}api/verifications/checkUser?email=${email}`)
+    return res.data;
+  }
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsLoading(true);
-    const formData = new FormData(e.currentTarget);
+    setFormData(new FormData(e.currentTarget));
+    const data = new FormData(e.currentTarget);
+    const temp = data.get('email');
+    setEmail(temp);
+    const shouldRegister = await checkUser(temp);
+    if(shouldRegister.success){
+      console.log(shouldRegister)
+      setIsOtpModalOpen(true);
+      setIsLoading(false)
+      return;
+    }
+    else{
+      console.log(shouldRegister.error);
+      setIsLoading(false);
+      return;
+    }
+  };
+
+  const createUser = async () => {
     const firstName = formData.get("firstName");
     const lastName = formData.get("lastName");
-    const email = formData.get("email");
     const password = formData.get("password");
     const response = await fetch(`${SERVER}api/auth/createuser`, {
       method: "POST",
@@ -49,8 +73,7 @@ export default function SignUp() {
       // props.showAlert("Invalid Details","danger");
       console.log("failse");
     }
-  };
-
+  }
   return (
     <Container component="main" maxWidth="xs">
       <CssBaseline />
@@ -138,7 +161,7 @@ export default function SignUp() {
           </Grid>
         </Box>
       </Box>
-      <OtpModal/>
+      {isOtpModalOpen && <OtpModal email={email} open={isOtpModalOpen} setOpen={setIsOtpModalOpen} next={createUser}/>}
     </Container>
   );
 }
