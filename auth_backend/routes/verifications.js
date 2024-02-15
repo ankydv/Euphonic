@@ -63,14 +63,14 @@ router.post('/verify-otp', async (req, res) => {
         const { email, otp } = req.body;
 
         if (!email || !otp) {
-            return res.status(400).json({ message: 'Email and OTP are required' });
+            return res.json({ message: 'Email and OTP are required' });
         }
         const otpDoc = await OTP.findOne({ email });
         if (!otpDoc) {
-            return res.status(404).json({ message: 'OTP not found for the provided email' });
+            return res.json({ message: 'OTP Expired' });
         }
         if (otpDoc.otp !== otp) {
-            return res.status(400).json({ message: 'Invalid OTP' });
+            return res.json({ message: 'Invalid OTP' });
         }
         await OTP.deleteOne({ email });
         return res.status(200).json({success: true, message: 'OTP verified successfully' });

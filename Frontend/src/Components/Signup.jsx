@@ -16,6 +16,7 @@ import { login } from "../state/action-creators";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import OtpModal from "./OtpModal";
+import { Alert } from "@mui/material";
 
 const SERVER = process.env.REACT_APP_AUTH_SERVER;
 
@@ -26,28 +27,34 @@ export default function SignUp() {
   const [isOtpModalOpen, setIsOtpModalOpen] = useState(false);
   const [email, setEmail] = useState();
   const [formData, setFormData] = useState();
+  const [alertMsg, setAlertMsg] = useState();
   const checkUser = async (email)=>{
     const res = await axios.get(`${SERVER}api/verifications/checkUser?email=${email}`)
     return res.data;
   }
   const handleSubmit = async (e) => {
     e.preventDefault();
+
     setIsLoading(true);
+    setAlertMsg(null);
     setFormData(new FormData(e.currentTarget));
     const data = new FormData(e.currentTarget);
     const temp = data.get('email');
     setEmail(temp);
-    const shouldRegister = await checkUser(temp);
-    if(shouldRegister.success){
-      console.log(shouldRegister)
-      setIsOtpModalOpen(true);
-      setIsLoading(false)
-      return;
+    try{
+      const shouldRegister = await checkUser(temp);
+      if(shouldRegister.success){
+        setIsOtpModalOpen(true);
+      }
+      else{
+        setAlertMsg(shouldRegister.error);
+      }
     }
-    else{
-      console.log(shouldRegister.error);
+    catch (error) {
+      setAlertMsg(error.message);
+    }
+    finally{
       setIsLoading(false);
-      return;
     }
   };
 
@@ -79,7 +86,6 @@ export default function SignUp() {
       <CssBaseline />
       <Box
         sx={{
-          marginTop: 8,
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
@@ -91,6 +97,7 @@ export default function SignUp() {
         <Typography component="h1" variant="h5">
           Sign up
         </Typography>
+        {alertMsg && <Alert severity="error">{alertMsg}</Alert>}
         <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 3 }}>
           <Grid container spacing={2}>
             <Grid item xs={12} sm={6}>

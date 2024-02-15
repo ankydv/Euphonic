@@ -11,6 +11,7 @@ import Box from '@mui/material/Box';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Container from '@mui/material/Container';
 import axios from 'axios';
+import { Alert } from '@mui/material';
 
 const SERVER = process.env.REACT_APP_AUTH_SERVER;
 
@@ -27,7 +28,7 @@ const style = {
 };
 
 export default function OtpModal({email, open, setOpen, next}) {
-  const [sent, setSent] = React.useState(false);
+  const [alertMsg, setAlertMsg] = React.useState();
   const handleClose = (event, reason) => {
     if(reason === 'backdropClick')
       return
@@ -38,11 +39,14 @@ export default function OtpModal({email, open, setOpen, next}) {
   React.useEffect(() => {
     const fetchData = async () => {
         try {
-            const res = await axios.get(`${SERVER}api/verifications/sendOtp?email=${email}`);
-            console.log(email);
-            console.log('otp sent');
+          const res = await axios.get(`${SERVER}api/verifications/sendOtp?email=${email}`);
+          if(res.data.success)
+            setAlertMsg({payload: res.data.message, type: 'success'})
+          else 
+          setAlertMsg({payload: res.data.error, type: 'error'})
         } catch (error) {
-            console.error('Error sending OTP:', error);
+          setAlertMsg({payload: error.message, type: 'error'})
+          console.error('Error sending OTP:', error);
         }
     };
 
@@ -53,10 +57,12 @@ export default function OtpModal({email, open, setOpen, next}) {
 }, []);
 
   async function handleSubmit(event){
+    setIsLoading(true);
+    setAlertMsg(null);
     event.preventDefault();
     const formData = new FormData(event.currentTarget);
     const otp = formData.get('otp');
-    const body = { email, otp: otp.toString() }
+    const body = { email, otp: otp}
     console.log(body);
     try {
       const response = await axios.post(`${SERVER}api/verifications/verify-otp`, body);
@@ -66,10 +72,14 @@ export default function OtpModal({email, open, setOpen, next}) {
         next();
       }
       else{
-        console.log(response.data.message);
+        setAlertMsg({payload: response.data.message, type: 'error'});
       }
   } catch (error) {
+      setAlertMsg({payload: error.message, type: 'error'});
       console.error('Error verifying OTP:', error);
+  }
+  finally{
+    setIsLoading(false);
   }
   }
   return (
@@ -95,6 +105,7 @@ export default function OtpModal({email, open, setOpen, next}) {
     <Typography component="h1" variant="h5">
         Verification
     </Typography>
+    {alertMsg && <Alert severity={alertMsg.type}>{alertMsg.payload}</Alert>}
     <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 3 }}>
         <Grid container spacing={2}>
         <Grid item xs={12} alignItems={'center'}>
