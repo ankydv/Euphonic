@@ -79,15 +79,13 @@ router.post(
       if (!user) {
         success=false;
         return res
-          .status(404)
-          .json({ error: "please try to login with correct credentials" });
+          .json({success, error: "User not found" });
       }
       const passwordCompare = await bcrypt.compare(password, user.password);
       if (!passwordCompare) {
         success=false;
         return res
-          .status(404)
-          .json({success, error: "please try to login with correct credentials" });
+          .json({success, error: "Incorrect Password" });
       }
 
       const data = {

@@ -29,9 +29,6 @@ router.get('/checkUser', async (req, res) => {
     }
 });
 
-router.get('/test', (req, res) => {
-    res.send('Hello, world!');
-});
 router.get('/sendOtp', async(req, res) => {
     const otp = Math.floor(100000 + Math.random() * 900000);
     const updatedOTP = await OTP.findOneAndUpdate(

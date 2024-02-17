@@ -167,6 +167,7 @@ export default function SignUp() {
             </Grid>
           </Grid>
         </Box>
+        {alertMsg && <Alert severity="error">{alertMsg}</Alert>}
       </Box>
       {isOtpModalOpen && <OtpModal email={email} open={isOtpModalOpen} setOpen={setIsOtpModalOpen} next={createUser}/>}
     </Container>

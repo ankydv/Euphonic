@@ -16,6 +16,7 @@ import { useDispatch } from "react-redux";
 import { login } from "../state/action-creators";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
+import { Alert } from "@mui/material";
 
 const SERVER = process.env.REACT_APP_AUTH_SERVER;
 
@@ -23,15 +24,18 @@ export default function SignIn() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
+  const [alertMsg, setAlertMsg] = useState();
 
   const handleSubmit = (event) => {
     event.preventDefault();
+    setAlertMsg(null);
     const formData = new FormData(event.currentTarget);
     authenticateLogin(formData);
   };
 
   const authenticateLogin = async (formData) => {
     setIsLoading(true);
+    try{
     const response = await fetch(`${SERVER}api/auth/login`, {
       method: "POST",
       headers: {
@@ -42,15 +46,21 @@ export default function SignIn() {
         password: formData.get("password"),
       }),
     });
-    setIsLoading(false);
     const json = await response.json();
     if (json.success) {
       localStorage.setItem("token", json.authtoken);
       dispatch(login(json.authtoken));
       navigate("/");
     } else {
-      return false;
+      setAlertMsg(json.error);
     }
+  }
+  catch (error) {
+    setAlertMsg(error.message);
+  }
+  finally{
+    setIsLoading(false);
+  }
   };
 
   return (
@@ -131,6 +141,7 @@ export default function SignIn() {
             </Grid>
           </Grid>
         </Box>
+        {alertMsg && <Alert severity="error">{alertMsg}</Alert>}
       </Box>
     </Container>
   );
