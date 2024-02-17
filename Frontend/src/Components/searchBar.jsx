@@ -2,10 +2,10 @@ import React, { useEffect, useRef } from "react";
 import "../styles/searchBar.css";
 
 import { useState } from "react";
-import { NavLink, useSearchParams, useLocation, useNavigate } from "react-router-dom";
+import { useSearchParams, useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
-import { Input, List, li, TextField, Typography, ListItemButton } from "@mui/material";
-import { useTheme } from "@emotion/react";
+import { List, TextField, Typography, ListItemButton } from "@mui/material";
+import { useTheme } from "@mui/material";
 
 const server = process.env.REACT_APP_SERVER;
 

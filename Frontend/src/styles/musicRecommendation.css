@@ -33,9 +33,6 @@
   transition: 0.1s ease-in;
 }
 
-.music-card-item:not(.shimmer-container):hover{
-  background:#f16fa3;
-}
 
 /* .music-card-item:before {
   z-index: 1;

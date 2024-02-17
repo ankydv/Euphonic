@@ -1,42 +1,59 @@
-import { createTheme } from '@mui/material/styles';
+import { useEffect, useState } from 'react'
+import { createTheme, darken, lighten } from '@mui/material/styles';
+import { useSelector } from 'react-redux';
+import axios from 'axios';
 
-const lightPrimaryColor = 'rgba(118, 155, 249, 0.67)';
-const lightSecondaryColor = '#FF0000';
+const SERVER = process.env.REACT_APP_AUTH_SERVER;
 
-const darkPrimaryColor = 'rgba(118, 155, 249, 0.67)';
-const darkSecondaryColor = '#FF0000';
+const Theme = ({ mode }) => {
+  const thumbUrl = useSelector((state)=>state.musicInfo)?.lastThumbnailUrl;
+  const [dominantColors, setDominantColors] = useState();
 
-const lightBackgroundColor = '#FFFFFF'; // Light mode background color
-const darkBackgroundColor = '#121212'; // Dark mode background color
+  const primaryColor = dominantColors ? dominantColors[2] :'rgb(118, 155, 249)';
+  const secondaryColor = '#FF0000';
+  const backgroundColor = dominantColors ? dominantColors[0] : null; 
 
-const lightTheme = createTheme({
-  palette: {
-    mode: 'light',
-    primary: {
-      main: lightPrimaryColor,
-    },
-    secondary: {
-      main: lightSecondaryColor,
-    },
-    background: {
-      default: lightBackgroundColor, // Set default background color for light mode
-    },
-  },
-});
+  useEffect(()=>{
+    const getDominantColor = async () => {
+      if(!thumbUrl)
+        return
+      const res = await axios.get(`${SERVER}api/colors/color-palette?url=${thumbUrl}`);
+      setDominantColors(res.data.palette);
+    }
+    getDominantColor();
+  },[thumbUrl])
 
-const darkTheme = createTheme({
-  palette: {
-    mode: 'dark',
-    primary: {
-      main: darkPrimaryColor,
+  const lightTheme = createTheme({
+    palette: {
+      mode: 'light',
+      primary: {
+        main: darken(primaryColor, 0.5)
+      },
+      secondary: {
+        main: secondaryColor,
+      },
+      background: {
+        default: backgroundColor?lighten(backgroundColor, 0.9): '#ffffff', 
+      },
     },
-    secondary: {
-      main: darkSecondaryColor,
+  });
+  
+  const darkTheme = createTheme({
+    palette: {
+      mode: 'dark',
+      primary: {
+        main: lighten(primaryColor, 0.5)
+      },
+      secondary: {
+        main: secondaryColor,
+      },
+      background: {
+        default: backgroundColor?darken(backgroundColor, 0.85):'#000000',
+      },
     },
-    background: {
-      default: darkBackgroundColor, // Set default background color for dark mode
-    },
-  },
-});
+  });
+  return mode == 'light' ? lightTheme : darkTheme;
+}
 
-export { lightTheme, darkTheme };
+export default Theme
+

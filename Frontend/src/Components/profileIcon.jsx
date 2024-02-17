@@ -1,16 +1,15 @@
 import "../styles/variables.css";
 import "../styles/profileIcon.css";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import Avatar from '@mui/material/Avatar';
-import { deepPurple } from '@mui/material/colors';
 import Button from '@mui/material/Button';
-import MaterialUISwitch from "./MaterialUI Components/Switch";
 import { bindActionCreators } from "redux";
 import { actionCreators } from "../state";
-
+import { LuMoon, LuSun } from "react-icons/lu";
+import { IconButton, Typography, useTheme } from "@mui/material";
 
 const  SERVER = process.env.REACT_APP_AUTH_SERVER;
 
@@ -20,6 +19,7 @@ const ProfileIcon = () => {
   const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
   const theme = useSelector((state) => state.theme);
   const navigate = useNavigate();
+  const themePalette = useTheme();
 
   const dispatch = useDispatch();
   const { sendTheme } = bindActionCreators(
@@ -49,14 +49,17 @@ const ProfileIcon = () => {
   }
 
   return (
-    <div className="profileIcon" onClick={handleProfile}>
-      <MaterialUISwitch onChange={handleSwitch} checked={theme==='dark'} />
+    <div className="profileIcon">
+      <IconButton title={theme === 'dark' ? "Light theme" : "Dark theme"} onClick={handleSwitch}>
+        {theme === 'dark' ? <LuSun size={25} /> : <LuMoon size={25} color="black" />}
+      </IconButton>
       {
       isLoggedIn ? currUser && <Avatar
-        sx={{ bgcolor: deepPurple[500], cursor: 'pointer' }}
+        sx={{ bgcolor: themePalette.palette.primary.main, cursor: 'pointer' }}
         alt="Remy Sharp"
         src="/broken-image.jpg"
-      >{currUser['firstName'].charAt(0).toUpperCase()}
+        onClick={handleProfile}
+      ><Typography color={'white'}>{currUser['firstName'].charAt(0).toUpperCase()}</Typography>
         </Avatar>
         :
         <Button variant="outlined" color="secondary" size="large" sx={{color:'white', borderColor: 'white'}} onClick={(() => navigate('/login'))} >Login</Button>

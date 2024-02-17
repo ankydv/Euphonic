@@ -8,6 +8,7 @@ import { actionCreators } from '../state/index';
 import axios from "axios";
 import { sample_dataset } from "./helpers/sample";
 import { useNavigate } from "react-router-dom";
+import { Box, useTheme } from "@mui/material";
 
  const server = process.env.REACT_APP_SERVER;
 
@@ -45,6 +46,7 @@ const MusicCardItem = ({ music, isLoading, itemType }) => {
   const dispatch = useDispatch();
   const { sendMusic } = bindActionCreators(actionCreators, dispatch);
   const navigate = useNavigate();
+  const theme = useTheme();
 
   const type = itemType?.toLowerCase();
   const isAlbum = music?.resultType=='album' || type?.includes('albums');
@@ -85,7 +87,13 @@ const MusicCardItem = ({ music, isLoading, itemType }) => {
       </div>
     </div>
     :
-    <div className="music-card-item" onClick={() => handlePlay(music)}>
+    <Box 
+      className="music-card-item" 
+      onClick={() => handlePlay(music)}
+      sx={{'&:hover': {
+        backgroundColor: theme.palette.primary.main,
+        color: 'white' // Hover background color
+      },}}>
       <div className={imgClass}>
         <img src={
           (music?.thumbnails[1])?
@@ -115,7 +123,7 @@ const MusicCardItem = ({ music, isLoading, itemType }) => {
           </li>
         </ul>
       </div>
-    </div>
+    </Box>
   );
 };
 

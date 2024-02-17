@@ -77,7 +77,6 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' 
     flexShrink: 0,
     whiteSpace: 'nowrap',
     boxSizing: 'border-box',
-    backgroundColor: theme.palette.background.default,
     ...(open && {
       ...openedMixin(theme),
       '& .MuiDrawer-paper': openedMixin(theme),
@@ -143,7 +142,7 @@ export default function MiniDrawer() {
         <Header />
       </AppBar>
       {isLoggedIn && 
-      <Drawer variant="permanent" open={open} sx={{backgroundColor: 'primary'}}>
+      <Drawer variant="permanent" open={open}>
         <DrawerHeader>
         </DrawerHeader>
         <List>
@@ -157,7 +156,7 @@ export default function MiniDrawer() {
           minHeight: 48,
           justifyContent: open ? 'initial' : 'center',
           px: 2.5,
-          backgroundColor: isActiveRoute(route) ? 'rgba(0, 0, 0, 0.1)' : 'transparent', // Highlight active route
+          backgroundColor: isActiveRoute(route) ? theme.palette.mode === 'light'?'rgba(0, 0, 0, 0.1)' : 'rgba(255,255,255,0.1)' : 'transparent', // Highlight active route
         }}
       >
         <ListItemIcon
@@ -167,9 +166,9 @@ export default function MiniDrawer() {
             justifyContent: 'center',
           }}
         >
-          {React.createElement(routeIcons[route], {size: 20, color: isActiveRoute(route) ? theme.palette.secondary.main : ''})}
+          {React.createElement(routeIcons[route], {size: 20, color: isActiveRoute(route) ? theme.palette.primary.main : ''})}
         </ListItemIcon>
-        <ListItemText primary={route.charAt(0).toUpperCase() + route.slice(1)} sx={{ opacity: open ? 1 : 0 }} />
+        <ListItemText color='primary' primary={route.charAt(0).toUpperCase() + route.slice(1)} sx={{ opacity: open ? 1 : 0 }} />
       </ListItemButton>
     </ListItem>
   ))}
