@@ -12,6 +12,7 @@ import MuiAlert from '@mui/material/Alert';
 import { PiHeartStraightFill, PiHeartStraightLight } from "react-icons/pi";
 import { ImLoop } from "react-icons/im";
 import MaterialUISwitch from "./MaterialUI Components/Switch"
+import { darken, lighten, useTheme } from "@mui/material";
 
 
 const server = process.env.REACT_APP_SERVER;
@@ -24,6 +25,8 @@ const MusicCard = () => {
 
   const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
   const navigate = useNavigate();
+  const theme = useTheme();
+  const gradientColor = theme.palette.primary.main;
 
   const [seekValue, setSeekValue] = useState(0);
   const currMusic = useSelector((state) => state.music);
@@ -51,6 +54,19 @@ const MusicCard = () => {
     actionCreators,
     dispatch
   );
+
+  const dynamicStyle = `
+  .music-card > .thumbnail:after {
+    background: linear-gradient(rgba(221, 65, 127, 0), ${gradientColor});
+  }
+`;
+
+// Create a style element and set its content to the dynamic CSS rule
+const styleElement = document.createElement('style');
+styleElement.textContent = dynamicStyle;
+
+// Append the style element to the document's head to apply the CSS rule
+document.head.appendChild(styleElement);
 
   const handleKeyPress = (event) => {
     if (
@@ -309,9 +325,10 @@ const MusicCard = () => {
       <div className="thumbnail">
         {currMusic && <img alt="Music Art" src={thumbUrl} />}
       </div>
-      <div className={waveClass}></div>
-      <div className={waveClass}></div>
-      <div className={waveClass}></div>
+      {Array.apply(null, {length: 3}).map(()=>(
+        <div className={waveClass} style={{background: `radial-gradient(${theme.palette.mode === 'dark' ? lighten(gradientColor,0.35) : darken(gradientColor,0.3)}, ${gradientColor})`}}></div>
+      ))
+      }
       {musicInfo && (
         <section className="player__body">
           <p className="title">{musicInfo.videoDetails.title}</p>
@@ -346,7 +363,7 @@ const MusicCard = () => {
       <div className="buttons">
         <ul className="list list--buttons" onClick={(e) => e.preventDefault()}>
           <li className="liked list__link" >
-            {isLiked === true ? <PiHeartStraightFill size={25} color="red" style={{cursor:'pointer'}} onClick={() => removeFromLiked(currMusic.videoId)} />:
+            {isLiked === true ? <PiHeartStraightFill size={25} color={gradientColor} style={{cursor:'pointer'}} onClick={() => removeFromLiked(currMusic.videoId)} />:
             <PiHeartStraightLight size={25} color={isLiked === 'loading' ? "gray" : "red"} style={{cursor:'pointer'}} onClick={() => addToLiked(currMusic)} />}
           </li>
           <li>
