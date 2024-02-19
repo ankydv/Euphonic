@@ -51,7 +51,7 @@
   height: 100%;
 } */
 
-.image{
+.music-card-item .image{
   position: relative;
   overflow: hidden;
   /* padding: 5% 5% 0% 5%; */

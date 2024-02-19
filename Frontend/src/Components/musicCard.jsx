@@ -54,11 +54,17 @@ const MusicCard = () => {
     actionCreators,
     dispatch
   );
-
+  const boxShadowColor = theme.palette.mode === 'dark'?'220, 220, 220' : '33, 33, 33';
   const dynamicStyle = `
   .music-card > .thumbnail:after {
     background: linear-gradient(rgba(221, 65, 127, 0), ${gradientColor});
-  }
+    }
+    .list--buttons a{
+      box-shadow: 0 3px 6px rgba(${boxShadowColor}, 0.1), 0 3px 12px rgba(${boxShadowColor}, 0.15);
+    }
+    .list--buttons a:hover {
+      box-shadow: 0 6px 9px rgba(${boxShadowColor}, 0.1), 0 6px 16px rgba(${boxShadowColor}, 0.15);
+    }
 `;
 
 // Create a style element and set its content to the dynamic CSS rule
@@ -311,7 +317,7 @@ document.head.appendChild(styleElement);
   const playPauseBtnClass = "fa fa-" + (playerState === 1 ? "pause" : "play");
   const waveClass = playerState !== 1 ? "wave" : "wave paused";
   return (
-    <div className="music-card">
+    <div className="music-card" style={{boxShadow: `0px 0px 10px rgba(${theme.palette.mode === 'light' ? '0, 0, 0' : '255, 255, 255'}, 0.4)`}}>
       {objToStream && (
         <audio
           src={objToStream.url}

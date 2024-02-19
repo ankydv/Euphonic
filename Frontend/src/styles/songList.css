@@ -18,8 +18,8 @@
   
   .song-list-list li {
     display: flex;
-    align-items: center;
-    padding: 10px;
+    /* align-items: center; */
+    /* padding: 10px; */
     cursor: pointer;
     transition: background-color 0.3s ease;
   }
@@ -33,17 +33,20 @@
 
   .song-info-container{
     display: flex;
-    justify-content: center;
+    /* justify-content: center; */
     align-items: center;
     flex-direction: row;
     gap: 10px;
+    max-width: 100%;
+    left: 0;
   }
 
   .song-info-container > .image{
     position: relative;
     background-color: black;
     height: 50px;
-    width: 50px;
+    aspect-ratio: 1;
+    overflow: hidden;
   }
   .song-info-container img{
     height: 50px;
@@ -56,7 +59,7 @@
 
   .song-info {
     flex: 1;
-    max-width: 300px;
+    max-width: calc(100% - 60px);
   }
   
   .song-title {
@@ -98,4 +101,5 @@
     left: 50%; /* Move the button to the middle horizontally */
     top: 50%;
     transform: translate(-50%, -50%); 
+    overflow: hidden;
   }
