@@ -16,6 +16,7 @@ import { darken, lighten, useTheme } from "@mui/material";
 
 
 const server = process.env.REACT_APP_SERVER;
+const server2 = process.env.REACT_APP_SERVER2;
 const targetItags = [141, 251, 140, 171];
 const host = process.env.REACT_APP_AUTH_SERVER;
 
@@ -125,7 +126,7 @@ document.head.appendChild(styleElement);
 
   useEffect(() => {
     if (currMusic) {
-      getMusicInfo(currMusic.videoId)
+        axios.get(`${server2}api/songinfo/${currMusic.videoId}`)
         .then((response) => {
           if(response.data.playabilityStatus.status == 'OK'){
             const thumbnails = response.data.videoDetails.thumbnail.thumbnails;
