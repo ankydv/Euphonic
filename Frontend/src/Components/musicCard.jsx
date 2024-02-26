@@ -55,25 +55,36 @@ const MusicCard = () => {
     actionCreators,
     dispatch
   );
-  const boxShadowColor = theme.palette.mode === 'dark'?'220, 220, 220' : '33, 33, 33';
+  // Get the existing style element if it exists
+const styleElement = document.querySelector('#dynamic-style');
+
+// If the style element doesn't exist, create it
+if (!styleElement) {
+  const styleElement = document.createElement('style');
+  styleElement.id = 'dynamic-style';
+  document.head.appendChild(styleElement);
+}
+
+// Function to update dynamic styles
+const updateDynamicStyle = (gradientColor) => {
+  const boxShadowColor = theme.palette.mode === 'dark' ? '220, 220, 220' : '33, 33, 33';
   const dynamicStyle = `
-  .music-card > .thumbnail:after {
-    background: linear-gradient(rgba(221, 65, 127, 0), ${gradientColor});
+    .music-card > .thumbnail:after {
+      background: linear-gradient(rgba(221, 65, 127, 0), ${gradientColor});
     }
-    .list--buttons a{
+    .list--buttons a {
       box-shadow: 0 3px 6px rgba(${boxShadowColor}, 0.1), 0 3px 12px rgba(${boxShadowColor}, 0.15);
     }
     .list--buttons a:hover {
       box-shadow: 0 6px 9px rgba(${boxShadowColor}, 0.1), 0 6px 16px rgba(${boxShadowColor}, 0.15);
     }
-`;
+  `;
+  if(styleElement) styleElement.textContent = dynamicStyle;
+};
 
-// Create a style element and set its content to the dynamic CSS rule
-const styleElement = document.createElement('style');
-styleElement.textContent = dynamicStyle;
+// Call updateDynamicStyle whenever gradientColor changes
+updateDynamicStyle(gradientColor);
 
-// Append the style element to the document's head to apply the CSS rule
-document.head.appendChild(styleElement);
 
   const handleKeyPress = (event) => {
     if (
@@ -101,19 +112,6 @@ document.head.appendChild(styleElement);
     else if(currDuration)
       player.play();
   },[isLoggedIn])
-
-  useEffect(() => {
-    const handleTimeUpdate = () => {
-      setPlayerState(audioRef?.current?.paused ? 2 : 1);
-    };
-    if (audioRef.current)
-      audioRef.current.addEventListener("timeupdate", handleTimeUpdate);
-
-    return () => {
-      if (audioRef.current)
-        audioRef.current.removeEventListener("timeupdate", handleTimeUpdate);
-    };
-  }, [audioRef.current]);
 
   useEffect(() => {
     // Add event listener when the component mounts
@@ -156,13 +154,16 @@ document.head.appendChild(styleElement);
     }
   }, [musicInfo]);
 
-  const seekTo = (event) => {
+  const handleSeek = (event) => {
     const newValue = parseInt(event.target.value);
-    const seekTime = (newValue / 100) * totalDuration;
+    setSeekValue(newValue);
+  };
+  const seek = () => {
+    const seekTime = (seekValue / 100) * totalDuration;
     player.currentTime = seekTime;
     if(videoRef && videoRef.current)
     videoRef.current.currentTime = seekTime;
-  };
+  }
 
   function formatTime(timeInSeconds) {
     const minutes = Math.floor(timeInSeconds / 60)
@@ -212,17 +213,40 @@ document.head.appendChild(styleElement);
     if (playerState === 1) {
       player.pause();
       videoRef?.current?.pause();
-    } else if (isLoggedIn) {
+    } else if (playerState == 2 && isLoggedIn) {
       player.play();
       videoRef?.current?.play();
     }
   };
 
+  const handlePlay = () => {
+    setPlayerState(1);
+  }
+  const handlePause = () => {
+    setPlayerState(2);
+  }
+  const handleWaiting = () => {
+    if(playerState === 4) return;
+    setPlayerState(3);
+  }
+  const handleSeeking = () => {
+    setPlayerState(4);
+  }
+  const handleSeeked = () => {
+    setPlayerState(audioRef.current.paused ? 2 : 1);
+  }
+  const handlePlaybackError = (event) => {
+    setPlayerState(5);
+    setSnackMsg(event.target.error.message);
+    setOpen(true);
+  }
+  
   const handleSeekBarFocus = () => {
     isSeekBarFocused.current = true;
   };
 
   const handleSeekBarBlur = () => {
+    seek();
     isSeekBarFocused.current = false;
   };
 
@@ -315,8 +339,8 @@ document.head.appendChild(styleElement);
   navigator.mediaSession.setActionHandler("play", handlePlayPause);
 
   
-  const playPauseBtnClass = "fa fa-" + (playerState === 1 ? "pause" : "play");
-  const waveClass = playerState !== 1 ? "wave" : "wave paused";
+  const playPauseBtnClass = "fa fa-" + (playerState === 2 ? "play" : "pause");
+  const waveClass = playerState == 1 ? "wave paused" : "wave";
   return (
     <div className="music-card" style={{boxShadow: `0px 0px 10px rgba(${theme.palette.mode === 'light' ? '0, 0, 0' : '255, 255, 255'}, 0.4)`}}>
       {objToStream && (
@@ -326,6 +350,12 @@ document.head.appendChild(styleElement);
           onLoadedMetadata={handleReady}
           ref={audioRef}
           onEnded={handleEnd}
+          onPlay={handlePlay}
+          onPause={handlePause}
+          onWaiting={handleWaiting}
+          onError={handlePlaybackError}
+          onSeeking={handleSeeking}
+          onSeeked={handleSeeked}
         />
       )}
 
@@ -350,7 +380,7 @@ document.head.appendChild(styleElement);
           max="100"
           value={seekValue}
           className="seek_slider"
-          onChange={seekTo}
+          onChange={handleSeek}
           onMouseDown={handleSeekBarFocus}
           onMouseUp={handleSeekBarBlur}
           onTouchStart={handleSeekBarFocus}
