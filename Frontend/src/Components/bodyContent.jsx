@@ -12,7 +12,7 @@ import {
 } from "react-icons/bs";
 import Video from "./Video.jsx";
 import MiniDrawer from "./MiniSideBar.jsx";
-import { Box } from "@mui/material";
+import { Box, useTheme } from "@mui/material";
 
 const BodyContent = () => {
   const currMusic = useSelector((state) => state.music);
@@ -24,6 +24,7 @@ const BodyContent = () => {
 
   const navigate = useNavigate();
   const location = useLocation();
+  const theme = useTheme();
   const isNotHome = location.pathname !== "/";
 
   const [isVideo, setIsVideo] = useState(false);
@@ -45,7 +46,6 @@ const BodyContent = () => {
       };
       exitPipMode();
     }, [shouldRender]);
-
   return (
     <Box sx={{ display: 'flex' }}>
     <MiniDrawer />
@@ -60,16 +60,9 @@ const BodyContent = () => {
             <BsFillArrowLeftCircleFill
               className="button"
               size={30}
-              color="#f52a99"
+              color={theme.palette.primary.main}
               onClick={() => navigate(-1)}
             ></BsFillArrowLeftCircleFill>
-
-            <BsFillArrowRightCircleFill
-              className="button"
-              size={30}
-              color="#f52a99"
-              onClick={() => navigate(1)}
-            ></BsFillArrowRightCircleFill>
           </div>
         )}
         <MyRoutes />

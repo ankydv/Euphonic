@@ -17,9 +17,7 @@ import { FaRegHeart } from "react-icons/fa";
 import { FaHistory } from "react-icons/fa";
 import { useDispatch, useSelector } from 'react-redux';
 import { logout } from "../state/action-creators";
-import { FaAnglesRight, FaAnglesLeft } from "react-icons/fa6";
-import { RiMenuUnfoldFill, RiMenuFoldFill } from "react-icons/ri";
-import { Typography } from '@mui/material';
+import { RiMenuFoldFill } from "react-icons/ri";
 
 const drawerWidth = 240;
 
@@ -137,7 +135,7 @@ export default function MiniDrawer() {
   return (
     <>
       <CssBaseline />
-      <AppBar position="fixed" color='default' sx={{ height: '9vh', maxHeight: '65px', display: 'flex', flexDirection: 'row', padding: '0 10px' }} open={open}>
+      <AppBar position="fixed" color='default' sx={{ height: '9vh', maxHeight: '65px', display: 'flex', flexDirection: 'row', padding: '0 10px', backgroundColor: 'inherit' }} open={open}>
        {isLoggedIn && <AnimatedIconButton isOpen={open} handleDrawerClose={handleDrawerClose} handleDrawerOpen={handleDrawerOpen} />}
         <Header />
       </AppBar>

@@ -35,8 +35,8 @@
 .button:hover{
   cursor: pointer;
 }
-.MuiDrawer-docked{
-  background-color: red;
+.MuiDrawer-paper {
+  background-color: inherit !important;
 }
 
 @media (max-width: 500px){
