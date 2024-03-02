@@ -2,7 +2,6 @@ const express = require("express");
 const {History, Liked} = require("../models/songs");
 const router = express.Router();
 const fetchuser = require("../middleware/fetchuser");
-const { body, validationResult } = require("express-validator");
 
 //route 1 :get all the notes using:get"/api/notes/fetchallnotes" login requered
 
@@ -25,7 +24,6 @@ router.post('/addhistory',fetchuser, async (req, res) => {
 
       if (foundData) {
         // Data with the specified videoId was found
-        console.log(foundData);
         foundData.date = Date.now();
         await foundData.save();
         console.log(foundData);

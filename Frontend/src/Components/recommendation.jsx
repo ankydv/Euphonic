@@ -10,7 +10,7 @@ import { sample_dataset } from "./helpers/sample";
 import { useNavigate } from "react-router-dom";
 import { Box, useTheme } from "@mui/material";
 
- const server = process.env.REACT_APP_SERVER;
+ const server = process.env.REACT_APP_SERVER2;
 
 const MusicRecommendation = () => {
 

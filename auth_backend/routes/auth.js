@@ -2,7 +2,6 @@ const express = require("express");
 const User = require("../models/User");
 const router = express.Router();
 const { body, validationResult } = require("express-validator");
-const bcrypt = require("bcryptjs");
 var jwt = require("jsonwebtoken");
 var fetchuser = require("../middleware/fetchuser");
 const jwt_secret = "subhaisagood$oy";
@@ -34,16 +33,13 @@ router.post(
           .status(404)
           .json({ success, error: "sorry a user with this email already exist" });
       }
-      //password encription
-      const salt = await bcrypt.genSalt(10);
-      secPass = await bcrypt.hash(req.body.password, salt);
 
       //create a new user
       user = await User.create({
         firstName: req.body.firstName,
         lastName: req.body.lastName,
         email: req.body.email,
-        password: secPass,
+        password: req.body.password,
       });
       const data = {
         user: {
@@ -81,7 +77,7 @@ router.post(
         return res
           .json({success, error: "User not found" });
       }
-      const passwordCompare = await bcrypt.compare(password, user.password);
+      const passwordCompare = await user.matchPassword(password);
       if (!passwordCompare) {
         success=false;
         return res
