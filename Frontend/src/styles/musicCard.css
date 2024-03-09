@@ -291,3 +291,10 @@
   justify-content: center;
   width: 100%;
 }
+
+.player-bar{
+  position: fixed;
+  bottom: 0;
+  z-index: 1;
+  width: 100%;
+}

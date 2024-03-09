@@ -149,7 +149,7 @@ updateDynamicStyle(gradientColor);
       navigator.mediaSession.metadata = new MediaMetadata({
         title: musicInfo.videoDetails.title,
         artist: musicInfo.videoDetails.author,
-        artwork: [{ src: thumbUrl, type: "image/png" }],
+        artwork: [{ src: musicInfo.lastThumbnailUrl, type: "image/png" }],
       });
     }
   }, [musicInfo]);
@@ -342,102 +342,115 @@ updateDynamicStyle(gradientColor);
   const playPauseBtnClass = "fa fa-" + (playerState === 2 ? "play" : "pause");
   const waveClass = playerState == 1 ? "wave paused" : "wave";
   return (
-    <div className="music-card" style={{boxShadow: `0px 0px 10px rgba(${theme.palette.mode === 'light' ? '0, 0, 0' : '255, 255, 255'}, 0.4)`}}>
-      {objToStream && (
-        <audio
-          src={objToStream.url}
-          className="ytplayer"
-          onLoadedMetadata={handleReady}
-          ref={audioRef}
-          onEnded={handleEnd}
-          onPlay={handlePlay}
-          onPause={handlePause}
-          onWaiting={handleWaiting}
-          onError={handlePlaybackError}
-          onSeeking={handleSeeking}
-          onSeeked={handleSeeked}
-        />
-      )}
+    <>{false ?
+      <div className="music-card" style={{boxShadow: `0px 0px 10px rgba(${theme.palette.mode === 'light' ? '0, 0, 0' : '255, 255, 255'}, 0.4)`}}>
+        {objToStream && (
+          <audio
+            src={objToStream.url}
+            className="ytplayer"
+            onLoadedMetadata={handleReady}
+            ref={audioRef}
+            onEnded={handleEnd}
+            onPlay={handlePlay}
+            onPause={handlePause}
+            onWaiting={handleWaiting}
+            onError={handlePlaybackError}
+            onSeeking={handleSeeking}
+            onSeeked={handleSeeked}
+          />
+        )}
 
-      <div className="thumbnail">
-        {currMusic && <img alt="Music Art" src={thumbUrl} />}
+        <div className="thumbnail">
+          {currMusic && <img alt="Music Art" src={thumbUrl} />}
+        </div>
+        {Array.apply(null, {length: 3}).map(()=>(
+          <div className={waveClass} style={{background: `radial-gradient(${theme.palette.mode === 'dark' ? lighten(gradientColor,0.35) : darken(gradientColor,0.3)}, ${gradientColor})`}}></div>
+        ))
+        }
+        {musicInfo && (
+          <section className="player__body">
+            <p className="title">{musicInfo.videoDetails.title}</p>
+            <p className="subtitle">{musicInfo.videoDetails.author}</p>
+          </section>
+        )}
+        <div className="slider_container">
+          <div className="current-time">{formatTime(currDuration)}</div>
+          <input
+            type="range"
+            min="1"
+            max="100"
+            value={seekValue}
+            className="seek_slider"
+            onChange={handleSeek}
+            onMouseDown={handleSeekBarFocus}
+            onMouseUp={handleSeekBarBlur}
+            onTouchStart={handleSeekBarFocus}
+            onTouchEnd={handleSeekBarBlur}
+          />
+          <SeekBarUpdater
+            player={player}
+            playerState={playerState}
+            totalDuration={totalDuration}
+            setCurrDuration={setCurrDuration}
+            setSeekValue={setSeekValue}
+            isSeekBarFocused={isSeekBarFocused}
+          />
+          <div className="current-time">{formatTime(totalDuration)}</div>
+        </div>
+
+        <div className="buttons">
+          <ul className="list list--buttons" onClick={(e) => e.preventDefault()}>
+            <li className="liked list__link" >
+              {isLiked === true ? <PiHeartStraightFill size={25} color={gradientColor} style={{cursor:'pointer'}} onClick={() => removeFromLiked(currMusic.videoId)} />:
+              <PiHeartStraightLight size={25} color={isLiked === 'loading' ? "gray" : "red"} style={{cursor:'pointer'}} onClick={() => addToLiked(currMusic)} />}
+            </li>
+            <li>
+              {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
+              <a className="list__link">
+                <i className="fa fa-step-backward" onClick={handlePrev}></i>
+              </a>
+            </li>
+
+            <li>
+              {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
+              <a className="list__link" onClick={handlePlayPause}>
+                <i className={playPauseBtnClass}></i>
+              </a>
+            </li>
+
+            <li>
+              {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
+              <a className="list__link" onClick={handleNext}>
+                <i className="fa fa-step-forward"></i>
+              </a>
+            </li>
+            <li className="list__link shuffle">
+              <ImLoop size={20} />
+            </li>
+          </ul>
+        </div>
+        <Snackbar open={open} autoHideDuration={3000} onClose={handleCloseSnack}>
+          <Alert onClose={handleCloseSnack} severity="error" sx={{  left:0,width: '300px' ,position: 'absolute', bottom: 10,}}>
+            {snackMsg}
+          </Alert>
+        </Snackbar>
+        {isVideo && 
+        <div className="switch__container">
+          <MaterialUISwitch   checked={isVideoSwitchedOn} onChange={handleSwitchChange} />
+        </div>}
       </div>
-      {Array.apply(null, {length: 3}).map(()=>(
-        <div className={waveClass} style={{background: `radial-gradient(${theme.palette.mode === 'dark' ? lighten(gradientColor,0.35) : darken(gradientColor,0.3)}, ${gradientColor})`}}></div>
-      ))
-      }
-      {musicInfo && (
-        <section className="player__body">
-          <p className="title">{musicInfo.videoDetails.title}</p>
-          <p className="subtitle">{musicInfo.videoDetails.author}</p>
-        </section>
-      )}
-      <div className="slider_container">
-        <div className="current-time">{formatTime(currDuration)}</div>
-        <input
-          type="range"
-          min="1"
-          max="100"
-          value={seekValue}
-          className="seek_slider"
-          onChange={handleSeek}
-          onMouseDown={handleSeekBarFocus}
-          onMouseUp={handleSeekBarBlur}
-          onTouchStart={handleSeekBarFocus}
-          onTouchEnd={handleSeekBarBlur}
-        />
-        <SeekBarUpdater
-          player={player}
-          playerState={playerState}
-          totalDuration={totalDuration}
-          setCurrDuration={setCurrDuration}
-          setSeekValue={setSeekValue}
-          isSeekBarFocused={isSeekBarFocused}
-        />
-        <div className="current-time">{formatTime(totalDuration)}</div>
+      :
+      <div className="player-bar" style={{backgroundColor: theme.palette.background.default}}>
+        <div className="song-info-container">
+          <div className="image">
+            <img src={thumbUrl} />
+          </div>
+          <div className="song-info">
+            {currMusic.title}
+          </div>
+        </div>
       </div>
-
-      <div className="buttons">
-        <ul className="list list--buttons" onClick={(e) => e.preventDefault()}>
-          <li className="liked list__link" >
-            {isLiked === true ? <PiHeartStraightFill size={25} color={gradientColor} style={{cursor:'pointer'}} onClick={() => removeFromLiked(currMusic.videoId)} />:
-            <PiHeartStraightLight size={25} color={isLiked === 'loading' ? "gray" : "red"} style={{cursor:'pointer'}} onClick={() => addToLiked(currMusic)} />}
-          </li>
-          <li>
-            {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
-            <a className="list__link">
-              <i className="fa fa-step-backward" onClick={handlePrev}></i>
-            </a>
-          </li>
-
-          <li>
-            {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
-            <a className="list__link" onClick={handlePlayPause}>
-              <i className={playPauseBtnClass}></i>
-            </a>
-          </li>
-
-          <li>
-            {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
-            <a className="list__link" onClick={handleNext}>
-              <i className="fa fa-step-forward"></i>
-            </a>
-          </li>
-          <li className="list__link shuffle">
-            <ImLoop size={20} />
-          </li>
-        </ul>
-      </div>
-      <Snackbar open={open} autoHideDuration={3000} onClose={handleCloseSnack}>
-        <Alert onClose={handleCloseSnack} severity="error" sx={{  left:0,width: '300px' ,position: 'absolute', bottom: 10,}}>
-          {snackMsg}
-        </Alert>
-      </Snackbar>
-      {isVideo && 
-      <div className="switch__container">
-        <MaterialUISwitch   checked={isVideoSwitchedOn} onChange={handleSwitchChange} />
-      </div>}
-    </div>
+    }</>
   );
 };
 
