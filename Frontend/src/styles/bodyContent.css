@@ -14,7 +14,7 @@
 
 .routes{
   position: relative;
-  height: calc(100vh - var(--music-card-top) - 100px);
+  height: calc(100vh - var(--music-card-top) - 65px);
   overflow-y: auto;
   overflow-x: hidden;
 }

@@ -12,7 +12,10 @@ import MuiAlert from '@mui/material/Alert';
 import { PiHeartStraightFill, PiHeartStraightLight } from "react-icons/pi";
 import { ImLoop } from "react-icons/im";
 import MaterialUISwitch from "./MaterialUI Components/Switch"
-import { darken, lighten, useTheme } from "@mui/material";
+import { IconButton, darken, lighten, useTheme } from "@mui/material";
+import {FaPlay, FaPause} from "react-icons/fa"
+import { GiPreviousButton, GiNextButton, GiKebabSpit } from "react-icons/gi";
+import { CiMenuKebab } from "react-icons/ci";
 
 
 const server = process.env.REACT_APP_SERVER;
@@ -338,13 +341,14 @@ updateDynamicStyle(gradientColor);
   navigator.mediaSession.setActionHandler("pause", handlePlayPause);
   navigator.mediaSession.setActionHandler("play", handlePlayPause);
 
-  
+  const isSmallDevice = window.innerWidth <=500;
+  console.log(typeof(window.innerWidth))
+
   const playPauseBtnClass = "fa fa-" + (playerState === 2 ? "play" : "pause");
   const waveClass = playerState == 1 ? "wave paused" : "wave";
   return (
-    <>{false ?
-      <div className="music-card" style={{boxShadow: `0px 0px 10px rgba(${theme.palette.mode === 'light' ? '0, 0, 0' : '255, 255, 255'}, 0.4)`}}>
-        {objToStream && (
+    <>
+    {objToStream && (
           <audio
             src={objToStream.url}
             className="ytplayer"
@@ -359,7 +363,16 @@ updateDynamicStyle(gradientColor);
             onSeeked={handleSeeked}
           />
         )}
-
+      <SeekBarUpdater
+          player={player}
+          playerState={playerState}
+          totalDuration={totalDuration}
+          setCurrDuration={setCurrDuration}
+          setSeekValue={setSeekValue}
+          isSeekBarFocused={isSeekBarFocused}
+        />
+    {false ?
+      <div className="music-card" style={{boxShadow: `0px 0px 10px rgba(${theme.palette.mode === 'light' ? '0, 0, 0' : '255, 255, 255'}, 0.4)`}}>
         <div className="thumbnail">
           {currMusic && <img alt="Music Art" src={thumbUrl} />}
         </div>
@@ -386,14 +399,6 @@ updateDynamicStyle(gradientColor);
             onMouseUp={handleSeekBarBlur}
             onTouchStart={handleSeekBarFocus}
             onTouchEnd={handleSeekBarBlur}
-          />
-          <SeekBarUpdater
-            player={player}
-            playerState={playerState}
-            totalDuration={totalDuration}
-            setCurrDuration={setCurrDuration}
-            setSeekValue={setSeekValue}
-            isSeekBarFocused={isSeekBarFocused}
           />
           <div className="current-time">{formatTime(totalDuration)}</div>
         </div>
@@ -442,13 +447,60 @@ updateDynamicStyle(gradientColor);
       :
       <div className="player-bar" style={{backgroundColor: theme.palette.background.default}}>
         <div className="song-info-container">
-          <div className="image">
+          <div className="image" style={{height: '80%'}}>
             <img src={thumbUrl} />
           </div>
           <div className="song-info">
-            {currMusic.title}
+            <div className="song-title">
+              {musicInfo?.videoDetails.title}
+            </div>
+            <div className="song-artist">
+              {musicInfo?.videoDetails.author}
+            </div>
           </div>
+          {!isSmallDevice && <div style={{marginLeft: "10px"}}>
+              {isLiked === true ? <PiHeartStraightFill size={25} color={gradientColor} style={{cursor:'pointer'}} onClick={() => removeFromLiked(currMusic.videoId)} />:
+              <PiHeartStraightLight size={25} color={isLiked === 'loading' ? "gray" : "red"} style={{cursor:'pointer'}} onClick={() => addToLiked(currMusic)} />}
+          </div>}
         </div>
+        <div className="player-bar-controls">
+              <IconButton onClick={handlePrev}>
+                <GiPreviousButton size={30} />
+              </IconButton>
+              <IconButton onClick={handlePlayPause}>
+                {playerState === 2? <FaPlay size={35} /> : <FaPause size={35} />}
+              </IconButton>
+              <IconButton onClick={handleNext}>
+                <GiNextButton size={30} />
+              </IconButton>
+
+        </div>
+        <div className="player-bar-buttons">
+        {isVideo && <MaterialUISwitch   checked={isVideoSwitchedOn} onChange={handleSwitchChange} />}
+          <IconButton className="shuffle" >
+            <ImLoop />
+          </IconButton>
+          <IconButton>
+            <CiMenuKebab  />
+          </IconButton>
+        </div>
+        <div className="slider_container" style={{position: 'absolute', top: "-50%", height: "100%"}}>
+          {/* <div className="current-time">{formatTime(currDuration)}</div> */}
+          <input
+            type="range"
+            min="1"
+            max="100"
+            value={seekValue}
+            className="seek_slider"
+            onChange={handleSeek}
+            onMouseDown={handleSeekBarFocus}
+            onMouseUp={handleSeekBarBlur}
+            onTouchStart={handleSeekBarFocus}
+            onTouchEnd={handleSeekBarBlur}
+            style={{width: "100%"}}
+            step="any"
+          />
+          </div>
       </div>
     }</>
   );
