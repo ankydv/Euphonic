@@ -21,6 +21,7 @@ const BodyContent = () => {
   const isVideoPictureInPicure = useSelector((state) => state.isVideoPictureInPicure);
   const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
   const bodyClass = `bodyContent ${currMusic ? "" : "noMusic"}`;
+  const isMobileMode = useSelector((state) => state.isMobileMode);
 
   const navigate = useNavigate();
   const location = useLocation();
@@ -28,6 +29,10 @@ const BodyContent = () => {
   const isNotHome = location.pathname !== "/";
 
   const [isVideo, setIsVideo] = useState(false);
+
+  const root = document.documentElement;
+      const computedStyle = getComputedStyle(root);
+      const musicCardTop = computedStyle.getPropertyValue('--music-card-top').trim();
 
     useEffect(() => {
         setIsVideo(musicInfo && musicInfo.videoDetails.musicVideoType !=="MUSIC_VIDEO_TYPE_ATV");
@@ -54,7 +59,7 @@ const BodyContent = () => {
       <div>
       {currMusic && <MusicCard />}
       </div>
-      <div className={`routes ${shouldRender && !isVideoPictureInPicure ? 'disable' : ''}`}>
+      <div className={`routes ${shouldRender && !isVideoPictureInPicure ? 'disable' : ''}`} style={{height: `calc(100vh - ${isMobileMode?'0':'70px'} - ${musicCardTop})`}}>
         {isNotHome && (
           <div className="navigation">
             <BsFillArrowLeftCircleFill

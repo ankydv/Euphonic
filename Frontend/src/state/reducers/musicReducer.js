@@ -15,6 +15,14 @@ const musicInfoReducer = (state = null, action) => {
         return state;
     }
 }
+const mobileModeReducer = (state = false, action) => {
+    if(action.type === 'sendMobileMode'){
+        return action.payload;
+    }
+    else{
+        return state;
+    }
+}
  
 export default reducer;
-export {musicInfoReducer};
+export {musicInfoReducer, mobileModeReducer};

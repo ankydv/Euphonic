@@ -16,6 +16,15 @@ export const sendMusicInfo = (musicInfo) => {
     }
 }
 
+export const sendMobileMode = (isMobileMode) => {
+    return (dispatch) => {
+        dispatch({
+            type: 'sendMobileMode',
+            payload: isMobileMode
+        })
+    }
+}
+
 export const sendQueue = (queue) => {
     return (dispatch) => {
         dispatch({

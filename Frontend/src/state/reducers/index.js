@@ -1,5 +1,5 @@
 import { combineReducers } from "redux";
-import musicReducer, { musicInfoReducer } from "./musicReducer";
+import musicReducer, { musicInfoReducer, mobileModeReducer } from "./musicReducer";
 import queueReducer, { queueIndexReducer } from "./queueReducer"
 import authReducer from "./authReducers";
 import reducer from "./historyReducers";
@@ -18,6 +18,7 @@ const reducers = combineReducers({
     isVideoSwitchedOn:isVideoSwitchedOnReducer,
     isVideoPictureInPicure:isVideoPictureInPicureReducer,
     theme:themeReducer,
+    isMobileMode:mobileModeReducer,
 })
 
 export default reducers;

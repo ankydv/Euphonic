@@ -13,7 +13,7 @@ import { PiHeartStraightFill, PiHeartStraightLight } from "react-icons/pi";
 import { ImLoop } from "react-icons/im";
 import MaterialUISwitch from "./MaterialUI Components/Switch"
 import { IconButton, darken, lighten, useTheme } from "@mui/material";
-import {FaPlay, FaPause} from "react-icons/fa"
+import {FaPlay, FaPause, FaChevronLeft, FaChevronRight } from "react-icons/fa"
 import { GiPreviousButton, GiNextButton, GiKebabSpit } from "react-icons/gi";
 import { CiMenuKebab } from "react-icons/ci";
 
@@ -44,6 +44,7 @@ const MusicCard = () => {
   const videoRef = useSelector((state) => state.videoRef);
   const isVideoSwitchedOn = useSelector((state) => state.isVideoSwitchedOn);
   const isVideo = musicInfo && musicInfo.videoDetails.musicVideoType !=="MUSIC_VIDEO_TYPE_ATV";
+  const isMobileMode = useSelector((state) => state.isMobileMode);
   const [thumbUrl, setThumbUrl] = useState(
     currMusic.thumbnails ? currMusic.thumbnails[0].url : null
   );
@@ -54,7 +55,7 @@ const MusicCard = () => {
     : null;
 
   const dispatch = useDispatch();
-  const { sendQueueIndex, sendMusic, sendAddHistoryResponse, sendMusicInfo, sendAudioRef, sendIsVideoSwitchedOn } = bindActionCreators(
+  const { sendQueueIndex, sendMusic, sendAddHistoryResponse, sendMusicInfo, sendAudioRef, sendIsVideoSwitchedOn, sendMobileMode } = bindActionCreators(
     actionCreators,
     dispatch
   );
@@ -80,6 +81,9 @@ const updateDynamicStyle = (gradientColor) => {
     }
     .list--buttons a:hover {
       box-shadow: 0 6px 9px rgba(${boxShadowColor}, 0.1), 0 6px 16px rgba(${boxShadowColor}, 0.15);
+    }
+    .seek_slider::-webkit-slider-thumb {
+      background: radial-gradient(circle, white, ${theme.palette.primary.dark});
     }
   `;
   if(styleElement) styleElement.textContent = dynamicStyle;
@@ -336,6 +340,13 @@ updateDynamicStyle(gradientColor);
   const handleSwitchChange = () => {
     sendIsVideoSwitchedOn(!isVideoSwitchedOn)
   };
+  const handleExpandClick = () => {
+    sendMobileMode(true);
+  }
+  const handleShrinkClick = () => {
+    sendMobileMode(false);
+  }
+
   navigator.mediaSession.setActionHandler("nexttrack", handleNext);
   navigator.mediaSession.setActionHandler("previoustrack", handlePrev);
   navigator.mediaSession.setActionHandler("pause", handlePlayPause);
@@ -371,7 +382,7 @@ updateDynamicStyle(gradientColor);
           setSeekValue={setSeekValue}
           isSeekBarFocused={isSeekBarFocused}
         />
-    {false ?
+    {isMobileMode ?
       <div className="music-card" style={{boxShadow: `0px 0px 10px rgba(${theme.palette.mode === 'light' ? '0, 0, 0' : '255, 255, 255'}, 0.4)`}}>
         <div className="thumbnail">
           {currMusic && <img alt="Music Art" src={thumbUrl} />}
@@ -399,6 +410,7 @@ updateDynamicStyle(gradientColor);
             onMouseUp={handleSeekBarBlur}
             onTouchStart={handleSeekBarFocus}
             onTouchEnd={handleSeekBarBlur}
+            style={{backgroundColor: theme.palette.primary.main}}
           />
           <div className="current-time">{formatTime(totalDuration)}</div>
         </div>
@@ -443,6 +455,9 @@ updateDynamicStyle(gradientColor);
         <div className="switch__container">
           <MaterialUISwitch   checked={isVideoSwitchedOn} onChange={handleSwitchChange} />
         </div>}
+        <IconButton title="Shrink" onClick={handleShrinkClick} style={{position: 'absolute', top: 0, left: 0, zIndex: 1}}>
+          <FaChevronLeft color="white" />
+        </IconButton>
       </div>
       :
       <div className="player-bar" style={{backgroundColor: theme.palette.background.default}}>
@@ -477,14 +492,17 @@ updateDynamicStyle(gradientColor);
         </div>
         <div className="player-bar-buttons">
         {isVideo && <MaterialUISwitch   checked={isVideoSwitchedOn} onChange={handleSwitchChange} />}
-          <IconButton className="shuffle" >
+          <IconButton title="Shuffle" className="shuffle" >
             <ImLoop />
           </IconButton>
-          <IconButton>
+          <IconButton title="Options">
             <CiMenuKebab  />
           </IconButton>
+          <IconButton title="Expand" onClick={handleExpandClick}>
+            <FaChevronRight />
+          </IconButton>
         </div>
-        <div className="slider_container" style={{position: 'absolute', top: "-50%", height: "100%"}}>
+        <div className="slider_container" style={{position: 'absolute', top: "0",}}>
           {/* <div className="current-time">{formatTime(currDuration)}</div> */}
           <input
             type="range"
@@ -497,7 +515,7 @@ updateDynamicStyle(gradientColor);
             onMouseUp={handleSeekBarBlur}
             onTouchStart={handleSeekBarFocus}
             onTouchEnd={handleSeekBarBlur}
-            style={{width: "100%"}}
+            style={{width: "100%", backgroundColor: theme.palette.primary.main}}
             step="any"
           />
           </div>
