@@ -3,10 +3,10 @@
 }
 .bodyContent {
   position: relative;
-  top: 9vh;
+  top: var(--music-card-top);
   display: grid;
   grid-template-columns: auto 3fr auto;
-  gap:1%;
+  column-gap:1%;
   margin-left: 1vw;
   transition: 200ms;
   flex-grow: 1;

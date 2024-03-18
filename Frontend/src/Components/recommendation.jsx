@@ -151,7 +151,7 @@ const MusicCards = ({ title, dataSet, isLoading }) => {
       <h2>{title}</h2><button onClick={handleViewAll}>View All</button>
       </div>
       <div className="music-cards">
-        {dataSet.map((music, index) => (
+        {dataSet?.map((music, index) => (
           <MusicCardItem
             isLoading={false}
             key={index}

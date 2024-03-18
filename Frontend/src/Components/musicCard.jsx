@@ -83,7 +83,9 @@ const updateDynamicStyle = (gradientColor) => {
 };
 
 // Call updateDynamicStyle whenever gradientColor changes
-updateDynamicStyle(gradientColor);
+  useEffect(() => {
+    updateDynamicStyle(gradientColor);
+  }, [gradientColor])
 
 
   const handleKeyPress = (event) => {
