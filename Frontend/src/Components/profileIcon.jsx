@@ -28,6 +28,10 @@ const ProfileIcon = () => {
   );
   
   const handleSwitch = () => {
+    document.body.style.transition = 'background-color 0ms';
+    setTimeout(() => {
+      document.body.style.transition = '';
+    }, 2);
     sendTheme(theme === 'dark' ? 'light': 'dark')
   }
   useEffect(() => {

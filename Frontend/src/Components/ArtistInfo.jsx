@@ -33,10 +33,10 @@ const ArtistInfo = () => {
          <SongList title={name} isLoading={isLoading} list={songList} shimmerLength={5} />
          {artistinfo && 
          <>
-         {artistinfo.albums && <MusicCards title={'Videos'} dataSet={artistinfo.videos.results} isLoading={isLoading} />}
+         {artistinfo.videos && <MusicCards title={'Videos'} dataSet={artistinfo.videos.results} isLoading={isLoading} />}
          {artistinfo.albums && <MusicCards title={'Albums'} dataSet={artistinfo.albums.results} isLoading={isLoading} />}
-         {artistinfo.albums && <MusicCards title={'Singles'} dataSet={artistinfo.singles.results} isLoading={isLoading} />}
-         {artistinfo.albums && <MusicCards title={'Related'} dataSet={artistinfo.related.results} isLoading={isLoading} />}
+         {artistinfo.singles && <MusicCards title={'Singles'} dataSet={artistinfo.singles.results} isLoading={isLoading} />}
+         {artistinfo.related && <MusicCards title={'Related'} dataSet={artistinfo.related.results} isLoading={isLoading} />}
          </>}
     </div>
   )
