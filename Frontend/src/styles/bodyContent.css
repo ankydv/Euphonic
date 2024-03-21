@@ -4,6 +4,7 @@
 .bodyContent {
   position: relative;
   top: var(--music-card-top);
+  height: calc(100vh - var(--music-card-top));
   display: grid;
   grid-template-columns: auto 3fr auto;
   column-gap:1%;

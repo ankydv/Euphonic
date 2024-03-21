@@ -30,6 +30,7 @@ const Video = () => {
     const [isLoading, setIsLoading] = useState(true);
     const [isOutOfFocus, setIsOutOfFocus] = useState(false);
     const [isQualityModalOpened, setIsQualityModalOpened] = useState(false);
+    const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
     
     const parendDiv = document.querySelector('.routes');
     if (parendDiv) {
@@ -193,6 +194,17 @@ const Video = () => {
     const handleLoadStart = () => {
       setIsLoading(true);
     };
+
+    const handlePlayPause = () => {
+      if (!videoRef.current.paused) {
+        audioRef.current.pause();
+        videoRef.current.pause();
+      } else if (isLoggedIn) {
+        audioRef.current.play();
+        videoRef.current.play();
+      }
+    };
+
   return (
     currFormat && 
     <>
@@ -200,18 +212,7 @@ const Video = () => {
     <div className={`video ${videoHide}`}>
         {
           <div className={`video__wrapper ${isLoading?"isLoading":""}`} style={isLoading?{aspectRatio:currFormat.width/currFormat.height}:{}}>
-            <div className='video__controls'>
-        <RxCross2 size={30} onClick={handleTogglePiP} />
-        <CgMiniPlayer size={27} onClick={handleTogglePiP} />
-        <BsArrowsFullscreen size={20} onClick={handleFullscreen} />
-        <div className='quality'>
-          <QualityLabel isQualityModalOpened={isQualityModalOpened} setIsQualityModalOpened={setIsQualityModalOpened} qualityLabel={currFormat.qualityLabel} />
-          {isQualityModalOpened && <div className='quality__toggle__container'>
-            <QualityToggle qualities={qualities} currQuality={currFormat} setCurrQuality={setCurrFormat} setIsQualityModalOpened={setIsQualityModalOpened} />
-          </div>}
-        </div>
-      </div>
-            <video onLoadStart={handleLoadStart} onEnded={handleEnd} id='videoElement' onSeeked={handleSeek} onPause={handlePause} onLoadedMetadata={handleReady} ref={videoRef} src={currFormat.url}></video>
+            <video onClick={handlePlayPause} onLoadStart={handleLoadStart} onEnded={handleEnd} id='videoElement' onSeeked={handleSeek} onPause={handlePause} onLoadedMetadata={handleReady} ref={videoRef} src={currFormat.url}></video>
             {(isWaiting || isLoading) && 
             <div className="loader__wrapper">
               <Backdrop
@@ -224,6 +225,17 @@ const Video = () => {
             }
           </div>
         }
+      <div className='video__controls'>
+        <RxCross2 size={30} onClick={handleTogglePiP} />
+        <CgMiniPlayer size={27} onClick={handleTogglePiP} />
+        <BsArrowsFullscreen size={20} onClick={handleFullscreen} />
+        <div className='quality'>
+          <QualityLabel isQualityModalOpened={isQualityModalOpened} setIsQualityModalOpened={setIsQualityModalOpened} qualityLabel={currFormat.qualityLabel} />
+          {isQualityModalOpened && <div className='quality__toggle__container'>
+            <QualityToggle qualities={qualities} currQuality={currFormat} setCurrQuality={setCurrFormat} setIsQualityModalOpened={setIsQualityModalOpened} />
+          </div>}
+        </div>
+      </div>
     </div>
     </>
   )

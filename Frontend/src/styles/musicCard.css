@@ -34,6 +34,9 @@
     top:0;
   }
 } */
+.music-card:hover #musicCardShrinkButton {
+  opacity: 1;
+}
 .music-card > .thumbnail img {
   position: relative;
   /* left: 0; */
@@ -301,6 +304,13 @@
   justify-content: space-between;
   backdrop-filter: blur(10px);
 }
+.player-bar .song-info-container {
+  width: calc(50% - 143px);
+}
+.player-bar .song-info {
+  flex: none;
+  max-width: calc(100% - 2 * 10px - 52px - 35px);
+}
 .player-bar-buttons{
   position: relative;
   display: flex;
@@ -317,4 +327,13 @@
   left: 50%;
   transform: translateX(-50%);
   height: 100%;
+}
+
+#musicCardShrinkButton {
+  position: absolute;
+  z-index: 1;
+  top: 0;
+  right: 0;
+  opacity: 0;
+  transition: opacity 200ms ease-in-out;
 }

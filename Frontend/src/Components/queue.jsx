@@ -15,6 +15,7 @@ const Queue = () => {
   const [isLoading, setIsLoading] = useState(true);
   const currMusic = useSelector((state) => state.music);
   const queue = useSelector((state) => state.queue);
+  const isMobileMode = useSelector((state) => state.isMobileMode);
 
   const dispatch = useDispatch();
   const { sendQueue, sendMusic, sendQueueIndex } = bindActionCreators(
@@ -52,8 +53,11 @@ const Queue = () => {
       setIsLoading(false)
   }, [currMusic, queue]);
 
+      const root = document.documentElement;
+      const computedStyle = getComputedStyle(root);
+      const musicCardTop = computedStyle.getPropertyValue('--music-card-top').trim();
   return (
-    <Box className = "up-next-container">
+    <Box className = "up-next-container" sx={{height: `calc(100vh - ${(!isMobileMode && currMusic)?'65px':'0px'} - ${musicCardTop})`}}>
       <SongList title={'Up Next'} list={queue} isLoading={isLoading} isQueue={true} />
     </Box>
   )

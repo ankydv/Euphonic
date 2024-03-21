@@ -1,7 +1,6 @@
 .up-next-container {
     align-self: flex-start;
     width: 400px;
-    height: calc(100vh - var(--music-card-top));
     overflow: auto;
     position: sticky;
     overflow-x: hidden;

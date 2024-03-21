@@ -22,7 +22,7 @@
 
 .video__controls{
     position: absolute;
-    top: -20%;
+    top: 20px;
     right: 0;
     display: flex;
     flex-direction: row-reverse;
@@ -53,6 +53,7 @@
 }
 .video__wrapper{
     position: relative;
+    cursor: pointer;
 }
 .video__wrapper.isLoading{
     width: 100%;

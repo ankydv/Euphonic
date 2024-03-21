@@ -30,7 +30,7 @@ const BodyContent = () => {
 
   const [isVideo, setIsVideo] = useState(false);
 
-  const root = document.documentElement;
+      const root = document.documentElement;
       const computedStyle = getComputedStyle(root);
       const musicCardTop = computedStyle.getPropertyValue('--music-card-top').trim();
 
@@ -59,7 +59,7 @@ const BodyContent = () => {
       <div>
       {currMusic && <MusicCard />}
       </div>
-      <div className={`routes ${shouldRender && !isVideoPictureInPicure ? 'disable' : ''}`} style={{height: `calc(100vh - ${isMobileMode?'0':'70px'} - ${musicCardTop})`}}>
+      <div className={`routes ${shouldRender && !isVideoPictureInPicure ? 'disable' : ''}`} style={{height: `calc(100vh - ${(!isMobileMode && currMusic)?'70px':'0px'} - ${musicCardTop})`}}>
         {isNotHome && (
           <div className="navigation">
             <BsFillArrowLeftCircleFill

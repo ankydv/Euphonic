@@ -355,7 +355,6 @@ const updateDynamicStyle = (gradientColor) => {
   navigator.mediaSession.setActionHandler("play", handlePlayPause);
 
   const isSmallDevice = window.innerWidth <=500;
-  console.log(typeof(window.innerWidth))
 
   const playPauseBtnClass = "fa fa-" + (playerState === 2 ? "play" : "pause");
   const waveClass = playerState == 1 ? "wave paused" : "wave";
@@ -457,7 +456,7 @@ const updateDynamicStyle = (gradientColor) => {
         <div className="switch__container">
           <MaterialUISwitch   checked={isVideoSwitchedOn} onChange={handleSwitchChange} />
         </div>}
-        <IconButton title="Shrink" onClick={handleShrinkClick} style={{position: 'absolute', top: 0, left: 0, zIndex: 1}}>
+        <IconButton id="musicCardShrinkButton" title="Shrink" onClick={handleShrinkClick} sx={{background: 'rgba(0,0,0,0.3)'}}>
           <FaChevronLeft color="white" />
         </IconButton>
       </div>
@@ -475,15 +474,15 @@ const updateDynamicStyle = (gradientColor) => {
               {musicInfo?.videoDetails.author}
             </div>
           </div>
-          {!isSmallDevice && <div style={{marginLeft: "10px"}}>
+          {!isSmallDevice && <div>
               {isLiked === true ? <PiHeartStraightFill size={25} color={gradientColor} style={{cursor:'pointer'}} onClick={() => removeFromLiked(currMusic.videoId)} />:
               <PiHeartStraightLight size={25} color={isLiked === 'loading' ? "gray" : "red"} style={{cursor:'pointer'}} onClick={() => addToLiked(currMusic)} />}
           </div>}
         </div>
         <div className="player-bar-controls">
-              <IconButton onClick={handlePrev}>
+              {!isSmallDevice && <IconButton onClick={handlePrev}>
                 <GiPreviousButton size={30} />
-              </IconButton>
+              </IconButton>}
               <IconButton onClick={handlePlayPause}>
                 {playerState === 2? <FaPlay size={35} /> : <FaPause size={35} />}
               </IconButton>
@@ -492,7 +491,7 @@ const updateDynamicStyle = (gradientColor) => {
               </IconButton>
 
         </div>
-        <div className="player-bar-buttons">
+        {!isSmallDevice && <div className="player-bar-buttons">
         {isVideo && <MaterialUISwitch   checked={isVideoSwitchedOn} onChange={handleSwitchChange} />}
           <IconButton title="Shuffle" className="shuffle" >
             <ImLoop />
@@ -503,7 +502,7 @@ const updateDynamicStyle = (gradientColor) => {
           <IconButton title="Expand" onClick={handleExpandClick}>
             <FaChevronRight />
           </IconButton>
-        </div>
+        </div>}
         <div className="slider_container" style={{position: 'absolute', top: "0",}}>
           {/* <div className="current-time">{formatTime(currDuration)}</div> */}
           <input
