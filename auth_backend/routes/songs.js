@@ -2,18 +2,40 @@ const express = require("express");
 const {History, Liked} = require("../models/songs");
 const router = express.Router();
 const fetchuser = require("../middleware/fetchuser");
+const paginate = require("../functions/pagination")
 
 //route 1 :get all the notes using:get"/api/notes/fetchallnotes" login requered
 
 router.get("/fetchhistory", fetchuser, async (req, res) => {
   try {
-    const notes = await History.find({ user: req.user.id }).sort({ date: -1 });
-    res.json(notes);
+    const { page = 1, limit = 10, lastDate } = req.query;
+    
+    let conditions = { user: req.user.id };
+    const totalRecords = await History.countDocuments(conditions);
+    const totalPages = Math.ceil(totalRecords / limit + 1);
+    
+    if (lastDate) {
+      conditions.date = { $lt: new Date(lastDate) };
+    }
+
+    const notes = await History.find(conditions)
+      .sort({ date: -1 })  // Sort by date in descending order
+      .skip((page == 1 ? 0 : page - 2) * limit)
+      .limit(limit);
+
+    res.json({
+      totalPages,
+      currentPage: page,
+      totalRecords,
+      data: notes,
+    });
   } catch (error) {
     console.error(error.message);
-    res.status(500).send("internal server error");
+    res.status(500).send("Internal Server Error");
   }
 });
+
+
 //route 2 :get all the notes using:post"/api/notes/addhistory" login required
 
 router.post('/addhistory',fetchuser, async (req, res) => {
