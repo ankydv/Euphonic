@@ -60,8 +60,8 @@ const ProfileIcon = () => {
       {
       isLoggedIn ? currUser && <Avatar
         sx={{ bgcolor: themePalette.palette.primary.main, cursor: 'pointer' }}
-        alt="Remy Sharp"
-        src="/broken-image.jpg"
+        title='Profile'
+        // src="/broken-image.jpg"
         onClick={handleProfile}
       ><Typography color={'white'}>{currUser['firstName'].charAt(0).toUpperCase()}</Typography>
         </Avatar>
