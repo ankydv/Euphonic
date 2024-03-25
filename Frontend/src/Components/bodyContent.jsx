@@ -33,6 +33,7 @@ const BodyContent = () => {
       const root = document.documentElement;
       const computedStyle = getComputedStyle(root);
       const musicCardTop = computedStyle.getPropertyValue('--music-card-top').trim();
+      const playerBarHeight = computedStyle.getPropertyValue('--player-bar-height').trim();
 
     useEffect(() => {
         setIsVideo(musicInfo && musicInfo.videoDetails.musicVideoType !=="MUSIC_VIDEO_TYPE_ATV");
@@ -59,7 +60,7 @@ const BodyContent = () => {
       <div>
       {currMusic && <MusicCard />}
       </div>
-      <div className={`routes ${shouldRender && !isVideoPictureInPicure ? 'disable' : ''}`} style={{height: `calc(100vh - ${(!isMobileMode && currMusic)?'70px':'0px'} - ${musicCardTop})`}}>
+      <div className={`routes ${shouldRender && !isVideoPictureInPicure ? 'disable' : ''}`} style={{height: `calc(100vh - ${(!isMobileMode && currMusic)?playerBarHeight:'0px'} - ${musicCardTop})`, paddingBottom: '14px'}}>
         {isNotHome && (
           <div className="navigation">
             <BsFillArrowLeftCircleFill
@@ -67,6 +68,7 @@ const BodyContent = () => {
               size={30}
               color={theme.palette.primary.main}
               onClick={() => navigate(-1)}
+              title="Go back"
             ></BsFillArrowLeftCircleFill>
           </div>
         )}

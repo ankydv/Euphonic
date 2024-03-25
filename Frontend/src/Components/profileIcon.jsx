@@ -63,7 +63,7 @@ const ProfileIcon = () => {
         title='Profile'
         // src="/broken-image.jpg"
         onClick={handleProfile}
-      ><Typography color={'white'}>{currUser['firstName'].charAt(0).toUpperCase()}</Typography>
+      ><Typography>{currUser['firstName'].charAt(0).toUpperCase()}</Typography>
         </Avatar>
         :
         <Button variant="outlined" color="secondary" size="large" sx={{color:'white', borderColor: 'white'}} onClick={(() => navigate('/login'))} >Login</Button>

@@ -8,7 +8,7 @@ const Logo = () => {
   const goToHome = () => {
     navigate('/');
   }
-  return <img className="logo" src={logo} alt="logo" onClick={goToHome}/>;
+  return <img className="logo" src={logo} alt="logo" title="Euphonic" onClick={goToHome}/>;
 };
 
 export default Logo;

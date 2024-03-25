@@ -56,9 +56,10 @@ const Queue = () => {
       const root = document.documentElement;
       const computedStyle = getComputedStyle(root);
       const musicCardTop = computedStyle.getPropertyValue('--music-card-top').trim();
+      const playerBarHeight = computedStyle.getPropertyValue('--player-bar-height').trim();
   return (
-    <Box className = "up-next-container" sx={{height: `calc(100vh - ${(!isMobileMode && currMusic)?'65px':'0px'} - ${musicCardTop})`}}>
-      <SongList title={'Up Next'} list={queue} isLoading={isLoading} isQueue={true} />
+    <Box className = "up-next-container" sx={{height: `calc(100vh - ${(!isMobileMode && currMusic)? playerBarHeight : '0px'} - ${musicCardTop})`}}>
+      <SongList title={'Queue'} list={queue} isLoading={isLoading} isQueue={true} />
     </Box>
   )
 };

@@ -3,10 +3,29 @@ import { styled } from '@mui/material/styles';
 import { renderToString } from 'react-dom/server';
 import { FaMusic, FaVideo } from "react-icons/fa6";
 
-const svgToDataUri = (svgComponent) => {
+const svgToDataUri = (svgComponent, color = 'white') => {
+  // Render SVG component to string
   const svgString = renderToString(svgComponent());
-  return `data:image/svg+xml;charset=utf-8,${encodeURIComponent(svgString)}`;
+
+  // Parse SVG string into DOM
+  const parser = new DOMParser();
+  const svgDoc = parser.parseFromString(svgString, 'image/svg+xml');
+  const svgElement = svgDoc.documentElement;
+
+  // Change the color of all <path> elements
+  const paths = svgElement.querySelectorAll('path');
+  paths.forEach(path => {
+    path.setAttribute('fill', color);
+  });
+
+  // Serialize modified SVG back to string
+  const serializer = new XMLSerializer();
+  const modifiedSvgString = serializer.serializeToString(svgElement);
+
+  // Return data URI
+  return `data:image/svg+xml;charset=utf-8,${encodeURIComponent(modifiedSvgString)}`;
 };
+
 const StyledFaVideo = styled(FaVideo)`
   color: white;
 `;

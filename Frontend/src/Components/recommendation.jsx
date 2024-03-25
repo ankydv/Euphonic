@@ -8,7 +8,7 @@ import { actionCreators } from '../state/index';
 import axios from "axios";
 import { sample_dataset } from "./helpers/sample";
 import { useNavigate } from "react-router-dom";
-import { Box, useTheme } from "@mui/material";
+import { Box, Button, useTheme } from "@mui/material";
 
  const server = process.env.REACT_APP_SERVER2;
 
@@ -127,7 +127,7 @@ const MusicCardItem = ({ music, isLoading, itemType }) => {
   );
 };
 
-const MusicCards = ({ title, dataSet, isLoading }) => {
+const MusicCards = ({ title, dataSet, isLoading, canExtend }) => {
   const handleViewAll = ()=>{
   }
   return (
@@ -148,7 +148,7 @@ const MusicCards = ({ title, dataSet, isLoading }) => {
     :
     <div className="music-cards-container">
       <div className="musicCards-header">
-      <h2>{title}</h2><button onClick={handleViewAll}>View All</button>
+      <h2>{title}</h2>{canExtend && <Button type="outline" onClick={handleViewAll}>View All</Button>}
       </div>
       <div className="music-cards">
         {dataSet?.map((music, index) => (

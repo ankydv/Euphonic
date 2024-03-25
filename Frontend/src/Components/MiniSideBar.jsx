@@ -94,6 +94,7 @@ const AnimatedIconButton = ({ isOpen, handleDrawerClose, handleDrawerOpen }) => 
         transform: isOpen ? 'rotate(0deg)' : 'rotate(180deg)',
       }}
       onClick={isOpen ? handleDrawerClose : handleDrawerOpen}
+      title={isOpen ? 'Close' : 'Open'}
     >
       <RiMenuFoldFill size={30} /> 
     </IconButton>

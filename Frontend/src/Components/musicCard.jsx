@@ -12,7 +12,7 @@ import MuiAlert from '@mui/material/Alert';
 import { PiHeartStraightFill, PiHeartStraightLight } from "react-icons/pi";
 import { ImLoop } from "react-icons/im";
 import MaterialUISwitch from "./MaterialUI Components/Switch"
-import { IconButton, darken, lighten, useTheme } from "@mui/material";
+import { IconButton, Typography, darken, lighten, useTheme } from "@mui/material";
 import {FaPlay, FaPause, FaChevronLeft, FaChevronRight } from "react-icons/fa"
 import { GiPreviousButton, GiNextButton, GiKebabSpit } from "react-icons/gi";
 import { CiMenuKebab } from "react-icons/ci";
@@ -45,6 +45,7 @@ const MusicCard = () => {
   const isVideoSwitchedOn = useSelector((state) => state.isVideoSwitchedOn);
   const isVideo = musicInfo && musicInfo.videoDetails.musicVideoType !=="MUSIC_VIDEO_TYPE_ATV";
   const isMobileMode = useSelector((state) => state.isMobileMode);
+  const [bufferedDuration, setBufferedDuration] = useState(0);
   const [thumbUrl, setThumbUrl] = useState(
     currMusic.thumbnails ? currMusic.thumbnails[0].url : null
   );
@@ -163,6 +164,30 @@ const updateDynamicStyle = (gradientColor) => {
     }
   }, [musicInfo]);
 
+  useEffect(() => {
+    const updateBufferedDuration = () => {
+      if (audioRef.current) {
+        const buffered = audioRef.current.buffered;
+        if (buffered.length > 0) {
+          const end = buffered.end(buffered.length - 1);
+          setBufferedDuration(end);
+        }
+      }
+    };
+
+    audioRef?.current?.addEventListener('progress', updateBufferedDuration);
+
+    return () => {
+      if (audioRef.current) {
+        audioRef.current.removeEventListener('progress', updateBufferedDuration);
+      }
+    };
+  }, []);
+
+  useEffect(() => {
+    console.log(formatTime(bufferedDuration));
+
+  },[bufferedDuration])
   const handleSeek = (event) => {
     const newValue = parseInt(event.target.value);
     setSeekValue(newValue);
@@ -411,6 +436,7 @@ const updateDynamicStyle = (gradientColor) => {
             onMouseUp={handleSeekBarBlur}
             onTouchStart={handleSeekBarFocus}
             onTouchEnd={handleSeekBarBlur}
+            step='any'
             style={{backgroundColor: theme.palette.primary.main}}
           />
           <div className="current-time">{formatTime(totalDuration)}</div>
@@ -475,18 +501,18 @@ const updateDynamicStyle = (gradientColor) => {
             </div>
           </div>
           {!isSmallDevice && <div>
-              {isLiked === true ? <PiHeartStraightFill size={25} color={gradientColor} style={{cursor:'pointer'}} onClick={() => removeFromLiked(currMusic.videoId)} />:
-              <PiHeartStraightLight size={25} color={isLiked === 'loading' ? "gray" : "red"} style={{cursor:'pointer'}} onClick={() => addToLiked(currMusic)} />}
+              {isLiked === true ? <PiHeartStraightFill size={25} color={gradientColor} style={{cursor:'pointer'}} onClick={() => removeFromLiked(currMusic.videoId)} title="Unlike" />:
+              <PiHeartStraightLight size={25} color={isLiked === 'loading' ? "gray" : "red"} style={{cursor:'pointer'}} onClick={() => addToLiked(currMusic)} title="Like" />}
           </div>}
         </div>
         <div className="player-bar-controls">
-              {!isSmallDevice && <IconButton onClick={handlePrev}>
+              {!isSmallDevice && <IconButton onClick={handlePrev} title="Previous track">
                 <GiPreviousButton size={30} />
               </IconButton>}
-              <IconButton onClick={handlePlayPause}>
+              <IconButton onClick={handlePlayPause} title={playerState === 2 ? 'Play' : 'Pause'}>
                 {playerState === 2? <FaPlay size={35} /> : <FaPause size={35} />}
               </IconButton>
-              <IconButton onClick={handleNext}>
+              <IconButton onClick={handleNext} title="Next track">
                 <GiNextButton size={30} />
               </IconButton>
 
@@ -503,7 +529,7 @@ const updateDynamicStyle = (gradientColor) => {
             <FaChevronRight />
           </IconButton>
         </div>}
-        <div className="slider_container" style={{position: 'absolute', top: "0",}}>
+        <div className="slider_container" style={{position: 'absolute', top: "-14px", backdropFilter: 'blur(100px)'}}>
           {/* <div className="current-time">{formatTime(currDuration)}</div> */}
           <input
             type="range"
@@ -516,9 +542,10 @@ const updateDynamicStyle = (gradientColor) => {
             onMouseUp={handleSeekBarBlur}
             onTouchStart={handleSeekBarFocus}
             onTouchEnd={handleSeekBarBlur}
-            style={{width: "100%", backgroundColor: theme.palette.primary.main}}
+            style={{flex:1, backgroundColor: theme.palette.primary.main}}
             step="any"
           />
+          <Typography sx={{paddingX: '10px', backdropFilter: 'blur(20px)'}}>{formatTime(currDuration)+' / '+formatTime(totalDuration)}</Typography>
           </div>
       </div>
     }</>
