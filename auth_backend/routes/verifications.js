@@ -2,19 +2,12 @@ const { body, validationResult } = require("express-validator");
 const express = require("express");
 const User = require("../models/User");
 const OTP = require('../models/OTP');
-var nodemailer = require("nodemailer");
+const { transporter, fromEmails } = require('./mailerConfig');
+const fs = require('fs');
+const path = require('path');
 
 const router = express.Router();
 
-const transporter = nodemailer.createTransport({
-    port: 465,
-    host: "smtp.gmail.com",
-    auth: {
-      user: "subhadipadhikary83@gmail.com",
-      pass: "rjly zbjd goft xkwm",
-    },
-    secure: true,
-  });
 
 router.get('/checkUser', async (req, res) => {
     try {
@@ -37,14 +30,18 @@ router.get('/sendOtp', async(req, res) => {
         { upsert: true, new: true }
     )
     try{
+        const otpPath = path.join(__dirname, '../UI Templates/otpEmail.html');
+        let otpTemplate = fs.readFileSync(otpPath, 'utf-8');
+        otpTemplate = otpTemplate.replace('{{otp}}', otp);
+        const filePath = path.join(__dirname, '../UI Templates/generalEmail.html');
+        let htmlTemplate = fs.readFileSync(filePath, 'utf-8');
+        htmlTemplate = htmlTemplate.replace('{{content}}', otpTemplate)
         const mailData = {
-            from: "subhadipadhikary83@gmail.com",
+            from: fromEmails.verification,
             to: req.query.email,
             subject: "[Euphonic] Verify Your Mail",
             text: "Your OTP is",
-            html: `
-            Your OTP is <b><span>${otp}</span></b>
-            `,
+            html: htmlTemplate
         };
         transporter.sendMail(mailData);
         return res.json({success: true ,message: 'OTP sent successfully'});

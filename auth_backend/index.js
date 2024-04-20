@@ -3,7 +3,7 @@ dotenv.config();
 const express = require("express");
 const connectToMongo = require("./db");
 var cors = require('cors')
-var nodemailer = require("nodemailer");
+const { transporter, fromEmails } = require('./routes/mailerConfig');
 const jwt = require("jsonwebtoken");
 const User = require('./models/User');
 const createJwtToken = require('./token');
@@ -11,6 +11,8 @@ const createJwtToken = require('./token');
 connectToMongo();
 const app = express();
 const port =process.env.PORT || 9001 ;
+const fs = require('fs');
+const path = require('path');
 
 
 app.use(cors())
@@ -24,15 +26,6 @@ app.use('/api/colors', require('./routes/colors'));
 app.get('/', async (req, res) => {
   res.send('Hello')
 })
-const transporter = nodemailer.createTransport({
-  port: 465,
-  host: "smtp.gmail.com",
-  auth: {
-    user: "subhadipadhikary83@gmail.com",
-    pass: "rjly zbjd goft xkwm",
-  },
-  secure: true,
-});
 
 app.get("/users/all", async (req, res) => {
   try {
@@ -56,24 +49,29 @@ app.get("/users/single", async (req, res) => {
 });
 
 app.post("/api/user/mail", async (req, res) => {
+  const email = req.body.email;
+  const user = await User.findOne({
+    email,
+  }).select("-password");
+  
+  if (!user) {
+    return res.json({ error: "User not found" });
+  }
+  const token = createJwtToken(user._id);
+  const link = `${process.env.FRONTEND_URL}/resetpassword?token=${token}`
   try {
-    const email = req.body.email;
-    const user = await User.findOne({
-      email,
-    }).select("-password");
-    
-    if (!user) {
-      return res.json({ error: "User not found" });
-    }
-    const token = createJwtToken(user._id);
+    const innerPath = path.join(__dirname, './UI Templates/resetPassword.html');
+    let innerTemplate = fs.readFileSync(innerPath, 'utf-8');
+    innerTemplate = innerTemplate.replace('{{link}}', link);
+    const filePath = path.join(__dirname, './UI Templates/generalEmail.html');
+    let htmlTemplate = fs.readFileSync(filePath, 'utf-8');
+    htmlTemplate = htmlTemplate.replace('{{content}}', innerTemplate)
     const mailData = {
-      from: "subhadipadhikary83@gmail.com", // sender address
-      to: email, // list of receivers
-      subject: "Sending Email using Node.js",
-      text: "That was easy!",
-      html: `
-      link - ${process.env.FRONTEND_URL}/resetpassword?token=${token}
-      `,
+      from: fromEmails.verification, 
+      to: email, 
+      subject: "[Euphonic] Reset Password",
+      text: "Click on the link below to reset Password.",
+      html: htmlTemplate
     };
     transporter.sendMail(mailData);
     // const user = await User.findById(req.body.id).select("-password");
