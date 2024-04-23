@@ -136,7 +136,7 @@ export default function MiniDrawer() {
   return (
     <>
       <CssBaseline />
-      <AppBar position="fixed" color='default' sx={{ height: '9vh', maxHeight: '65px', display: 'flex', flexDirection: 'row', padding: '0 10px', backgroundColor: 'inherit' }} open={open}>
+      <AppBar position="fixed" color='default' sx={{ height: '9vh', maxHeight: '60px', display: 'flex', flexDirection: 'row', padding: '0 10px', backgroundColor: 'inherit' }} open={open}>
        {isLoggedIn && <AnimatedIconButton isOpen={open} handleDrawerClose={handleDrawerClose} handleDrawerOpen={handleDrawerOpen} />}
         <Header />
       </AppBar>

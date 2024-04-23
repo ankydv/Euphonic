@@ -32,7 +32,9 @@
   /* border: 1px solid black; */
   transition: 0.1s ease-in;
 }
-
+.music-card-item:hover{
+  cursor: pointer;
+}
 
 /* .music-card-item:before {
   z-index: 1;

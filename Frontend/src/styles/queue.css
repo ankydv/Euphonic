@@ -1,6 +1,7 @@
 .up-next-container {
     align-self: flex-start;
-    width: 400px;
+    width: 25vw;
+    max-width: 400px;
     overflow: auto;
     position: sticky;
     overflow-x: hidden;

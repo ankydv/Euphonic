@@ -18,6 +18,9 @@
   overflow-y: auto;
   overflow-x: hidden;
 }
+.routes::-webkit-scrollbar{
+  width: 10px;
+}
 .routes.disable {
   overflow: hidden;
 }
