@@ -30,10 +30,10 @@ router.get('/sendOtp', async(req, res) => {
         { upsert: true, new: true }
     )
     try{
-        const otpPath = path.join(__dirname, '../UI Templates/otpEmail.html');
+        const otpPath = path.resolve(__dirname, '../UI Templates/otpEmail.html');
         let otpTemplate = fs.readFileSync(otpPath, 'utf-8');
         otpTemplate = otpTemplate.replace('{{otp}}', otp);
-        const filePath = path.join(__dirname, '../UI Templates/generalEmail.html');
+        const filePath = path.resolve(__dirname, '../UI Templates/generalEmail.html');
         let htmlTemplate = fs.readFileSync(filePath, 'utf-8');
         htmlTemplate = htmlTemplate.replace('{{content}}', otpTemplate)
         const mailData = {

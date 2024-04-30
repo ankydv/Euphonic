@@ -60,10 +60,10 @@ app.post("/api/user/mail", async (req, res) => {
   const token = createJwtToken(user._id);
   const link = `${process.env.FRONTEND_URL}/resetpassword?token=${token}`
   try {
-    const innerPath = path.join(__dirname, './UI Templates/resetPassword.html');
+    const innerPath = path.resolve(__dirname, './UI Templates/resetPassword.html');
     let innerTemplate = fs.readFileSync(innerPath, 'utf-8');
     innerTemplate = innerTemplate.replace('{{link}}', link);
-    const filePath = path.join(__dirname, './UI Templates/generalEmail.html');
+    const filePath = path.resolve(__dirname, './UI Templates/generalEmail.html');
     let htmlTemplate = fs.readFileSync(filePath, 'utf-8');
     htmlTemplate = htmlTemplate.replace('{{content}}', innerTemplate)
     const mailData = {
