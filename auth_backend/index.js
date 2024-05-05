@@ -23,6 +23,7 @@ app.use("/api/auth", require("./routes/auth"));
 app.use("/api/songs", require("./routes/songs"));
 app.use('/api/verifications', require('./routes/verifications'));
 app.use('/api/colors', require('./routes/colors'));
+app.use('/api/payment', require('./routes/paypment'));
 app.get('/', async (req, res) => {
   res.send('Hello')
 })
