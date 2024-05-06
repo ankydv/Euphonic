@@ -5,6 +5,7 @@ const { body, validationResult } = require("express-validator");
 var jwt = require("jsonwebtoken");
 var fetchuser = require("../middleware/fetchuser");
 const jwt_secret = "subhaisagood$oy";
+const paymentService = require("../services/paymentService")
 
 //rout 1 create a user using: post "/api/auth/createuser" no login requere
 router.post(
@@ -33,7 +34,10 @@ router.post(
           .status(404)
           .json({ success, error: "sorry a user with this email already exist" });
       }
-
+      //stripe user creation
+      const name = req.body.firstName+" "+req.body.lastName;
+      const customer = await paymentService.createCustomer({name: name, email: req.body.email});
+     
       //create a new user
       user = await User.create({
         firstName: req.body.firstName,
@@ -41,6 +45,7 @@ router.post(
         email: req.body.email,
         password: req.body.password,
       });
+     
       const data = {
         user: {
           id: user.id,

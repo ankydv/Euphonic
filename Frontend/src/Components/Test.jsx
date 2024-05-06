@@ -4,7 +4,7 @@ import { CardElement, Elements, useStripe, useElements } from '@stripe/react-str
 import { Box, Container, CssBaseline, useTheme } from '@mui/material';
 const publishableKey = process.env.REACT_APP_STRIPE_PUBLISHABLE_KEY;
 
-const stripePromise = loadStripe(publishableKey);
+const stripePromise = loadStripe('pk_test_51PCitgSAsvsjn3avNtmpzVwUXVYlIf3jiQSboowwKauGkXtRvQ0LAEYTSeMt0ylAieHvOkkuHy0iiVyCAgoKU97f00e44JqTJu');
 
 const CheckoutForm = () => {
   const stripe = useStripe();
@@ -27,7 +27,7 @@ const CheckoutForm = () => {
     if (error) {
       console.log('Error:', error);
     } else {
-      console.log('Token:', token.id);
+      console.log('Token:', token);
       // Send the token to your server here
     }
   };
@@ -52,10 +52,14 @@ const CheckoutForm = () => {
     <Container component="main" maxWidth="xs">
       <CssBaseline />
     <form  onSubmit={handleSubmit}>
-    <Box
-        sx={{
+    <div
+        style={{
+          height: '100%',
+          marginTop: '100px',
+          // alignItems: 'center',
           display: "flex",
           flexDirection: "column",
+          justifyContent: 'center',
           gap: '1rem'
         }}
       >
@@ -63,7 +67,7 @@ const CheckoutForm = () => {
       <button onClick={handleSubmit} type="submit" disabled={false}>
         Pay
       </button>
-      </Box>
+      </div>
     </form>
     
     </Container>

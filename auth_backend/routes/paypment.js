@@ -7,6 +7,6 @@ router.get("/hello", (req, res) => {
 });
 
 router.post("/create-customer", paymentController.createCustomer);
-router.post('/users/:userId/cards', paymentController.addCard);
+router.post('/users/cards', paymentController.addCard);
 
 module.exports = router;

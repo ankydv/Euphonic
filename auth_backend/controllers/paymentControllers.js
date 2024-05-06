@@ -1,4 +1,5 @@
 const paymentService = require("../services/paymentService");
+const PaymentError = require("../utils/PaymentError");
 
 const createCustomer = async (req, res) => {
   try {
@@ -14,24 +15,21 @@ const createCustomer = async (req, res) => {
 };
 
 const addCard = async (req, res) => {
-  const userId = req.params.userId;
-  const { cardNumber, expMonth, expYear, cvc } = req.body;
-
   try {
-    const card = await paymentService.addCard(
-      userId,
-      cardNumber,
-      expMonth,
-      expYear,
-      cvc
-    );
-    res.status(201).json({ card });
+    const { tokenId, email } = req.body;
+    const result = await paymentService.addCardToCustomer(tokenId, email);
+    res.status(200).json({
+      message: "Card Added Successfully",
+      result,
+    });
   } catch (error) {
-    console.error("Error adding card:", error);
-    res.status(500).send({ message: error.userMessage || "An error occurred" });
+    if (error instanceof PaymentError) {
+      res.status(400).send(error.message);
+    } else {
+      res.status(500).send("An unexpected error occurred");
+    }
   }
 };
-
 module.exports = {
   createCustomer,
   addCard,

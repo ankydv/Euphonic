@@ -15,7 +15,6 @@ class PaymentError extends Error {
       case "StripeAPIError":
         return "Payment service is currently unavailable.";
       default:
-        console.log(this.message);
         return "An unexpected error occurred.";
     }
   }
