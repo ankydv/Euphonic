@@ -1,7 +1,6 @@
-const nodemailer = require('nodemailer');
-require('dotenv').config();
+import { createTransport } from 'nodemailer';
 
-const transporter = nodemailer.createTransport({
+const transporter = createTransport({
     port: 465,
     host: "smtp.gmail.com",
     auth: {
@@ -17,7 +16,7 @@ const fromEmails = {
     // Add more 'from' email addresses as needed
 };
 
-module.exports = {
+export  {
     transporter,
     fromEmails,
 };

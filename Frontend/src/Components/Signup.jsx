@@ -62,7 +62,7 @@ export default function SignUp() {
     const firstName = formData.get("firstName");
     const lastName = formData.get("lastName");
     const password = formData.get("password");
-    const response = await fetch(`${SERVER}api/auth/createuser`, {
+    const response = await fetch(`${SERVER}api/auth/signup`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -73,8 +73,8 @@ export default function SignUp() {
     setIsLoading(false);
     if (json.success) {
       // Save the auth token and redirect
-      localStorage.setItem("token", json.authtoken);
-      dispatch(login(json.authtoken));
+      localStorage.setItem("token", json.authToken);
+      dispatch(login(json.authToken));
       navigate("/");
     } else {
       // props.showAlert("Invalid Details","danger");
@@ -97,7 +97,6 @@ export default function SignUp() {
         <Typography component="h1" variant="h5">
           Sign up
         </Typography>
-        {alertMsg && <Alert severity="error">{alertMsg}</Alert>}
         <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 3 }}>
           <Grid container spacing={2}>
             <Grid item xs={12} sm={6}>

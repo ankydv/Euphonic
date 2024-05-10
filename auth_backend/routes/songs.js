@@ -1,10 +1,11 @@
-const express = require("express");
-const {History, Liked} = require("../models/songs");
-const router = express.Router();
-const fetchuser = require("../middleware/fetchuser");
-const paginate = require("../functions/pagination")
+import express from 'express';
+import { History, Liked } from '../models/song.model.js';
+import { Router } from 'express';
+import fetchuser from '../middleware/fetchuser.js';
+import paginate from '../functions/pagination.js';
 
 //route 1 :get all the notes using:get"/api/notes/fetchallnotes" login requered
+const router = Router();
 
 router.get("/fetchhistory", fetchuser, async (req, res) => {
   try {
@@ -173,4 +174,4 @@ router.delete("/deleteLiked/:videoId", fetchuser, async (req, res) => {
     res.status(500).send("Internal Server Error");
   }
 });
-module.exports = router;
+export default router;

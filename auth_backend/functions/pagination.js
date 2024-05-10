@@ -16,4 +16,4 @@ const paginate = async (model, conditions, page = 1, limit = 10, sort = { _id: -
     }
   };
   
-  module.exports = paginate
+export default paginate;

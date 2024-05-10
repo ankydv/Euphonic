@@ -1,5 +1,5 @@
-const mongoose = require("mongoose");
-const { Schema } = mongoose;
+import mongoose, {Schema} from "mongoose";
+
 const SongSchema = new Schema({
   user: {
     type: mongoose.Schema.Types.ObjectId,
@@ -14,6 +14,5 @@ const SongSchema = new Schema({
     default: Date.now,
   },
 });
-const History = mongoose.model("history", SongSchema);
-const Liked = mongoose.model("liked", SongSchema);
-module.exports = {History, Liked};
+export const History = mongoose.model("history", SongSchema);
+export const Liked = mongoose.model("liked", SongSchema);

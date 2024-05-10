@@ -1,35 +1,42 @@
-const dotenv=require('dotenv');
-dotenv.config();
-const express = require("express");
-const connectToMongo = require("./db");
-var cors = require('cors')
-const { transporter, fromEmails } = require('./routes/mailerConfig');
-const jwt = require("jsonwebtoken");
-const User = require('./models/User');
-const createJwtToken = require('./token');
+import { config } from 'dotenv';
+config();
+import express, { json } from "express";
+import connectToMongo from "./db.js";
+import cors from 'cors';
+import { transporter, fromEmails } from './routes/mailerConfig.js';
+import verify from "jsonwebtoken";
+import User from './models/user.model.js';
+import createJwtToken from './token.js';
 // database connection
 connectToMongo();
 const app = express();
 const port =process.env.PORT || 9001 ;
-const fs = require('fs');
-const path = require('path');
+import { readFileSync } from 'fs';
+import { resolve } from 'path';
+
+import userRoutes from './routes/user.route.js';
+import songRoutes from './routes/songs.js';
+import verificationRoutes from './routes/verifications.js';
+import colorRoutes from './routes/colors.js';
+import errorHandlerMiddleware from './middleware/errorHandler.middleware.js';
 
 
 app.use(cors())
-app.use(express.json());
+app.use(json());
 
 // availabel routes
-app.use("/api/auth", require("./routes/auth"));
-app.use("/api/songs", require("./routes/songs"));
-app.use('/api/verifications', require('./routes/verifications'));
-app.use('/api/colors', require('./routes/colors'));
+app.use("/api/auth", userRoutes);
+app.use("/api/songs", songRoutes);
+app.use('/api/verifications', verificationRoutes);
+app.use('/api/colors', colorRoutes);
+app.use(errorHandlerMiddleware);
 app.get('/', async (req, res) => {
   res.send('Hello')
 })
 
 app.get("/users/all", async (req, res) => {
   try {
-    const allUsers = await User.find({});
+    const allUsers = await find({});
     res.json({ users: allUsers });
   } catch (error) {
     console.log(error);
@@ -39,7 +46,7 @@ app.get("/users/all", async (req, res) => {
 
 app.get("/users/single", async (req, res) => {
   try {
-    const user = await User.findById(req.body.id).select("-password");
+    const user = await findById(req.body.id).select("-password");
     const token = createJwtToken(user);
     res.json({ user, token });
   } catch (error) {
@@ -50,7 +57,7 @@ app.get("/users/single", async (req, res) => {
 
 app.post("/api/user/mail", async (req, res) => {
   const email = req.body.email;
-  const user = await User.findOne({
+  const user = await findOne({
     email,
   }).select("-password");
   
@@ -60,11 +67,11 @@ app.post("/api/user/mail", async (req, res) => {
   const token = createJwtToken(user._id);
   const link = `${process.env.FRONTEND_URL}/resetpassword?token=${token}`
   try {
-    const innerPath = path.resolve(__dirname, './UItemplates/resetPassword.html');
-    let innerTemplate = fs.readFileSync(innerPath, 'utf-8');
+    const innerPath = resolve(__dirname, './UItemplates/resetPassword.html');
+    let innerTemplate = readFileSync(innerPath, 'utf-8');
     innerTemplate = innerTemplate.replace('{{link}}', link);
-    const filePath = path.resolve(__dirname, './UItemplates/generalEmail.html');
-    let htmlTemplate = fs.readFileSync(filePath, 'utf-8');
+    const filePath = resolve(__dirname, './UItemplates/generalEmail.html');
+    let htmlTemplate = readFileSync(filePath, 'utf-8');
     htmlTemplate = htmlTemplate.replace('{{content}}', innerTemplate)
     const mailData = {
       from: fromEmails.verification, 
@@ -87,8 +94,8 @@ app.post("/api/user/validate", async (req, res) => {
   try {
     console.log("t2");
     const token = req.query.token;
-    const payload = jwt.verify(token, "ASIUDOASNDUH(*@HQIENDQ");
-    const user = await User.findById(payload.user).select("-password");
+    const payload = verify(token, "ASIUDOASNDUH(*@HQIENDQ");
+    const user = await findById(payload.user).select("-password");
     user.password = req.body.password;
     user.save();
     res.json({ message: "Password Changed Successfully" });
@@ -101,4 +108,4 @@ app.listen(port, () => {
 });
 
 
-module.exports = [app, transporter];
+export default [app, transporter];

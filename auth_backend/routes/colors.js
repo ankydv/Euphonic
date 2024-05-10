@@ -1,6 +1,6 @@
-const express = require('express');
-const axios = require('axios');
-const getColors = require('get-image-colors');
+import express from 'express';
+import axios from 'axios';
+import getColors from 'get-image-colors';
 
 const app = express();
 
@@ -57,4 +57,4 @@ app.get('/dominant-color', async (req, res) => {
   }
 });
 
-module.exports = app;
+export default app;

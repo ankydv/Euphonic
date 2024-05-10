@@ -1,10 +1,11 @@
-const { body, validationResult } = require("express-validator");
-const express = require("express");
-const User = require("../models/User");
-const OTP = require('../models/OTP');
-const { transporter, fromEmails } = require('./mailerConfig');
-const fs = require('fs');
-const path = require('path');
+import { body, validationResult } from 'express-validator';
+import express from 'express';
+import User from '../models/user.model.js';
+import OTP from '../models/otp.model.js';
+import { transporter, fromEmails } from './mailerConfig.js';
+import fs from 'fs';
+import path from 'path';
+import { fileURLToPath } from 'url';
 
 const router = express.Router();
 
@@ -30,10 +31,12 @@ router.get('/sendOtp', async(req, res) => {
         { upsert: true, new: true }
     )
     try{
-        const otpPath = path.resolve(__dirname, '../UItemplates/otpEmail.html');
+        const currentFileURL = import.meta.url;
+        const currentFilePath = fileURLToPath(currentFileURL);
+        const otpPath = path.resolve(path.dirname(currentFilePath), '../UItemplates/otpEmail.html');
         let otpTemplate = fs.readFileSync(otpPath, 'utf-8');
         otpTemplate = otpTemplate.replace('{{otp}}', otp);
-        const filePath = path.resolve(__dirname, '../UItemplates/generalEmail.html');
+        const filePath = path.resolve(path.dirname(currentFilePath), '../UItemplates/generalEmail.html');
         let htmlTemplate = fs.readFileSync(filePath, 'utf-8');
         htmlTemplate = htmlTemplate.replace('{{content}}', otpTemplate)
         const mailData = {
@@ -74,4 +77,4 @@ router.post('/verify-otp', async (req, res) => {
     }
 });
 
-module.exports = router;
+export default router;
