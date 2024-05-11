@@ -30,7 +30,19 @@ const addCard = async (req, res) => {
     }
   }
 };
+
+const createPaymentIntent = async (req, res) => {
+  try {
+    const clientSecret = await paymentService.createPaymentIntent(req.body);
+    res.json({ client_secret: clientSecret });
+  } catch (error) {
+    console.error('Error creating PaymentIntent:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+};
+
 module.exports = {
   createCustomer,
   addCard,
+  createPaymentIntent
 };

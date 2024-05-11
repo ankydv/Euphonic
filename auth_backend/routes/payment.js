@@ -8,5 +8,6 @@ router.get("/hello", (req, res) => {
 
 router.post("/create-customer", paymentController.createCustomer);
 router.post('/users/cards', paymentController.addCard);
+router.post('/payment-intent', paymentController.createPaymentIntent);
 
 module.exports = router;

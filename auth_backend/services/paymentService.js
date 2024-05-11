@@ -45,7 +45,36 @@ const addCardToCustomer = async (tokenId, email) => {
     throw new PaymentError(error.message, error.type);
   }
 };
+
+// services/paymentService.js
+
+const createPaymentIntent = async (data) => {
+  try {
+    const paymentIntent = await stripe.paymentIntents.create({
+      amount: 101,
+      currency: "inr",
+      description: 'Software development services',
+      shipping: {
+        name: 'Customer Name', // Replace with the actual customer's name
+        address: {
+          line1: 'Address line 1', // Replace with the actual address line 1
+          line2: 'Address line 2', // Optional, replace with the actual address line 2 or remove if not needed
+          city: 'City', // Replace with the actual city
+          state: 'State', // Replace with the actual state
+          postal_code: '11001', // Replace with the actual postal code
+          country: 'US' // Replace with the actual country code (e.g., 'IN' for India)
+        }
+      }
+    });
+    return paymentIntent.client_secret;
+  } catch (error) {
+    // Replace with your custom error handling
+    throw new PaymentError(error.message, error.type);
+  }
+};
+
 module.exports = {
   createCustomer,
   addCardToCustomer,
+  createPaymentIntent,
 };
