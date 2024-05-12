@@ -39,7 +39,8 @@ export default function OtpModal({email, open, setOpen, next}) {
   React.useEffect(() => {
     const fetchData = async () => {
         try {
-          const res = await axios.get(`${SERVER}api/verifications/sendOtp?email=${email}`);
+          const res = await axios.post(`${SERVER}api/verifications/sendOtp`, {email});
+          console.log(res.data)
           if(res.data.success)
             setAlertMsg({payload: res.data.message, type: 'success'})
           else 
@@ -66,18 +67,26 @@ export default function OtpModal({email, open, setOpen, next}) {
     console.log(body);
     try {
       const response = await axios.post(`${SERVER}api/verifications/verify-otp`, body);
-      if(response.data.success){
-        console.log(response.data.message)
-        handleClose()
+      if (response.data.success) {
+        console.log(response.data.message);
+        handleClose();
         next();
+      } else {
+        setAlertMsg({ payload: response.data.error, type: 'error' });
       }
-      else{
-        setAlertMsg({payload: response.data.message, type: 'error'});
+    } catch (error) {
+      if (error.response) {
+        setAlertMsg({ payload: error.response.data.error, type: 'error' });
+        console.error('Server error:', error.response.data.error);
+      } else if (error.request) {
+        setAlertMsg({ payload: 'No response from server', type: 'error' });
+        console.error('No response from server');
+      } else {
+        setAlertMsg({ payload: 'An unexpected error occurred', type: 'error' });
+        console.error('Unexpected error:', error.message);
       }
-  } catch (error) {
-      setAlertMsg({payload: error.message, type: 'error'});
-      console.error('Error verifying OTP:', error);
-  }
+    }
+    
   finally{
     setIsLoading(false);
   }

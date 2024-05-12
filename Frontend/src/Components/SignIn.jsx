@@ -36,7 +36,7 @@ export default function SignIn() {
   const authenticateLogin = async (formData) => {
     setIsLoading(true);
     try{
-    const response = await fetch(`${SERVER}api/auth/login`, {
+    const response = await fetch(`${SERVER}api/auth/signin`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

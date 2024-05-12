@@ -3,11 +3,9 @@ config();
 import express, { json } from "express";
 import connectToMongo from "./db.js";
 import cors from 'cors';
-import { transporter, fromEmails } from './routes/mailerConfig.js';
+import { transporter, fromEmails } from './configs/mailer.config.js';
 import verify from "jsonwebtoken";
-import User from './models/user.model.js';
 import createJwtToken from './token.js';
-// database connection
 connectToMongo();
 const app = express();
 const port =process.env.PORT || 9001 ;
@@ -15,10 +13,10 @@ import { readFileSync } from 'fs';
 import { resolve } from 'path';
 
 import userRoutes from './routes/user.route.js';
-import songRoutes from './routes/songs.js';
-import verificationRoutes from './routes/verifications.js';
-import colorRoutes from './routes/colors.js';
-import errorHandlerMiddleware from './middleware/errorHandler.middleware.js';
+import songRoutes from './routes/song.route.js';
+import verificationRoutes from './routes/otp.route.js';
+import colorRoutes from './routes/color.route.js';
+import errorHandlerMiddleware from './middleware/error.middleware.js';
 
 
 app.use(cors())

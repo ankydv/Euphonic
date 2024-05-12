@@ -43,10 +43,10 @@ export const signUp = asyncHandler(async (req, res, next) => {
 
 export const signIn = asyncHandler(async (req, res, next) => {
   const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      console.log(errors);
-      return next(new ErrorHandler(400, errors.array()[1].msg))
-    }
+  if (!errors.isEmpty()) {
+    return next(new ErrorHandler(400, errors.array()[0].msg));
+  }
+
   const { email, password } = req.body;
   try {
     let user = await User.findOne({ email });
@@ -58,10 +58,38 @@ export const signIn = asyncHandler(async (req, res, next) => {
       return next(new ErrorHandler(400, "Incorrect password"));
     }
 
-    const authtoken = generateRefreshToken(user);
-    res.json({ authtoken });
+    const authtoken = user.generateRefreshToken();
+    res.json({ success: true, authtoken });
   } catch (error) {
     console.error(error.message);
     res.status(500).send("Internal server error");
+  }
+});
+
+export const getUserDetails = asyncHandler(async (req, res) => {
+  try {
+    const userId = req.user.id;
+    const user = await User.findById(userId).select("-password");
+    res.send(user);
+  } catch (error) {
+    console.error(error.message);
+    res.status(500).send("Internal Server Error");
+  }
+});
+
+export const isNewUser = asyncHandler(async (req, res, next) => {
+  try {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return next(new ErrorHandler(400, errors.array()[0].msg));
+    }
+    const { email } = req.query;
+    console.log(email);
+    const user = await User.findOne({ email: email });
+    if (user) return next(new ErrorHandler(400, "Email already registered"));
+    res.json({ success: true });
+  } catch (error) {
+    console.error(error.message);
+    res.status(500).send(error);
   }
 });
