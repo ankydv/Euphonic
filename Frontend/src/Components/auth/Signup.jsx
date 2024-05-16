@@ -12,10 +12,10 @@ import Container from "@mui/material/Container";
 import axios from 'axios';
 
 import { useDispatch } from "react-redux";
-import { login } from "../state/action-creators";
+import { login } from "../../state/action-creators";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
-import OtpModal from "./OtpModal";
+import OtpModal from "../OtpModal";
 import { Alert } from "@mui/material";
 
 const SERVER = process.env.REACT_APP_AUTH_SERVER;

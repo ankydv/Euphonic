@@ -16,7 +16,7 @@ import { LuLogOut } from "react-icons/lu";
 import { FaRegHeart } from "react-icons/fa";
 import { FaHistory } from "react-icons/fa";
 import { useDispatch, useSelector } from 'react-redux';
-import { logout } from "../state/action-creators";
+import { logout } from "../../state/action-creators";
 import { RiMenuFoldFill } from "react-icons/ri";
 
 const drawerWidth = 240;

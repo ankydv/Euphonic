@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import SongList from './SongList'
+import SongList from '../SongList'
 import { useSelector } from 'react-redux';
 import axios from 'axios';
 

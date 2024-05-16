@@ -1,16 +1,16 @@
 import React from 'react';
 import { Route, Routes } from 'react-router-dom';
-import MusicRecommendation from "./Components/recommendation";
-import SearchResults from './Components/searchResults';
-import History from './Components/History';
-import ArtistInfo from './Components/ArtistInfo';
-import AlbumInfo from './Components/AlbumInfo';
-import ForgotPassword from './Components/ForgotPassword';
-import Liked from './Components/Liked';
-import Test from './Components/Test';
-import PlayListInfo from './Components/PlayListInfo';
-import SignIn from './Components/SignIn';
-import SignUp from './Components/Signup';
+import MusicRecommendation from "./Components/home/recommendation";
+import SearchResults from './Components/search/searchResults';
+import History from './Components/history/History';
+import ArtistInfo from './Components/artist/ArtistInfo';
+import AlbumInfo from './Components/album/AlbumInfo';
+import ForgotPassword from './Components/auth/ForgotPassword';
+import Liked from './Components/liked/Liked';
+import Test from './Components/common/Test';
+import PlayListInfo from './Components/playlist/PlayListInfo';
+import SignIn from './Components/auth/SignIn';
+import SignUp from './Components/auth/Signup';
 
 const MyRoutes = () => {
   return (

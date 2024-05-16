@@ -1,10 +1,10 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react'
 import { useSearchParams } from 'react-router-dom';
-import SongList from './SongList';
+import SongList from '../SongList';
 import { useDispatch, useSelector } from "react-redux";
 import { bindActionCreators } from "redux";
-import { actionCreators } from "../state/index";
+import { actionCreators } from "../../state/index";
 
 const PlayListInfo = () => {
     const server = process.env.REACT_APP_SERVER;

@@ -9,9 +9,9 @@ import Backdrop from '@mui/material/Backdrop';
 
 import { useDispatch } from "react-redux";
 import { bindActionCreators } from "redux";
-import { actionCreators } from "../state/index";
+import { actionCreators } from "../../state/index";
 import { useLocation } from 'react-router-dom';
-import QualityToggle, { QualityLabel } from './MaterialUI Components/VideoQuality';
+import QualityToggle, { QualityLabel } from '../MaterialUI Components/VideoQuality';
 
 const Video = () => {
     const musicInfo = useSelector((state) => state.musicInfo);

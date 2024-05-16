@@ -4,7 +4,7 @@ import { useSelector } from "react-redux";
 
 import { useDispatch } from "react-redux";
 import { bindActionCreators } from "redux";
-import { actionCreators } from "../state/index";
+import { actionCreators } from "../../state/index";
 import { Box, List, ListItemButton } from "@mui/material";
 
 const SongList = ({ title, list, isLoading, shimmerLength, handleSongClick, isQueue }) => {
