@@ -9,6 +9,7 @@ const Header = () => {
     <div className="header">
       <Logo />
       <SearchBar />
+      
       <ProfileIcon />
     </div>
   );

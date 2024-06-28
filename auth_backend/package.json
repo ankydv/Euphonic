@@ -24,7 +24,8 @@
     "get-image-colors": "^4.0.1",
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^6.10.1",
-    "nodemailer": "^6.9.8"
+    "nodemailer": "^6.9.8",
+    "razorpay": "^2.9.4"
   },
   "devDependencies": {
     "nodemon": "^3.0.1"

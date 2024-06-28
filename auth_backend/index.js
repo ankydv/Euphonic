@@ -17,6 +17,7 @@ import songRoutes from './routes/song.route.js';
 import verificationRoutes from './routes/otp.route.js';
 import colorRoutes from './routes/color.route.js';
 import errorHandlerMiddleware from './middleware/error.middleware.js';
+import paymentRoutes from './routes/payment.route.js'
 
 
 app.use(cors())
@@ -27,6 +28,7 @@ app.use("/api/auth", userRoutes);
 app.use("/api/songs", songRoutes);
 app.use('/api/verifications', verificationRoutes);
 app.use('/api/colors', colorRoutes);
+app.use('/api/pay', paymentRoutes);
 app.use(errorHandlerMiddleware);
 app.get('/', async (req, res) => {
   res.send('Hello')
