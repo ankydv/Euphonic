@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import SongList from '../SongList'
-import { useSelector } from 'react-redux';
+import SongList from '../../Components/songList/SongList'
 import axios from 'axios';
 
 const server = process.env.REACT_APP_AUTH_SERVER;

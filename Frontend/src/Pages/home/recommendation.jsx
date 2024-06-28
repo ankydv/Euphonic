@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from "react";
-import "../styles/musicRecommendation.css"; // Import the CSS file for styling
+import "./musicRecommendation.css"; // Import the CSS file for styling
 // import "../styles/musicCard.css"
 
 import { useDispatch } from 'react-redux';
 import { bindActionCreators } from "redux";
 import { actionCreators } from '../../state/index';
 import axios from "axios";
-import { sample_dataset } from "../helpers/sample";
+import { sample_dataset } from "../../Components/helpers/sample";
 import { useNavigate } from "react-router-dom";
 import { Box, Button, useTheme } from "@mui/material";
 

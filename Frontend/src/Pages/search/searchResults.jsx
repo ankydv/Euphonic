@@ -1,9 +1,9 @@
-import { MusicCards } from "./recommendation";
-import "../styles/musicRecommendation.css";
+import { MusicCards } from "../home/recommendation";
+// TODO: add css musicrecommendation 
 import { useSearchParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { sample_searchResult } from "../helpers/sample";
+import { sample_searchResult } from "../../Components/helpers/sample";
 
 const server = process.env.REACT_APP_SERVER;
 

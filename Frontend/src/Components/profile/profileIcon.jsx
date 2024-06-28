@@ -1,5 +1,5 @@
-import "../styles/variables.css";
-import "../styles/profileIcon.css";
+import "../../styles/variables.css";
+import "./profileIcon.css";
 import { useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { useEffect, useState } from "react";

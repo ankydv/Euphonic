@@ -1,8 +1,8 @@
-import MusicCard from "../Components/musicCard";
-import "../styles/bodyContent.css";
-import MyRoutes from "../../Routes.js";
+import MusicCard from "./Components/MusicCard/musicCard";
+import "./bodyContent.css";
+import MyRoutes from "./Routes.js";
 import { useSelector } from "react-redux";
-import Queue from "./queue";
+import Queue from "./Components/queue/queue";
 import { useState, useEffect } from "react";
 
 import { useLocation, useNavigate } from "react-router-dom";
@@ -10,8 +10,8 @@ import {
   BsFillArrowLeftCircleFill,
   BsFillArrowRightCircleFill,
 } from "react-icons/bs";
-import Video from "./Video.jsx";
-import MiniDrawer from "./MiniSideBar.jsx";
+import Video from "./Components/video/Video";
+import MiniDrawer from "./Components/MiniSideBar";
 import { Box, useTheme } from "@mui/material";
 
 const BodyContent = () => {

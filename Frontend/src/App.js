@@ -1,5 +1,5 @@
 import './App.css';
-import BodyContent from "./Components/bodyContent";
+import BodyContent from "./bodyContent";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { ThemeProvider } from '@mui/material/styles';
 import Theme from './theme';

@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import "../styles/songList.css";
+import "./songList.css";
 import { useSelector } from "react-redux";
 
 import { useDispatch } from "react-redux";

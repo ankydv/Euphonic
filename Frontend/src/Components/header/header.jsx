@@ -1,7 +1,7 @@
-import "../styles/header.css";
+import "./header.css";
 import React from "react";
 import SearchBar from "../search/searchBar";
-import Logo from "./logo";
+import Logo from "../logo/logo";
 import ProfileIcon from "../profile/profileIcon";
 
 const Header = () => {

@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react'
-import "../styles/video.css";
+import "./video.css";
 import { useSelector } from 'react-redux';
 import { RxCross2 } from "react-icons/rx";
 import { CgMiniPlayer } from "react-icons/cg";
@@ -11,7 +11,7 @@ import { useDispatch } from "react-redux";
 import { bindActionCreators } from "redux";
 import { actionCreators } from "../../state/index";
 import { useLocation } from 'react-router-dom';
-import QualityToggle, { QualityLabel } from '../MaterialUI Components/VideoQuality';
+import QualityToggle, { QualityLabel } from './VideoQuality';
 
 const Video = () => {
     const musicInfo = useSelector((state) => state.musicInfo);

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import SongList from '../SongList'
+import SongList from "../../Components/songList/SongList"
 import { useSelector } from 'react-redux';
 import axios from 'axios';
 import { Box, Button, Typography } from '@mui/material';

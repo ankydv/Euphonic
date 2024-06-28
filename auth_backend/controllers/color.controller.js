@@ -29,7 +29,6 @@ async function getDominantColorFromURL(url) {
 export const getColorPalette = asyncHandler(async (req, res) => {
   const { url, numColors } = req.query;
   try {
-    a;
     const palette = await getColorPaletteFromURL(url, numColors || 5);
     res.json({ palette });
   } catch (error) {

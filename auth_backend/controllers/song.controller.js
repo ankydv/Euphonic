@@ -29,7 +29,7 @@ export const addHistory = asyncHandler(async (req, res) => {
   try {
     const jsonData = req.body;
 
-    foundData = await History.findOne({
+    const foundData = await History.findOne({
       "music.videoId": jsonData.music.videoId,
     });
 

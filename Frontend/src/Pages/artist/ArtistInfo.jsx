@@ -1,8 +1,8 @@
 import axios from 'axios';
 import React, { useEffect, useRef, useState } from 'react'
 import { useSearchParams } from 'react-router-dom';
-import SongList from './SongList';
-import { MusicCards } from './recommendation';
+import SongList from '../../Components/songList/SongList';
+import { MusicCards } from '../home/recommendation';
 
 const ArtistInfo = () => {
 

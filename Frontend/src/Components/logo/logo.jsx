@@ -1,7 +1,8 @@
 import { useNavigate } from "react-router-dom";
-import "../styles/logo.css";
+import "./logo.css";
+import logo from '../../assets/logo.png';
 
-const logo = require("../res/logo.png");
+
 
 const Logo = () => {
   const navigate = useNavigate();

@@ -1,5 +1,5 @@
 import axios from "axios";
-import "../styles/musicCard.css";
+import "./musicCard.css";
 import React from "react";
 import { useState, useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -11,7 +11,7 @@ import Snackbar from '@mui/material/Snackbar';
 import MuiAlert from '@mui/material/Alert';
 import { PiHeartStraightFill, PiHeartStraightLight } from "react-icons/pi";
 import { ImLoop } from "react-icons/im";
-import MaterialUISwitch from "../MaterialUI Components/Switch"
+import MaterialUISwitch from "../Switch"
 import { IconButton, Typography, darken, lighten, useTheme } from "@mui/material";
 import {FaPlay, FaPause, FaChevronLeft, FaChevronRight } from "react-icons/fa"
 import { GiPreviousButton, GiNextButton, GiKebabSpit } from "react-icons/gi";

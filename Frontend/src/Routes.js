@@ -1,14 +1,14 @@
 import React from 'react';
 import { Route, Routes } from 'react-router-dom';
-import MusicRecommendation from "./Components/home/recommendation";
-import SearchResults from './Components/search/searchResults';
-import History from './Components/history/History';
-import ArtistInfo from './Components/artist/ArtistInfo';
-import AlbumInfo from './Components/album/AlbumInfo';
+import MusicRecommendation from "./Pages/home/recommendation";
+import SearchResults from './Pages/search/searchResults';
+import History from './Pages/history/History';
+import ArtistInfo from './Pages/artist/ArtistInfo';
+import AlbumInfo from './Pages/AlbumInfo/AlbumInfo';
 import ForgotPassword from './Components/auth/ForgotPassword';
-import Liked from './Components/liked/Liked';
-import Test from './Components/common/Test';
-import PlayListInfo from './Components/playlist/PlayListInfo';
+import Liked from './Pages/liked/Liked';
+// import Test from './Components/songList/Test';
+import PlayListInfo from './Pages/playlist/PlayListInfo';
 import SignIn from './Components/auth/SignIn';
 import SignUp from './Components/auth/Signup';
 
@@ -26,7 +26,7 @@ const MyRoutes = () => {
         <Route path='/playlist' Component={PlayListInfo} />
         <Route path='/resetpassword' Component={ForgotPassword} />
         <Route path='/liked' Component={Liked} />
-        <Route path='/test' Component={Test} />
+        {/* <Route path='/test' Component={Test} /> */}
       </Routes>
   );
 };
