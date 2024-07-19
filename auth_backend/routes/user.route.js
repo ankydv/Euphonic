@@ -6,6 +6,7 @@ import {
   signIn,
   getUserDetails,
   isNewUser,
+  firebase,
 } from "../controllers/user.controller.js";
 import { config } from "dotenv";
 config();
@@ -37,5 +38,7 @@ router.get(
   ],
   isNewUser
 );
+
+router.post("/firebase", firebase)
 
 export default router;

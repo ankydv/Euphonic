@@ -2,6 +2,7 @@ import { validationResult } from "express-validator";
 import User from "../models/user.model.js";
 import { ErrorHandler } from "../utils/ErrorHandler.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
+import admin from "../configs/firebase.config.js"
 
 export const signUp = asyncHandler(async (req, res, next) => {
   const { firstName, lastName, email, password } = req.body;
@@ -68,6 +69,7 @@ export const signIn = asyncHandler(async (req, res, next) => {
 
 export const getUserDetails = asyncHandler(async (req, res) => {
   try {
+    console.log(req.user);
     const userId = req.user.id;
     const user = await User.findById(userId).select("-password");
     res.send(user);
@@ -91,5 +93,37 @@ export const isNewUser = asyncHandler(async (req, res, next) => {
   } catch (error) {
     console.error(error.message);
     res.status(500).send(error);
+  }
+});
+
+export const firebase = asyncHandler(async (req, res) => {
+  const token = req.headers.authorization.split('Bearer ')[1];
+  
+  try {
+    const decodedToken = await admin.auth().verifyIdToken(token);
+    const {email, picture} = decodedToken;
+    const existedUser = await User.findOne({
+      email,
+    });
+    console.log(decodedToken)
+    if (existedUser) {
+      const authToken = existedUser.generateRefreshToken();
+      return res.json({authToken})
+    }
+    const [firstName, lastName] = decodedToken.name.split(' ');
+    const uid = decodedToken.uid;
+    const user = await User.create({
+      firstName,
+      lastName: lastName || "",
+      email,
+      uid,
+      picture
+    });
+    const authToken = user.generateRefreshToken();
+    return res.json({authToken})
+
+  } catch (error) {
+    console.log(error.message)
+    res.status(401).send('Unauthorized');
   }
 });

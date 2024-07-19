@@ -131,6 +131,7 @@ export default function MiniDrawer() {
   const handleLogout = () => {
     dispatch(logout());
     localStorage.removeItem('token');
+    localStorage.removeItem('avatar');
 }
 
   return (

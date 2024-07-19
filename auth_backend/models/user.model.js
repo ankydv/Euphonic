@@ -22,13 +22,21 @@ const userSchema = new Schema(
     },
     password: {
       type: String,
-      required: [true, "password is required"],
+      required: false,
       minlength: [6, "password must be at least 6 characters long"],
     },
     date: {
       type: Date,
       default: Date.now,
     },
+    uid: {
+      type: String,
+      required: false,
+    },
+    picture: {
+      type: String,
+      required: false,
+    }
   },
   { timestamps: true }
 );
