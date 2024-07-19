@@ -17,6 +17,7 @@ import { login } from "../../state/action-creators";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { Alert } from "@mui/material";
+import GoogleSignIn from "./GoogleAuth";
 
 const SERVER = process.env.REACT_APP_AUTH_SERVER;
 
@@ -68,7 +69,6 @@ export default function SignIn() {
       <CssBaseline />
       <Box
         sx={{
-          marginTop: 8,
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
@@ -141,7 +141,12 @@ export default function SignIn() {
             </Grid>
           </Grid>
         </Box>
-        {alertMsg && <Alert severity="error">{alertMsg}</Alert>}
+        <Box sx={{
+          mt: 2,
+        }}>
+          <GoogleSignIn />
+        </Box>
+        {alertMsg && <Alert sx={{mt: 2}} severity="error">{alertMsg}</Alert>}
       </Box>
     </Container>
   );

@@ -20,13 +20,13 @@ const ProfileIcon = () => {
   const theme = useSelector((state) => state.theme);
   const navigate = useNavigate();
   const themePalette = useTheme();
+  const [avatar, setAvatar] = useState();
 
   const dispatch = useDispatch();
   const { sendTheme } = bindActionCreators(
     actionCreators,
     dispatch
   );
-  console.log(currUser)
   const handleSwitch = () => {
     document.body.style.transition = 'background-color 0ms';
     setTimeout(() => {
@@ -42,6 +42,7 @@ const ProfileIcon = () => {
     axios.post(`${SERVER}api/auth/getuser`, {}, { headers })
       .then(res => {
         setCurrUser(res.data);
+        setAvatar(localStorage.getItem("avatar"));
       })
       .catch(error => {
         console.error(error);
@@ -61,7 +62,7 @@ const ProfileIcon = () => {
       isLoggedIn ? currUser && <Avatar
         sx={{ bgcolor: themePalette.palette.primary.main, cursor: 'pointer' }}
         title='Profile'
-        // src="/broken-image.jpg"
+        src={avatar || currUser.picture}
         onClick={handleProfile}
       ><Typography>{currUser['firstName']?.charAt(0).toUpperCase()}</Typography>
         </Avatar>

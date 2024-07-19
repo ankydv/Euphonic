@@ -17,6 +17,7 @@ import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import OtpModal from "./OtpModal";
 import { Alert } from "@mui/material";
+import GoogleSignIn from "./GoogleAuth";
 
 const SERVER = process.env.REACT_APP_AUTH_SERVER;
 
@@ -165,6 +166,11 @@ export default function SignUp() {
               </Link>
             </Grid>
           </Grid>
+        </Box>
+        <Box sx={{
+          mt: 2,
+        }}>
+          <GoogleSignIn />
         </Box>
         {alertMsg && <Alert severity="error">{alertMsg}</Alert>}
       </Box>
