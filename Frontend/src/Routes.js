@@ -12,6 +12,7 @@ import PlayListInfo from './Pages/playlist/PlayListInfo';
 import SignIn from './Components/auth/SignIn';
 import SignUp from './Components/auth/Signup';
 import CustomCheckout from './Pages/razorpay/CustomCheckout';
+import PricingPage from './Pages/upgrade/Pricing';
 
 const MyRoutes = () => {
   return (
@@ -28,6 +29,7 @@ const MyRoutes = () => {
         <Route path='/resetpassword' Component={ForgotPassword} />
         <Route path='/liked' Component={Liked} />
         <Route path='/pay' Component={CustomCheckout} />
+        <Route path='/upgrade' Component={PricingPage} />
         {/* <Route path='/test' Component={Test} /> */}
       </Routes>
   );
