@@ -6,6 +6,7 @@ from ytmusicapi import YTMusic;
 from pytube.cipher import Cipher
 from urllib.parse import parse_qs
 import requests
+import syncedlyrics, re
 
 router = APIRouter()
 yt = YTMusic(location='IN')
@@ -43,3 +44,32 @@ def getWatchList(videoId:str):
     except Exception as e:
          raise HTTPException(status_code=400, detail=str(e))
 
+def parse_lyrics(lyrics_text):
+    lines = lyrics_text.split('\n')
+    parsed_lines = []
+    for line in lines:
+        if '[' in line and ']' in line:
+            match = re.match(r'\[(\d+):(\d+\.\d+)\](.*)', line)
+            if match:
+                minutes = int(match.group(1))
+                seconds = float(match.group(2))
+                time = minutes * 60 + seconds
+                text = match.group(3).strip()
+                parsed_lines.append({'time': time, 'text': text})
+    return parsed_lines
+
+@router.get('/lyrics')
+def get_lyrics(song_title: str):
+    try:
+        lrc = syncedlyrics.search(song_title, providers=["Megalobiz"], synced_only=True)
+        if lrc:
+            parsed_lyrics = parse_lyrics(lrc)
+            return {"lyrics": parsed_lyrics}
+        else:
+            raise HTTPException(status_code=404, detail="Lyrics not found or returned None.")
+    except Exception as e:
+        print(e)
+        raise HTTPException(status_code=400, detail="Something went wrong")
+    
+# a = get_lyrics('we rollin')
+# print(a)

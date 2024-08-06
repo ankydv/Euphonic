@@ -16,6 +16,7 @@ import { IconButton, Typography, darken, lighten, useTheme } from "@mui/material
 import {FaPlay, FaPause, FaChevronLeft, FaChevronRight } from "react-icons/fa"
 import { GiPreviousButton, GiNextButton, GiKebabSpit } from "react-icons/gi";
 import { CiMenuKebab } from "react-icons/ci";
+import Lyrics from "../lyrics/Lyrics";
 
 
 const server = process.env.REACT_APP_SERVER;
@@ -505,6 +506,7 @@ const updateDynamicStyle = (gradientColor) => {
               <PiHeartStraightLight size={25} color={isLiked === 'loading' ? "gray" : "red"} style={{cursor:'pointer'}} onClick={() => addToLiked(currMusic)} title="Like" />}
           </div>}
         </div>
+        {musicInfo && <Lyrics songTitle={musicInfo?.videoDetails.title} artist={musicInfo.videoDetails.author} currentTime={currDuration}/>}
         <div className="player-bar-controls">
               {!isSmallDevice && <IconButton onClick={handlePrev} title="Previous track">
                 <GiPreviousButton size={30} />
