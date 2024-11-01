@@ -15,6 +15,7 @@ const GoogleSignIn = () => {
   const theme = useTheme();
   const dispatch = useDispatch();
   const provider = new GoogleAuthProvider();
+  provider.addScope('https://www.googleapis.com/auth/youtube');
   const navigate = useNavigate();
   const handleGoogleSignIn = async () => {
     try {

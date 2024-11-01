@@ -11,6 +11,7 @@ import Liked from './Pages/liked/Liked';
 import PlayListInfo from './Pages/playlist/PlayListInfo';
 import SignIn from './Components/auth/SignIn';
 import SignUp from './Components/auth/Signup';
+import PrivacyPolicy from './Pages/PrivacyPolicy';
 
 const MyRoutes = () => {
   return (
@@ -26,6 +27,7 @@ const MyRoutes = () => {
         <Route path='/playlist' Component={PlayListInfo} />
         <Route path='/resetpassword' Component={ForgotPassword} />
         <Route path='/liked' Component={Liked} />
+        <Route path='/privacypolicy' Component={PrivacyPolicy} />
         {/* <Route path='/test' Component={Test} /> */}
       </Routes>
   );
