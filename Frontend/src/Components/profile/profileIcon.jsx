@@ -1,6 +1,6 @@
 import "../../styles/variables.css";
 import "./profileIcon.css";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { useEffect, useState } from "react";
 import axios from "axios";
@@ -55,6 +55,7 @@ const ProfileIcon = () => {
 
   return (
     <div className="profileIcon">
+      <Link to={'/privacypolicy'}>Privacy Policy</Link>
       <IconButton title={theme === 'dark' ? "Light theme" : "Dark theme"} onClick={handleSwitch}>
         {theme === 'dark' ? <LuSun size={25} /> : <LuMoon size={25} color="black" />}
       </IconButton>
