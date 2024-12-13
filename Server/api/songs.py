@@ -7,6 +7,7 @@ from pytube.cipher import Cipher
 from urllib.parse import parse_qs
 import requests
 from yt_dlp import YoutubeDL
+from .youtube import player
 
 router = APIRouter()
 yt = YTMusic(location='IN')
@@ -15,7 +16,7 @@ yt = YTMusic(location='IN')
 @router.get("/songinfo/{id}")
 def getSongInfo(id: str):
     try:
-        info = pytube.YouTube(f'v={id}').vid_info
+        info = player(id)
         if info['playabilityStatus']['status'] == 'ERROR':    # pytube return error as a value if vid is wrong
             raise HTTPException(status_code=404, detail='No song/video found with that id')
         return info
