@@ -17,7 +17,8 @@ import songRoutes from './routes/song.route.js';
 import verificationRoutes from './routes/otp.route.js';
 import colorRoutes from './routes/color.route.js';
 import errorHandlerMiddleware from './middleware/error.middleware.js';
-
+import { setupSocket } from './socketServer.js';
+import http from 'http';
 
 app.use(cors())
 app.use(json());
@@ -31,7 +32,8 @@ app.use(errorHandlerMiddleware);
 app.get('/', async (req, res) => {
   res.send('Hello')
 })
-
+const server = http.createServer(app);
+setupSocket(server)
 app.get("/users/all", async (req, res) => {
   try {
     const allUsers = await find({});
@@ -101,7 +103,7 @@ app.post("/api/user/validate", async (req, res) => {
     res.status(400).json({ error: error.message });
   }
 });
-app.listen(port, () => {
+server.listen(port, () => {
   console.log(`inotebook backend listening at http://localhost:${port}`);
 });
 

@@ -3,6 +3,22 @@ import User from "../models/user.model.js";
 import { ErrorHandler } from "../utils/ErrorHandler.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
 import admin from "../configs/firebase.config.js"
+import axios from "axios";
+
+const fetchGoogleProfile = async (BEARER_TOKEN) => {
+  const GOOGLE_API_URL = 'https://www.googleapis.com/oauth2/v3/userinfo';
+  try {
+    const response = await axios.get(GOOGLE_API_URL, {
+      headers: {
+        Authorization: `Bearer ${BEARER_TOKEN}`,
+      },
+    });
+
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching user google info:', error.response?.data || error.message);
+  }
+}
 
 export const signUp = asyncHandler(async (req, res, next) => {
   const { firstName, lastName, email, password } = req.body;
@@ -98,10 +114,16 @@ export const isNewUser = asyncHandler(async (req, res, next) => {
 
 export const firebase = asyncHandler(async (req, res) => {
   const token = req.headers.authorization.split('Bearer ')[1];
-  
+  const isFirebaseToken = req.isFirebaseToken;
+  console.log(typeof(isFirebaseToken)+isFirebaseToken)
   try {
-    const decodedToken = await admin.auth().verifyIdToken(token);
-    const {email, picture} = decodedToken;
+    let decodedToken;
+    // if(isFirebaseToken!='false')
+      // decodedToken = await admin.auth().verifyIdToken(token);
+    // else 
+      decodedToken = await fetchGoogleProfile(token)
+      console.log(decodedToken)
+      const {email, picture} = decodedToken;
     const existedUser = await User.findOne({
       email,
     });
