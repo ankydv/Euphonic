@@ -15,7 +15,7 @@ const GoogleSignIn = () => {
   const theme = useTheme();
   const dispatch = useDispatch();
   const provider = new GoogleAuthProvider();
-  provider.addScope('https://www.googleapis.com/auth/youtube');
+  // provider.addScope('https://www.googleapis.com/auth/youtube');
   const navigate = useNavigate();
   const handleGoogleSignIn = async () => {
     try {
@@ -23,7 +23,7 @@ const GoogleSignIn = () => {
       const token = await result.user.getIdToken();
 
       const res = await axios.post(
-        `${SERVER}api/auth/firebase`,
+        `${SERVER}api/auth/firebase?isFirebaseToken=true`,
         {},
         {
           headers: {
