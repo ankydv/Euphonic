@@ -24,7 +24,7 @@ const ForgotPassword = () => {
     e.preventDefault();
     try {
       // Make a POST request to the "/api/user/mail" endpoint
-      const response = await axios.post(`${SERVER}api/user/mail`, { email: email });
+      const response = await axios.post(`${SERVER}api/verifications/reset-password-mail`, { email: email });
   
       // Check the response and handle it accordingly
       if (response.data.message) {
@@ -95,7 +95,7 @@ const NewPassWordForm = () => {
     if (password === confirmPassword) {
       // Passwords match, you can proceed with further actions
       try {
-        const response = await axios.post(`${SERVER}api/user/validate?token=${encodeURIComponent(params.get('token'))}`, {
+        const response = await axios.post(`${SERVER}api/verifications/update-password?token=${encodeURIComponent(params.get('token'))}`, {
           password: password,
         });
         setMessage(response.data.message);

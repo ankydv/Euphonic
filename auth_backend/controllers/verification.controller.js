@@ -6,6 +6,10 @@ import path from "path";
 import { fileURLToPath } from "url";
 import { validationResult } from "express-validator";
 import { ErrorHandler } from "../utils/ErrorHandler.js";
+import { resolve } from "path";
+import { readFileSync } from "fs";
+import User from "../models/user.model.js";
+import jwt from "../utils/token.js";
 
 export const sendOtp = asyncHandler(async (req, res, next) => {
   const errors = validationResult(req);
@@ -73,3 +77,53 @@ export const verifyOtp = asyncHandler(async (req, res, next) => {
     return res.status(500).json({ message: "Internal server error" });
   }
 });
+
+export const resetPasswordMail = async (req, res) => {
+  const email = req.body.email;
+  const user = await User.findOne({ email }).select("-password");
+
+  if (!user) {
+    return res.json({ error: "User not found" });
+  }
+
+  const token = jwt.createJwtToken(user._id);
+  const link = `${process.env.FRONTEND_URL}/resetpassword?token=${token}`;
+
+  try {
+    const innerPath = resolve('./views/emails/resetPassword.html');
+    let innerTemplate = readFileSync(innerPath, 'utf-8');
+    innerTemplate = innerTemplate.replace('{{link}}', link);
+
+    const filePath = resolve('./views/emails/generalEmail.html');
+    let htmlTemplate = readFileSync(filePath, 'utf-8');
+    htmlTemplate = htmlTemplate.replace('{{content}}', innerTemplate);
+
+    const mailData = {
+      from: fromEmails.verification,
+      to: email,
+      subject: "[Euphonic] Reset Password",
+      text: "Click on the link below to reset Password.",
+      html: htmlTemplate
+    };
+
+    transporter.sendMail(mailData);
+    res.json({ message: "Password reset link sent successfully!" });
+  } catch (error) {
+    res.json({ error: error.message });
+  }
+};
+
+export const updatePassword = async (req, res) => {
+  try {
+    const token = req.query.token;
+    const payload = jwt.verifyJwtToken(token);
+    const user = await User.findById(payload.user).select("-password");
+
+    user.password = req.body.password;
+    await user.save();
+
+    res.json({ message: "Password Changed Successfully" });
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+};
