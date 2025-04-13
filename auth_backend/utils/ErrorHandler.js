@@ -19,3 +19,12 @@ export class ErrorHandler extends Error {
     }
   }
 }
+
+export function handleSocketError(socket, event, error, callback) {
+  console.error(`Socket Error in ${event}:`, error.message);
+  if(callback){ 
+    callback({ success: false, message: error.message });
+    return
+  }
+  socket.emit("error", { event, message: error.message });
+}
