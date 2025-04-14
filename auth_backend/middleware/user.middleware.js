@@ -1,22 +1,47 @@
 import jwt from "jsonwebtoken";
 import { config } from "dotenv";
-import { asyncHandler } from "../utils/asyncHandler.js";
+import { clerkClient, getAuth } from "@clerk/express";
 import User from "../models/user.model.js";
-import { ErrorHandler } from "../utils/ErrorHandler.js";
 config();
+
 const jwt_secret = process.env.REFRESH_TOKEN_SECRET;
 
 //get the user from jwt token and add id to req object
-export const fetchuser = (req, res, next) => {
+export const fetchuser = async (req, res, next) => {
   const token = req.header("auth-token");
-  if (!token) {
+  const { userId } = getAuth(req)
+  if (!token && !userId) {
     res.status(401).send({ error: "please authenticate using a valid token" });
   }
   try {
-    const data = jwt.verify(token, jwt_secret);
-    req.user = data.user;
+    if(token){
+      const data = jwt.verify(token, jwt_secret);
+      req.user = data.user;
+    }
+    else if (userId) {
+      const clerkUser = await clerkClient.users.getUser(userId);
+
+      if (!clerkUser) {
+        return next(new ErrorHandler(404, "Clerk user not found"));
+      }
+
+      const primaryEmail = clerkUser.emailAddresses.find(
+        (email) => email.id === clerkUser.primaryEmailAddressId
+      )?.emailAddress;
+
+      if (!primaryEmail) {
+        return next(new ErrorHandler(400, "Primary email not found for Clerk user"));
+      }
+      const mongoUser = await User.findOne({ email: primaryEmail }).select("_id"); // Only select the ID
+
+      if (!mongoUser) {
+         return next(new ErrorHandler(404, "User not found in application database"));
+      } else {
+         req.user = { id: mongoUser._id };
+      }
+    }
     next();
-    // res.send(data);
+
   } catch (error) {
     if (error.name === "TokenExpiredError") {
       return res.status(401).send({
@@ -24,7 +49,7 @@ export const fetchuser = (req, res, next) => {
       });
     }
     return res.status(401).send({
-      error: "Invalid token. Please authenticate using a valid token",
+      error: error,
     });
   }
 };

@@ -3,6 +3,7 @@ import User from "../models/user.model.js";
 import { ErrorHandler } from "../utils/ErrorHandler.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
 import admin from "../configs/firebase.config.js"
+import { clerkClient, getAuth } from "@clerk/express";
 
 export const signUp = asyncHandler(async (req, res, next) => {
   const { firstName, lastName, email, password } = req.body;
@@ -125,5 +126,41 @@ export const firebase = asyncHandler(async (req, res) => {
   } catch (error) {
     console.log(error.message)
     res.status(401).send('Unauthorized');
+  }
+});
+
+export const signUpUsingClerk = asyncHandler(async (req, res) => {
+  try{
+    const { userId } = getAuth(req);
+    const clerkUser = await clerkClient.users.getUser(userId);
+
+    if (!clerkUser) {
+      return next(new ErrorHandler(404, "Clerk user not found"));
+    }
+    const primaryEmail = clerkUser.emailAddresses.find(
+      (email) => email.id === clerkUser.primaryEmailAddressId
+    )?.emailAddress;
+    if (!primaryEmail) {
+      return next(new ErrorHandler(400, "Primary email not found for Clerk user"));
+    }
+    const existedUser = await User.findOne({
+      email: primaryEmail,
+    });
+    if(existedUser)
+        return res.status(200).json({authToken: existedUser.generateRefreshToken()})
+    const user = await User.create({
+      firstName: clerkUser.firstName,
+      lastName: clerkUser.lastName,
+      email: primaryEmail,
+      picture: clerkUser.imageUrl,
+    });
+    return res.status(200).json({
+      success: true,
+      message: "User created successfully",
+      authToken: user.generateRefreshToken(),
+    });
+  }
+  catch(error){
+    return next(new ErrorHandler(500, error.message));
   }
 });

@@ -12,10 +12,12 @@ import songRoutes from './routes/song.route.js';
 import verificationRoutes from './routes/verification.route.js';
 import colorRoutes from './routes/color.route.js';
 import errorHandlerMiddleware from './middleware/error.middleware.js';
+import { clerkMiddleware } from '@clerk/express';
 
 
 app.use(cors())
 app.use(json());
+app.use(clerkMiddleware());
 
 // availabel routes
 app.use("/api/auth", userRoutes);
