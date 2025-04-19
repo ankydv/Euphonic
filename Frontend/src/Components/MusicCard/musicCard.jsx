@@ -3,7 +3,6 @@ import "./musicCard.css";
 import React from "react";
 import { useState, useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import getMusicInfo from "../helpers/music_info";
 import { bindActionCreators } from "redux";
 import { actionCreators } from "../../state";
 import { useNavigate } from "react-router-dom";
@@ -16,6 +15,7 @@ import { IconButton, Typography, darken, lighten, useTheme } from "@mui/material
 import {FaPlay, FaPause, FaChevronLeft, FaChevronRight } from "react-icons/fa"
 import { GiPreviousButton, GiNextButton, GiKebabSpit } from "react-icons/gi";
 import { CiMenuKebab } from "react-icons/ci";
+import {refreshToken} from '../../utils/ytToken.utils'
 
 
 const server = process.env.REACT_APP_SERVER;
@@ -133,8 +133,10 @@ const updateDynamicStyle = (gradientColor) => {
   }, [playerState]);
 
   useEffect(() => {
-    if (currMusic) {
-        axios.get(`${server2}api/songinfo/${currMusic.videoId}`)
+
+    const fetchMusicInfo = async () => {
+      await refreshToken();
+      axios.get(`${server2}api/songinfo/${currMusic.videoId}?accessToken=${localStorage.getItem('accessToken')}`)
         .then((response) => {
           if(response.data.playabilityStatus.status == 'OK'){
             const thumbnails = response.data.videoDetails.thumbnail.thumbnails;
@@ -151,6 +153,10 @@ const updateDynamicStyle = (gradientColor) => {
         .catch((error) => {
           console.error("Request error:", error.message);
         });
+    }
+
+    if (currMusic) {
+        fetchMusicInfo();
     }
   }, [currMusic]);
 

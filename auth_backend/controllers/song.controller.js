@@ -88,7 +88,7 @@ export const isLiked = asyncHandler(async (req, res) => {
 export const addLiked = asyncHandler(async (req, res) => {
   try {
     const jsonData = req.body;
-    foundData = await Liked.findOne({
+    const foundData = await Liked.findOne({
       "music.videoId": jsonData.music.videoId,
     });
 
