@@ -9,8 +9,6 @@ router = APIRouter()
 def getHome():
     try:
         a = yt.get_home()
-        b = yt.get_charts("IN")
-        a.append({'title': 'Artists', 'contents': b['artists']['items']})
         return a
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
