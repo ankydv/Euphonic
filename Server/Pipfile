@@ -7,11 +7,11 @@ name = "pypi"
 fastapi = "==0.100.0"
 pytube = "==15.0.0"
 python-dotenv = "==1.0.0"
-ytmusicapi = "==1.8.1"
 yt-dlp = "*"
+ytmusicapi = "==1.11.1"
 
 [dev-packages]
 uvicorn = {version = "*", extras = ["standard"]}
 
 [requires]
-python_version = "3.11"
+python_version = "3.13.1"

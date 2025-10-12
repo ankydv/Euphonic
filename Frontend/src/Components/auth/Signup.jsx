@@ -30,7 +30,7 @@ export default function SignUp() {
   const [formData, setFormData] = useState();
   const [alertMsg, setAlertMsg] = useState();
   const checkUser = async (email)=>{
-    const res = await axios.get(`${SERVER}api/verifications/checkUser?email=${email}`)
+    const res = await axios.get(`${SERVER}api/auth/isNewUser?email=${email}`)
     return res.data;
   }
   const handleSubmit = async (e) => {

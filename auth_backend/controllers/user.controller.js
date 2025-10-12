@@ -88,7 +88,7 @@ export const isNewUser = asyncHandler(async (req, res, next) => {
     const { email } = req.query;
     console.log(email);
     const user = await User.findOne({ email: email });
-    if (user) return next(new ErrorHandler(400, "Email already registered"));
+    if (user) return res.json({ success: false, error: "User already exists" });
     res.json({ success: true });
   } catch (error) {
     console.error(error.message);
