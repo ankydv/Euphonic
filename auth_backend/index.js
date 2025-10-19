@@ -9,6 +9,7 @@ const port =process.env.PORT || 9001 ;
 
 import userRoutes from './routes/user.route.js';
 import songRoutes from './routes/song.route.js';
+import playlistRoutes from './routes/playlist.routes.js';
 import verificationRoutes from './routes/verification.route.js';
 import colorRoutes from './routes/color.route.js';
 import errorHandlerMiddleware from './middleware/error.middleware.js';
@@ -22,6 +23,7 @@ app.use(clerkMiddleware());
 // availabel routes
 app.use("/api/auth", userRoutes);
 app.use("/api/songs", songRoutes);
+app.use('/api/playlists', playlistRoutes);
 app.use('/api/verifications', verificationRoutes);
 app.use('/api/colors', colorRoutes);
 app.use(errorHandlerMiddleware);

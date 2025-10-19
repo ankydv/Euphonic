@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { fetchuser } from "../middleware/user.middleware.js";
+import { requireAuth } from "../middleware/clerk.middleware.js";
 import {
   addHistory,
   addLiked,
@@ -12,17 +12,17 @@ import { validateFetchHistory } from "../middleware/validations/song.validation.
 
 const router = Router();
 
-router.get("/fetchhistory", validateFetchHistory, fetchuser, fetchHistory);
+router.get("/fetchhistory", validateFetchHistory, requireAuth, fetchHistory);
 
 
-router.post("/addhistory", fetchuser, addHistory);
+router.post("/addhistory", requireAuth, addHistory);
 
-router.get("/fetchliked", fetchuser, fetchLiked);
+router.get("/fetchliked", requireAuth, fetchLiked);
 
-router.get("/checkLiked/:videoId", fetchuser, isLiked);
+router.get("/checkLiked/:videoId", requireAuth, isLiked);
 
-router.post("/addliked", fetchuser, addLiked);
+router.post("/addliked", requireAuth, addLiked);
 
-router.delete("/deleteLiked/:videoId", fetchuser, deleteLiked);
+router.delete("/deleteLiked/:videoId", requireAuth, deleteLiked);
 
 export default router;
