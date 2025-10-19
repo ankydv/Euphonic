@@ -14,6 +14,8 @@ import verificationRoutes from './routes/verification.route.js';
 import colorRoutes from './routes/color.route.js';
 import errorHandlerMiddleware from './middleware/error.middleware.js';
 import { clerkMiddleware } from '@clerk/express';
+import { requireAuth } from './middleware/clerk.middleware.js';
+import historyRoutes from './routes/history.route.js';
 
 
 app.use(cors())
@@ -23,7 +25,8 @@ app.use(clerkMiddleware());
 // availabel routes
 app.use("/api/auth", userRoutes);
 app.use("/api/songs", songRoutes);
-app.use('/api/playlists', playlistRoutes);
+app.use('/api/playlists', requireAuth, playlistRoutes);
+app.use('/api/history', requireAuth, historyRoutes);
 app.use('/api/verifications', verificationRoutes);
 app.use('/api/colors', colorRoutes);
 app.use(errorHandlerMiddleware);

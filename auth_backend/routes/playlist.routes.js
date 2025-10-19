@@ -5,9 +5,9 @@ import { requireAuth } from "../middleware/clerk.middleware.js"; // Clerk middle
 const router = express.Router();
 
 //GET /api/playlist/
-router.get("/", requireAuth, getPlaylists);
+router.get("/", getPlaylists);
 
 // POST /api/playlist/create
-router.post("/create", requireAuth, createPlaylist);
+router.post("/create", createPlaylist);
 
 export default router;
