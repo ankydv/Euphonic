@@ -1,4 +1,4 @@
-import { History, Playlist } from "../models/song.model.js";
+import { Playlist } from "../models/song.model.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
 
 export const fetchLiked = asyncHandler(async (req, res) => {

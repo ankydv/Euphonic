@@ -23,7 +23,7 @@ export const getHistory = async (req, res, next) => {
     }
 
     const history = await History.find(conditions)
-      .sort({ _id: -1 }) // Newest first
+      .sort({ playedAt: -1 }) // Newest first
       .limit(Number(limit))
       .populate("song") // Optional: populate song details
       .lean();
@@ -53,6 +53,19 @@ export const addHistory = async (req, res, next) => {
 
     if (!song || !song._id) {
       return next(new ErrorHandler(400, "Song data missing or invalid"));
+    }
+
+    const existing = await History.findOne({ user: userId, song: song._id });
+    if (existing) {
+      const now = new Date();
+      existing.playedAt = now;
+      await existing.save();
+
+      return res.status(200).json({
+        success: true,
+        message: "History timestamp updated",
+        history: existing,
+      });
     }
 
     const history = await History.create({

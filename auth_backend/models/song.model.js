@@ -1,14 +1,16 @@
 import mongoose, {Schema} from "mongoose";
 
 const SongSchema = new Schema({
-  songId: { type: String, required: true, unique: true }, // YouTube/Spotify/etc ID
+  videoId: { type: String, required: true, unique: true }, // YouTube/Spotify/etc ID
   title: { type: String, required: true },
-  artist: { type: String },
-  album: { type: String },
-  duration: { type: Number },
-  thumbnail: { type: String },
-  url: { type: String }, // streamable URL
-  metadata: { type: Schema.Types.Mixed }, // for any additional info (tags, mood, etc.)
+  keywords: { type: [String], index: true }, 
+  author: { type: String },
+  lengthSeconds: { type: Number },
+  thumbnail: { 
+    thumbnails:[
+      { url: String, width: Number, height: Number }
+    ]
+   },   // array of thumbnail URLs 
 }, { timestamps: true });
 
 
@@ -28,6 +30,7 @@ const HistorySchema = new Schema({
   song: { type: Schema.Types.ObjectId, ref: "Song", required: true },
   playedAt: { type: Date, default: Date.now }
 });
+HistorySchema.index({ userId: 1, playedAt: -1 });
 
 export const Song = mongoose.model("Song", SongSchema);
 export const Playlist = mongoose.model("Playlist", PlaylistSchema);

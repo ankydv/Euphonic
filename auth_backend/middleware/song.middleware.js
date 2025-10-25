@@ -19,13 +19,13 @@ export const addSong = async (req, res, next) => {
       return next(new ErrorHandler(400, "Missing or invalid 'song' object in body"));
     }
 
-    const { songId, title } = song;
-    if (!songId || !title) {
-      return next(new ErrorHandler(400, "Both 'songId' and 'title' are required"));
+    const { videoId, title } = song;
+    if (!videoId || !title) {
+      return next(new ErrorHandler(400, "Both 'videoId' and 'title' are required"));
     }
 
     // ✅ Find or create song
-    let songDoc = await Song.findOne({ songId });
+    let songDoc = await Song.findOne({ videoId });
     if (!songDoc) {
       songDoc = await Song.create(song);
     }
