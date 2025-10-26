@@ -1,13 +1,14 @@
 import express from "express";
-import { createPlaylist, getPlaylists } from "../controllers/playlist.controller.js";
-import { requireAuth } from "../middleware/clerk.middleware.js"; // Clerk middleware
+import { createPlaylist, getPlaylists, addSongToPlaylist, removeSongFromPlaylist, deletePlaylist } from "../controllers/playlist.controller.js";
+import { addSong } from "../middleware/song.middleware.js";
 
 const router = express.Router();
 
-//GET /api/playlist/
 router.get("/", getPlaylists);
-
-// POST /api/playlist/create
 router.post("/create", createPlaylist);
+router.post("/add-song", addSong, addSongToPlaylist);
+router.delete("/remove-song/:playlistId/song/:songId", removeSongFromPlaylist);
+router.delete("/delete/:playlistId", deletePlaylist);
+
 
 export default router;
